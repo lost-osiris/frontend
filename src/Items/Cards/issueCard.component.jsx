@@ -166,7 +166,7 @@ export const IssueCard = (props) => {
                           issue.status === "won't-fix"
                         ) {
                           issue.archived = !issue.archived;
-                          axios.post(`/api/issue/${props.issue._id}`, issue);
+                          axios.put(`/api/issue/${props.issue._id}`, issue);
                         } else {
                           window.alert(
                             'Status must be "Completed" or "Won\'t Fix" in order to archive'

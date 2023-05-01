@@ -4,7 +4,7 @@ export const UserContext = createContext({});
 
 export const UserProvider = (props) => {
   const [tokenInfo, setUserState] = useState(
-    JSON.parse(localStorage.getItem("user_info"))
+    JSON.parse(localStorage.getItem("userInfo"))
   );
 
   const updateUserState = (newState) => {

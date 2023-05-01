@@ -20,7 +20,6 @@ export const IssuePage = () => {
   let navigate = useNavigate();
   let [issue, setIssue] = useState(null);
   let [editIssue, setEditIssue] = useState({ issue: null, toggle: false });
-  console.log(params);
 
   useEffect(() => {
     if (issue === null) {

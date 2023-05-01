@@ -147,7 +147,7 @@ export const Header = () => {
                 <Fab
                   color="discord"
                   variant="extended"
-                  href="https://discord.com/api/oauth2/authorize?client_id=1074939657902637058&redirect_uri=http%3A%2F%2F127.0.0.1%3A3000&response_type=code&scope=identify"
+                  href="https://discord.com/api/oauth2/authorize?client_id=1074939657902637058&redirect_uri=https%3A%2F%2Fissue-tracker-front.vercel.app%2F&response_type=code&scope=identify"
                 >
                   Discord Login
                   <LoginIcon sx={{ pl: 0.5 }} />
@@ -213,7 +213,7 @@ export const Header = () => {
                   <Fab
                     color="discord"
                     variant="extended"
-                    href="https://discord.com/api/oauth2/authorize?client_id=1074939657902637058&redirect_uri=http%3A%2F%2F127.0.0.1%3A3000&response_type=code&scope=identify"
+                    href="https://discord.com/api/oauth2/authorize?client_id=1074939657902637058&redirect_uri=https%3A%2F%2Fissue-tracker-front.vercel.app%2F&response_type=code&scope=identify"
                   >
                     Discord Login
                     <LoginIcon sx={{ pl: 0.5 }} />

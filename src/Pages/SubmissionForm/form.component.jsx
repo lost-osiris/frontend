@@ -22,7 +22,7 @@ import SendIcon from "@mui/icons-material/Send";
 import RefreshIcon from "@mui/icons-material/Refresh";
 
 export const UserForm = (props) => {
-  const { tokenInfo } = useContext(UserContext);
+  const { tokenInfo, setUserState } = useContext(UserContext);
   const [categories, setCategories] = useState([]);
   const [modlogsButtonColor, setModlogsButtonColor] = useState("primary");
   const [modlogsButtonText, setModlogsButtonText] = useState("Upload Modlogs");
@@ -40,9 +40,9 @@ export const UserForm = (props) => {
       type: "",
       priority: "",
       playerData: {
-        name: !tokenInfo.data.username ? "" : tokenInfo.data.username,
-        id: !tokenInfo.data.id ? "" : tokenInfo.data.id,
-        avatar: !tokenInfo.data.avatar ? "" : tokenInfo.data.avatar,
+        name: !tokenInfo.data.username || null ? "" : tokenInfo.data.username,
+        id: !tokenInfo.data.id || null ? "" : tokenInfo.data.id,
+        avatar: !tokenInfo.data.avatar || null ? "" : tokenInfo.data.avatar,
       },
       version: "",
       description: "",
@@ -90,13 +90,16 @@ export const UserForm = (props) => {
       setNewIssue(issue);
     }
   };
+
   useEffect(() => {
     if (!categories[0]) {
       axios
-        .get(`api/project/Pale-Court/categories`)
+        .get(`/api/project/Pale-Court/categories`)
         .then((res) => setCategories(res.data));
     }
+  }, [categories]);
 
+  useEffect(() => {
     if (
       newIssue.attachments.general_url.match(
         /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g
@@ -116,7 +119,7 @@ export const UserForm = (props) => {
       setEmbedHelperValidation("Please enter a valid embed link");
       setEmbedFieldColor("warning");
     }
-  }, [newIssue, submitFormColor, submitFormText, categories]);
+  }, [newIssue, submitFormColor, submitFormText]);
 
   const handleFormSubmit = async () => {
     await axios.post(`/api/issue/findexact`, newIssue).then((res) => {
@@ -135,7 +138,6 @@ export const UserForm = (props) => {
               .then(() => window.alert("issue updated!"));
           } else {
             promise = axios.post("/api/issue", updatedIssue);
-            console.log(updatedIssue);
           }
           promise.then(() => {
             if (!props.onSubmit) {
@@ -146,9 +148,13 @@ export const UserForm = (props) => {
                 type: "",
                 priority: "",
                 playerData: {
-                  name: !tokenInfo.data.username ? "" : tokenInfo.data.username,
-                  id: !tokenInfo.data.id ? "" : tokenInfo.data.id,
-                  avatar: !tokenInfo.data.avatar ? "" : tokenInfo.data.avatar,
+                  name:
+                    !tokenInfo.data.username || null
+                      ? ""
+                      : tokenInfo.data.username,
+                  id: !tokenInfo.data.id || null ? "" : tokenInfo.data.id,
+                  avatar:
+                    !tokenInfo.data.avatar || null ? "" : tokenInfo.data.avatar,
                 },
                 version: "",
                 description: "",
@@ -188,7 +194,7 @@ export const UserForm = (props) => {
         You cannot submit a form —{" "}
         <strong>
           Please login{" "}
-          <a href="https://discord.com/api/oauth2/authorize?client_id=1074939657902637058&redirect_uri=http%3A%2F%2F127.0.0.1%3A3000&response_type=code&scope=identify">
+          <a href="https://discord.com/api/oauth2/authorize?client_id=1074939657902637058&redirect_uri=https%3A%2F%2Fissue-tracker-front.vercel.app%2F&response_type=code&scope=identify">
             here{" "}
           </a>
           to be able to submit a form for this project
@@ -260,7 +266,9 @@ export const UserForm = (props) => {
                   label="Player"
                   variant="standard"
                   value={newIssue.playerData.name}
-                  defaultValue={tokenInfo.username}
+                  defaultValue={
+                    tokenInfo.username ? tokenInfo.username : "Discord Name"
+                  }
                   onChange={(e) => updateNewIssue("playerName", e.target.value)}
                   sx={{ pb: 2 }}
                   fullWidth
@@ -435,6 +443,11 @@ export const UserForm = (props) => {
                   id="embed"
                   label="Embed"
                   placeholder="Embed"
+                  defaultValue={
+                    !tokenInfo.attachments.embedSource
+                      ? "Embed"
+                      : tokenInfo.attachments.embedSource
+                  }
                   value={newIssue.attachments.embedSource}
                   onChange={(e) =>
                     updateNewIssue("attachmentsEmbedSource", e.target.value)
@@ -449,6 +462,11 @@ export const UserForm = (props) => {
                   id="generic"
                   label="URL"
                   placeholder="URL"
+                  defaultValue={
+                    !tokenInfo.attachments.generalUrl
+                      ? "URL"
+                      : tokenInfo.attachments.generalUrl
+                  }
                   value={newIssue.attachments.generalUrl}
                   onChange={(e) =>
                     updateNewIssue("attachmentsUrl", e.target.value)
