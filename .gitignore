@@ -23,4 +23,3 @@ node_modules
 *.code-workspace
 notes.txt
 .vercel
-vercel.json

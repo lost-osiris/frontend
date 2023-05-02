@@ -30,7 +30,7 @@ export const IssueCardList = () => {
   const archived = searchParams.get("archived") === "true";
 
   useEffect(() => {
-    if (issues === null) {
+    if (!issues) {
       axios
         .get(`/api/project/Pale-Court/category/${params.category}/issues`)
         .then((res) => setIssues(res.data));

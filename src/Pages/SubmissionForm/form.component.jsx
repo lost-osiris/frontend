@@ -52,13 +52,13 @@ export const UserForm = (props) => {
       },
       archived: false,
       attachments: {
-        embed_source: "",
-        general_url: "",
+        embedSource: "",
+        generalUrl: "",
       },
     }
   );
 
-  let updateNewIssue = (field, value) => {
+  const updateNewIssue = (field, value) => {
     if (field === "modlogs") {
       const reader = new FileReader();
       reader.readAsText(value);
@@ -76,12 +76,17 @@ export const UserForm = (props) => {
     } else if (field === "attachmentsUrl") {
       setNewIssue({
         ...newIssue,
-        attachments: { ...newIssue.attachments, general_url: value },
+        attachments: { ...newIssue.attachments, generalUrl: value },
       });
     } else if (field === "attachmentsEmbedSource") {
       setNewIssue({
         ...newIssue,
-        attachments: { ...newIssue.attachments, embed_source: value },
+        attachments: { ...newIssue.attachments, embedSource: value },
+      });
+    } else if (field === " category") {
+      setNewIssue({
+        ...newIssue,
+        category: value.replace(/ /g, "%20"),
       });
     } else {
       let issue = { ...newIssue };
@@ -101,7 +106,7 @@ export const UserForm = (props) => {
 
   useEffect(() => {
     if (
-      newIssue.attachments.general_url.match(
+      newIssue.attachments.generalUrl.match(
         /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g
       )
     ) {
@@ -112,7 +117,7 @@ export const UserForm = (props) => {
       setgeneralFieldColor("warning");
     }
 
-    if (newIssue.attachments.embed_source.includes("iframe")) {
+    if (newIssue.attachments.embedSource.includes("iframe")) {
       setEmbedHelperValidation("Valid Embed!");
       setEmbedFieldColor("success");
     } else {
@@ -121,7 +126,10 @@ export const UserForm = (props) => {
     }
   }, [newIssue, submitFormColor, submitFormText]);
 
+  console.log(newIssue.category);
+
   const handleFormSubmit = async () => {
+    newIssue.category.replaceAll(" ", "%20");
     await axios.post(`/api/issue/findexact`, newIssue).then((res) => {
       if (res.data) {
         window.alert("this issue already exists");
@@ -130,7 +138,7 @@ export const UserForm = (props) => {
           let promise;
           let updatedIssue = {
             ...newIssue,
-            category: newIssue.category.toLowerCase(),
+            category: newIssue.category.toLowerCase().replaceAll(" ", "%20"),
           };
           if (props.isUpdate) {
             promise = axios
@@ -164,8 +172,8 @@ export const UserForm = (props) => {
                 },
                 archived: false,
                 attachments: {
-                  embed_source: "",
-                  general_url: "",
+                  embedSource: "",
+                  generalUrl: "",
                 },
               });
               setSubmitFormColor("success");
@@ -244,15 +252,16 @@ export const UserForm = (props) => {
                 <TextField
                   id="category-select"
                   label="Category"
-                  value={newIssue.category}
+                  value={newIssue.category
+                    .replace(/%20/g, " ")
+                    .split(" ")
+                    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                    .join(" ")}
                   select
                   fullWidth
                   sx={{ pb: 2 }}
                   onChange={(e) => updateNewIssue("category", e.target.value)}
                 >
-                  <MenuItem defaultValue="none">
-                    <em>None</em>
-                  </MenuItem>
                   {categories.map((category) => (
                     <MenuItem key={category} value={category}>
                       {category}
@@ -266,9 +275,7 @@ export const UserForm = (props) => {
                   label="Player"
                   variant="standard"
                   value={newIssue.playerData.name}
-                  defaultValue={
-                    tokenInfo.username ? tokenInfo.username : "Discord Name"
-                  }
+                  defaultValue={tokenInfo.username}
                   onChange={(e) => updateNewIssue("playerName", e.target.value)}
                   sx={{ pb: 2 }}
                   fullWidth
@@ -426,7 +433,19 @@ export const UserForm = (props) => {
                 hidden
                 accept="text/*"
                 type="file"
-                onChange={(e) => updateNewIssue("modlogs", e.target.files[0])}
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  if (file && file.size > 4 * 1024 * 1024) {
+                    setModlogsButtonColor("error");
+                    setModlogsButtonText("File size too large! ( > 4MB )");
+                    setTimeout(() => {
+                      setModlogsButtonColor("primary");
+                      setModlogsButtonText("Upload Modlogs");
+                    }, 5000);
+                  } else {
+                    updateNewIssue("modlogs", file);
+                  }
+                }}
               />
             </Button>
           </Grid>
@@ -444,9 +463,9 @@ export const UserForm = (props) => {
                   label="Embed"
                   placeholder="Embed"
                   defaultValue={
-                    !tokenInfo.attachments.embedSource
-                      ? "Embed"
-                      : tokenInfo.attachments.embedSource
+                    newIssue && newIssue.attachments.embedSource
+                      ? newIssue.attachments.embedSource
+                      : "Embed"
                   }
                   value={newIssue.attachments.embedSource}
                   onChange={(e) =>
@@ -463,9 +482,9 @@ export const UserForm = (props) => {
                   label="URL"
                   placeholder="URL"
                   defaultValue={
-                    !tokenInfo.attachments.generalUrl
-                      ? "URL"
-                      : tokenInfo.attachments.generalUrl
+                    newIssue && newIssue.attachments.generalUrl
+                      ? newIssue.attachments.generalUrl
+                      : "Embed"
                   }
                   value={newIssue.attachments.generalUrl}
                   onChange={(e) =>

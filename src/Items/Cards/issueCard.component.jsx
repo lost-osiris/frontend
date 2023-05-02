@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import axios from "axios";
@@ -25,6 +25,7 @@ import {
   FormGroup,
   Switch,
   FormControlLabel,
+  Avatar,
 } from "@mui/material";
 
 import EditIcon from "@mui/icons-material/Edit";
@@ -81,6 +82,7 @@ export const IssueCard = (props) => {
   let navigate = useNavigate();
   const [issue, setIssue] = useState({ ...props.issue });
   const [toggleModlogs, setToggleModlogs] = useState(false);
+  const [modlogs, setModlogs] = useState("");
   const [toggleAttachments, setToggleAttachments] = useState(false);
   const [menuOpen, setMenuOpen] = useState(null);
 
@@ -99,6 +101,18 @@ export const IssueCard = (props) => {
     !toggleAttachments
       ? setToggleAttachments(true)
       : setToggleAttachments(false);
+
+  useEffect(() => {
+    if (toggleModlogs && !modlogs) {
+      axios
+        .get(`/api/issue/${issue._id}/modlogs`)
+        .then((res) => setModlogs(res.data));
+    }
+
+    if (!toggleModlogs && modlogs) {
+      setModlogs(null);
+    }
+  }, [toggleModlogs, modlogs]);
 
   return (
     <>
@@ -209,11 +223,38 @@ export const IssueCard = (props) => {
                 />
               </Box>
             </Grid>
-
-            <Grid item md="12" sx={{ mt: 2 }}>
-              <Typography variant="body1" color="text.secondary">
-                {issue.description}
-              </Typography>
+            <Grid container alignItems="flex-start">
+              <Grid item md="10" sx={{ mt: 2, ml: 5 }}>
+                <Typography variant="body1" color="text.secondary">
+                  {issue.description.length > 300
+                    ? issue.description.slice(0, 300) + "..."
+                    : issue.description}
+                </Typography>
+              </Grid>
+              <Grid
+                item
+                md="1"
+                sx={{
+                  mt: 2,
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  alignItems: "flex-end",
+                }}
+              >
+                {/* <Typography
+                  variant="button"
+                  color="text.secondary"
+                  align="center"
+                  display="block"
+                >
+                  {issue.playerData.name}
+                </Typography> */}
+                <Avatar
+                  onClick={() => navigate(`/user/${issue.playerData.id}`)}
+                  src={`https://cdn.discordapp.com/avatars/${issue.playerData.id}/${issue.playerData.avatar}.png`}
+                  alt={issue.playerData.name}
+                />
+              </Grid>
             </Grid>
           </Grid>
         </CardContent>
@@ -224,10 +265,12 @@ export const IssueCard = (props) => {
         open={toggleModlogs}
         onClose={handleModlogsToggle}
       >
-        <DialogTitle>{issue.modlogs.title}</DialogTitle>
+        <DialogTitle>
+          {modlogs && modlogs.modlogs.title ? modlogs.modlogs.title : ""}
+        </DialogTitle>
         <DialogContent>
           <DialogContentText component="pre">
-            {issue.modlogs.body}
+            {modlogs && modlogs.modlogs.body ? modlogs.modlogs.body : ""}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -250,7 +293,7 @@ export const IssueCard = (props) => {
             />
             <Button
               onClick={() =>
-                window.open(issue.attachments.general_url, "_blank")
+                window.open(issue.attachments.generalUrl, "_blank")
               }
             >
               Go to URL
