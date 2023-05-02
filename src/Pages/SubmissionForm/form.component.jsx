@@ -126,8 +126,6 @@ export const UserForm = (props) => {
     }
   }, [newIssue, submitFormColor, submitFormText]);
 
-  console.log(newIssue.category);
-
   const handleFormSubmit = async () => {
     newIssue.category.replaceAll(" ", "%20");
     await axios.post(`/api/issue/findexact`, newIssue).then((res) => {
@@ -136,16 +134,20 @@ export const UserForm = (props) => {
       } else {
         try {
           let promise;
-          let updatedIssue = {
+          let issue = {
             ...newIssue,
             category: newIssue.category.toLowerCase().replaceAll(" ", "%20"),
           };
           if (props.isUpdate) {
+            let data = {
+              issue,
+              userInfo: JSON.parse(localStorage.getItem(["userInfo"])),
+            };
             promise = axios
-              .put(`/api/issue/${props.issue._id}`, updatedIssue)
+              .put(`/api/issue/${props.issue._id}`, data)
               .then(() => window.alert("issue updated!"));
           } else {
-            promise = axios.post("/api/issue", updatedIssue);
+            promise = axios.post("/api/issue", issue);
           }
           promise.then(() => {
             if (!props.onSubmit) {

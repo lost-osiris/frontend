@@ -87,7 +87,8 @@ export const IssueCard = (props) => {
   const [menuOpen, setMenuOpen] = useState(null);
 
   const handleCardDelete = () => {
-    axios.delete(`/api/issue/${issue._id}`).then(() => {
+    let data = JSON.parse(localStorage.getItem(["userInfo"]));
+    axios.delete(`/api/issue/${issue._id}`, { data: data }).then(() => {
       if (props.onDelete) {
         props.onDelete();
       }
@@ -180,7 +181,14 @@ export const IssueCard = (props) => {
                           issue.status === "won't-fix"
                         ) {
                           issue.archived = !issue.archived;
-                          axios.put(`/api/issue/${props.issue._id}`, issue);
+                          let data = {
+                            issue,
+                            userInfo: JSON.parse(
+                              localStorage.getItem(["userInfo"])
+                            ),
+                          };
+                          console.log(data);
+                          axios.put(`/api/issue/${props.issue._id}`, data);
                         } else {
                           window.alert(
                             'Status must be "Completed" or "Won\'t Fix" in order to archive'
@@ -241,14 +249,6 @@ export const IssueCard = (props) => {
                   alignItems: "flex-end",
                 }}
               >
-                {/* <Typography
-                  variant="button"
-                  color="text.secondary"
-                  align="center"
-                  display="block"
-                >
-                  {issue.playerData.name}
-                </Typography> */}
                 <Avatar
                   onClick={() => navigate(`/user/${issue.playerData.id}`)}
                   src={`https://cdn.discordapp.com/avatars/${issue.playerData.id}/${issue.playerData.avatar}.png`}
