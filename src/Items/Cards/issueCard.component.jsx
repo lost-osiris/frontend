@@ -96,7 +96,7 @@ export const IssueCard = (props) => {
     issue.attachments.generalUrl !== "" || issue.attachments.embedSource !== "";
 
   const handleCardDelete = () => {
-    axios.delete(`/api/issue/${issue._id}`, userInfo).then(() => {
+    axios.delete(`/api/issue/${issue._id}`, { data: userInfo }).then(() => {
       if (props.onDelete) {
         props.onDelete();
       }
