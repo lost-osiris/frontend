@@ -6,8 +6,7 @@ import { IssueCardList } from "./Pages/IssueList/issueList.component";
 import { IssuePage } from "./Pages/Issue/issue.component";
 import { ProjectCardList } from "./Pages/ProjectList/projectList.component";
 import { UserForm } from "./Pages/SubmissionForm/form.component.jsx";
-
-
+import { UserProvider } from "./context/authprovider.component";
 
 const darkTheme = createTheme({
   palette: {
@@ -20,14 +19,16 @@ const App = () => {
     <ThemeProvider theme={darkTheme}>
       <div className="App">
         <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Header />}>
-              <Route path="/projects" element={<ProjectCardList />} />
-              <Route path="/form" element={<UserForm />} />
-              <Route path="/issues/:category" element={<IssueCardList />} />
-              <Route path="/issue/:issueId" element={<IssuePage />} />
-            </Route>
-          </Routes>
+          <UserProvider>
+            <Routes>
+              <Route path="/" element={<Header />}>
+                <Route path="/projects" element={<ProjectCardList />} />
+                <Route path="/form" element={<UserForm />} />
+                <Route path="/issues/:category" element={<IssueCardList />} />
+                <Route path="/issue/:issueId" element={<IssuePage />} />
+              </Route>
+            </Routes>
+          </UserProvider>
         </BrowserRouter>
       </div>
     </ThemeProvider>

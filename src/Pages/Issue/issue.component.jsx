@@ -51,7 +51,7 @@ export const IssuePage = () => {
   return (
     <div>
       <Grid container>
-        <Grid item md={12} key={`${JSON.stringify(issue)}`}>
+        <Grid item lg={12} key={`${JSON.stringify(issue)}`}>
           <IssueCard
             issue={issue}
             toggleEdit={(issue) => toggleEdit(issue)}

@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useContext } from "react";
+import { UserContext } from "../../context/authprovider.component";
+import { useNavigate, useParams } from "react-router-dom";
 
 import axios from "axios";
 
@@ -25,6 +26,7 @@ import {
   FormGroup,
   Switch,
   FormControlLabel,
+  Link,
   Avatar,
 } from "@mui/material";
 
@@ -33,6 +35,8 @@ import AttachFileIcon from "@mui/icons-material/AttachFile";
 import ArticleIcon from "@mui/icons-material/Article";
 import CloseIcon from "@mui/icons-material/Close";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import ArchiveIcon from "@mui/icons-material/Archive";
+import UnarchiveIcon from "@mui/icons-material/Unarchive";
 import { toTitleCase } from "../../utils";
 
 const getStatusColor = (status) => {
@@ -81,14 +85,18 @@ const getPriorityColor = (priority) => {
 export const IssueCard = (props) => {
   let navigate = useNavigate();
   const [issue, setIssue] = useState({ ...props.issue });
+  const userInfo = useContext(UserContext);
   const [toggleModlogs, setToggleModlogs] = useState(false);
   const [modlogs, setModlogs] = useState("");
   const [toggleAttachments, setToggleAttachments] = useState(false);
   const [menuOpen, setMenuOpen] = useState(null);
+  const params = useParams();
+
+  const hasAttachments =
+    issue.attachments.generalUrl !== "" || issue.attachments.embedSource !== "";
 
   const handleCardDelete = () => {
-    let data = JSON.parse(localStorage.getItem(["userInfo"]));
-    axios.delete(`/api/issue/${issue._id}`, { data: data }).then(() => {
+    axios.delete(`/api/issue/${issue._id}`, userInfo).then(() => {
       if (props.onDelete) {
         props.onDelete();
       }
@@ -115,18 +123,47 @@ export const IssueCard = (props) => {
     }
   }, [toggleModlogs, modlogs]);
 
+  const issueSummary =
+    issue.summary.charAt(0).toUpperCase() + issue.summary.slice(1);
+
   return (
     <>
       <Card>
         <CardContent sx={{ pt: 0 }}>
           <Grid container spacing={2}>
-            <Grid item lg="11">
+            <Grid item lg="1">
+              <Avatar
+                onClick={() => navigate(`/user/${issue.playerData.id}`)}
+                src={`https://cdn.discordapp.com/avatars/${issue.playerData.id}/${issue.playerData.avatar}.png`}
+                alt={issue.playerData.name}
+                sx={{ mt: 2 }}
+              />
+            </Grid>
+            <Grid item lg="10">
               <Box
                 component="h4"
-                sx={{ ml: 1 }}
-                onClick={() => navigate(`/issue/${issue._id}`)}
+                sx={{
+                  ml: 1,
+                  mt: 3,
+                }}
               >
-                {issue.summary}
+                <Box
+                  component="span"
+                  sx={{
+                    "&:hover": {
+                      opacity: [0.9, 0.8, 0.7],
+                      cursor: "pointer",
+                      textDecoration: "underline",
+                    },
+                  }}
+                  onClick={() => navigate(`/issue/${issue._id}`)}
+                >
+                  {params.issueId
+                    ? issueSummary
+                    : issueSummary.length > 45
+                    ? issueSummary.slice(0, 40) + "..."
+                    : issueSummary}
+                </Box>
               </Box>
             </Grid>
             <Grid item lg="1" sx={{ mt: 2, textAlign: "right" }}>
@@ -149,33 +186,35 @@ export const IssueCard = (props) => {
                 transformOrigin={{ horizontal: "right", vertical: "top" }}
                 id="menu"
               >
-                <MenuItem onClick={handleModlogsToggle}>
-                  <ListItemIcon>
-                    <ArticleIcon fontSize="small" />
-                  </ListItemIcon>
-                  <ListItemText>View Mod Logs</ListItemText>
-                </MenuItem>
-                <MenuItem onClick={handleAttachmentsToggle}>
-                  <ListItemIcon>
-                    <AttachFileIcon fontSize="small" />
-                  </ListItemIcon>
-                  <ListItemText>View Attachment</ListItemText>
-                </MenuItem>
-                <Divider />
-                <MenuItem onClick={() => props.toggleEdit(issue)}>
-                  <ListItemIcon>
-                    <EditIcon fontSize="small" />
-                  </ListItemIcon>
-                  <ListItemText>Edit</ListItemText>
-                </MenuItem>
-                <Grid container>
-                  <Grid item md="3">
-                    <Switch
-                      size="small"
-                      control={<Switch />}
-                      checked={issue.archived}
-                      label="Archived"
-                      onChange={() => {
+                {issue.modlogs && (
+                  <MenuItem onClick={handleModlogsToggle}>
+                    <ListItemIcon>
+                      <ArticleIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>View Mod Logs</ListItemText>
+                  </MenuItem>
+                )}
+
+                {hasAttachments && (
+                  <MenuItem onClick={handleAttachmentsToggle}>
+                    <ListItemIcon>
+                      <AttachFileIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>View Attachment</ListItemText>
+                  </MenuItem>
+                )}
+
+                {((userInfo && hasAttachments) || issue.modlogs) && <Divider />}
+                {userInfo && (
+                  <div>
+                    <MenuItem onClick={() => props.toggleEdit(issue)}>
+                      <ListItemIcon>
+                        <EditIcon fontSize="small" color="primary" />
+                      </ListItemIcon>
+                      <ListItemText>Edit</ListItemText>
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => {
                         if (
                           issue.status === "completed" ||
                           issue.status === "won't-fix"
@@ -183,11 +222,8 @@ export const IssueCard = (props) => {
                           issue.archived = !issue.archived;
                           let data = {
                             issue,
-                            userInfo: JSON.parse(
-                              localStorage.getItem(["userInfo"])
-                            ),
+                            userInfo: userInfo,
                           };
-                          console.log(data);
                           axios.put(`/api/issue/${props.issue._id}`, data);
                         } else {
                           window.alert(
@@ -195,67 +231,75 @@ export const IssueCard = (props) => {
                           );
                         }
                       }}
-                    />
-                  </Grid>
-                  <Grid item sx={{ pl: 0.5 }}>
-                    <Typography>Archived</Typography>
-                  </Grid>
-                </Grid>
+                    >
+                      <ListItemIcon>
+                        {issue.archived ? (
+                          <UnarchiveIcon fontSize="small" color="warning" />
+                        ) : (
+                          <ArchiveIcon fontSize="small" color="warning" />
+                        )}
+                      </ListItemIcon>
+                      {issue.archived ? (
+                        <ListItemText>Unarchive</ListItemText>
+                      ) : (
+                        <ListItemText>Archive</ListItemText>
+                      )}
+                    </MenuItem>
+                  </div>
+                )}
 
-                <Divider />
-                <MenuItem onClick={handleCardDelete}>
-                  <ListItemIcon>
-                    <CloseIcon fontSize="small" />
-                  </ListItemIcon>
-                  <ListItemText>Delete</ListItemText>
-                </MenuItem>
+                {userInfo && (
+                  <div>
+                    <Divider />
+                    <MenuItem onClick={handleCardDelete}>
+                      <ListItemIcon>
+                        <CloseIcon fontSize="small" color="error" />
+                      </ListItemIcon>
+                      <ListItemText>Delete</ListItemText>
+                    </MenuItem>
+                  </div>
+                )}
               </Menu>
             </Grid>
-            <Grid item md="11">
+            <Grid item lg="11">
               <Box component="span" sx={{ pr: 1 }}>
                 <Chip
+                  size="small"
                   color={getStatusColor(issue.status)}
                   label={toTitleCase(issue.status)}
                 />
               </Box>
               <Box component="span" sx={{ pr: 1 }}>
                 <Chip
+                  size="small"
                   color={getTypeColor(issue.type)}
                   label={toTitleCase(issue.type)}
                 />
               </Box>
               <Box component="span" sx={{ pr: 1 }}>
                 <Chip
+                  size="small"
                   color={getPriorityColor(issue.priority)}
                   label={toTitleCase(`${issue.priority} Priority`)}
                 />
               </Box>
             </Grid>
-            <Grid container alignItems="flex-start">
-              <Grid item md="10" sx={{ mt: 2, ml: 5 }}>
-                <Typography variant="body1" color="text.secondary">
-                  {issue.description.length > 300
-                    ? issue.description.slice(0, 300) + "..."
-                    : issue.description}
-                </Typography>
+
+            {params.issueId && (
+              <Grid container alignItems="flex-start">
+                <Grid item lg="12" sx={{ mt: 5, ml: 2 }}>
+                  <Typography variant="h5">Description</Typography>
+                </Grid>
+                <Grid item lg="12" sx={{ m: 1 }}>
+                  <Divider />
+                </Grid>
+                <Grid item lg="12" sx={{ mt: 0, ml: 2 }}>
+                  <Typography variant="body1" color="text.secondary">
+                    {issue.description}
+                  </Typography>
+                </Grid>
               </Grid>
-              <Grid
-                item
-                md="1"
-                sx={{
-                  mt: 2,
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  alignItems: "flex-end",
-                }}
-              >
-                <Avatar
-                  onClick={() => navigate(`/user/${issue.playerData.id}`)}
-                  src={`https://cdn.discordapp.com/avatars/${issue.playerData.id}/${issue.playerData.avatar}.png`}
-                  alt={issue.playerData.name}
-                />
-              </Grid>
-            </Grid>
+            )}
           </Grid>
         </CardContent>
       </Card>

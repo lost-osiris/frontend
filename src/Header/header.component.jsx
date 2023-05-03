@@ -1,12 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "../context/authprovider.component";
-import {
-  Outlet,
-  useLocation,
-  useParams,
-  useSearchParams,
-  useNavigate,
-} from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import axios from "axios";
 
@@ -29,7 +23,6 @@ import LoginIcon from "@mui/icons-material/Login";
 import HomeIcon from "@mui/icons-material/Home";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-const currentDatetime = new Date();
 const drawerWidth = 240;
 const theme = createTheme({
   palette: {
@@ -39,58 +32,16 @@ const theme = createTheme({
   },
 });
 
+const AUTH_REDIRECT =
+  process.env.REACT_APP_IS_DEV === "true"
+    ? encodeURI("http://localhost:3000/")
+    : encodeURI("https://issue-tracker-front.vercel.app/");
+
 export const Header = () => {
-  const { tokenInfo, setUserState } = useContext(UserContext);
+  const userInfo = useContext(UserContext);
   const [categories, setCategories] = useState([]);
-  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const location = useLocation();
-  let params = useParams();
-  let code = searchParams.get("code");
-
-  if (code) {
-    axios.post(`/api/user/discord/${code}`).then((res) => {
-      if (res.data) {
-        localStorage.setItem("userAuth", JSON.stringify(res.data));
-        axios
-          .get("https://discord.com/api/v8/users/@me", {
-            headers: {
-              Authorization: `Bearer ${res.data.access_token}`,
-            },
-          })
-          .then((discordRes) => {
-            const newDatetime = new Date(
-              currentDatetime.getTime() + 12 * 60 * 60 * 1000
-            );
-            localStorage.setItem(
-              "userInfo",
-              JSON.stringify({ data: discordRes.data, expireDate: newDatetime })
-            );
-
-            navigate("/");
-            setUserState(JSON.parse(localStorage.getItem(["userInfo"])));
-          });
-      }
-    });
-  }
-
-  useEffect(() => {
-    if (tokenInfo) {
-      if (new Date(tokenInfo.expireDate) < currentDatetime) {
-        console.log(
-          "current is past the token, resetting and logging user out"
-        );
-        localStorage.removeItem("expireDate");
-        localStorage.removeItem("userInfo");
-        setUserState("");
-        navigate("/");
-      }
-    }
-
-    if (!tokenInfo && localStorage.getItem(["userInfo"])) {
-      setUserState(JSON.parse(localStorage.getItem(["userInfo"])));
-    }
-  }, [tokenInfo, setUserState]);
 
   useEffect(() => {
     if (!categories[0]) {
@@ -128,16 +79,16 @@ export const Header = () => {
               Project
               <AddIcon />
             </Fab>
-            {tokenInfo ? (
+            {userInfo ? (
               <ThemeProvider theme={theme}>
                 <Fab
                   color="discord"
                   variant="circular"
-                  onClick={() => navigate(`/user/${tokenInfo.data.id}`)}
+                  onClick={() => navigate(`/user/${userInfo.id}`)}
                 >
                   <Avatar
-                    src={`https://cdn.discordapp.com/avatars/${tokenInfo.data.id}/${tokenInfo.data.avatar}.png`}
-                    alt={tokenInfo.data.username}
+                    src={`https://cdn.discordapp.com/avatars/${userInfo.id}/${userInfo.avatar}.png`}
+                    alt={userInfo.username}
                     sx={{ width: 50, height: 50 }}
                   />
                 </Fab>
@@ -147,7 +98,7 @@ export const Header = () => {
                 <Fab
                   color="discord"
                   variant="extended"
-                  href="https://discord.com/api/oauth2/authorize?client_id=1074939657902637058&redirect_uri=https%3A%2F%2Fissue-tracker-front.vercel.app%2F&response_type=code&scope=identify"
+                  href={`https://discord.com/api/oauth2/authorize?client_id=1074939657902637058&redirect_uri=${AUTH_REDIRECT}&response_type=code&scope=identify`}
                 >
                   Discord Login
                   <LoginIcon sx={{ pl: 0.5 }} />
@@ -183,7 +134,7 @@ export const Header = () => {
               Project Management
             </Typography>
 
-            {tokenInfo ? (
+            {userInfo ? (
               <div>
                 <Fab
                   variant="extended"
@@ -197,11 +148,11 @@ export const Header = () => {
                   <Fab
                     color="discord"
                     variant="circular"
-                    onClick={() => navigate(`/user/${tokenInfo.data.id}`)}
+                    onClick={() => navigate(`/user/${userInfo.id}`)}
                   >
                     <Avatar
-                      src={`https://cdn.discordapp.com/avatars/${tokenInfo.data.id}/${tokenInfo.data.avatar}.png`}
-                      alt={tokenInfo.data.username}
+                      src={`https://cdn.discordapp.com/avatars/${userInfo.id}/${userInfo.avatar}.png`}
+                      alt={userInfo.username}
                       sx={{ width: 50, height: 50 }}
                     />
                   </Fab>
@@ -213,7 +164,7 @@ export const Header = () => {
                   <Fab
                     color="discord"
                     variant="extended"
-                    href="https://discord.com/api/oauth2/authorize?client_id=1074939657902637058&redirect_uri=https%3A%2F%2Fissue-tracker-front.vercel.app%2F&response_type=code&scope=identify"
+                    href={`https://discord.com/api/oauth2/authorize?client_id=1074939657902637058&redirect_uri=${AUTH_REDIRECT}&response_type=code&scope=identify`}
                   >
                     Discord Login
                     <LoginIcon sx={{ pl: 0.5 }} />

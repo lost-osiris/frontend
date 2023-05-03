@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "../../context/authprovider.component";
 import axios from "axios";
+import { toTitleCase } from "../../utils";
 
 import {
   Radio,
@@ -22,7 +23,7 @@ import SendIcon from "@mui/icons-material/Send";
 import RefreshIcon from "@mui/icons-material/Refresh";
 
 export const UserForm = (props) => {
-  const { tokenInfo, setUserState } = useContext(UserContext);
+  const userInfo = useContext(UserContext);
   const [categories, setCategories] = useState([]);
   const [modlogsButtonColor, setModlogsButtonColor] = useState("primary");
   const [modlogsButtonText, setModlogsButtonText] = useState("Upload Modlogs");
@@ -36,13 +37,13 @@ export const UserForm = (props) => {
     props.issue || {
       status: "reported",
       summary: "",
-      category: "",
-      type: "",
-      priority: "",
+      category: "general",
+      type: "bug",
+      priority: "medium",
       playerData: {
-        name: !tokenInfo.data.username || null ? "" : tokenInfo.data.username,
-        id: !tokenInfo.data.id || null ? "" : tokenInfo.data.id,
-        avatar: !tokenInfo.data.avatar || null ? "" : tokenInfo.data.avatar,
+        name: !userInfo.username || null ? "" : userInfo.username,
+        id: !userInfo.id || null ? "" : userInfo.id,
+        avatar: !userInfo.avatar || null ? "" : userInfo.avatar,
       },
       version: "",
       description: "",
@@ -83,11 +84,6 @@ export const UserForm = (props) => {
         ...newIssue,
         attachments: { ...newIssue.attachments, embedSource: value },
       });
-    } else if (field === " category") {
-      setNewIssue({
-        ...newIssue,
-        category: value.replace(/ /g, "%20"),
-      });
     } else {
       let issue = { ...newIssue };
       issue[field] = value;
@@ -127,77 +123,75 @@ export const UserForm = (props) => {
   }, [newIssue, submitFormColor, submitFormText]);
 
   const handleFormSubmit = async () => {
-    newIssue.category.replaceAll(" ", "%20");
-    await axios.post(`/api/issue/findexact`, newIssue).then((res) => {
-      if (res.data) {
-        window.alert("this issue already exists");
-      } else {
-        try {
-          let promise;
-          let issue = {
-            ...newIssue,
-            category: newIssue.category.toLowerCase().replaceAll(" ", "%20"),
-          };
-          if (props.isUpdate) {
-            let data = {
-              issue,
-              userInfo: JSON.parse(localStorage.getItem(["userInfo"])),
+    if (newIssue.summary !== "") {
+      await axios.post(`/api/issue/findexact`, newIssue).then((res) => {
+        if (res.data) {
+          window.alert("this issue already exists");
+        } else {
+          try {
+            let promise;
+            let issue = {
+              ...newIssue,
             };
-            promise = axios
-              .put(`/api/issue/${props.issue._id}`, data)
-              .then(() => window.alert("issue updated!"));
-          } else {
-            promise = axios.post("/api/issue", issue);
-          }
-          promise.then(() => {
-            if (!props.onSubmit) {
-              setNewIssue({
-                status: "reported",
-                summary: "",
-                category: "",
-                type: "",
-                priority: "",
-                playerData: {
-                  name:
-                    !tokenInfo.data.username || null
-                      ? ""
-                      : tokenInfo.data.username,
-                  id: !tokenInfo.data.id || null ? "" : tokenInfo.data.id,
-                  avatar:
-                    !tokenInfo.data.avatar || null ? "" : tokenInfo.data.avatar,
-                },
-                version: "",
-                description: "",
-                modlogs: {
-                  title: "",
-                  body: "",
-                },
-                archived: false,
-                attachments: {
-                  embedSource: "",
-                  generalUrl: "",
-                },
-              });
-              setSubmitFormColor("success");
-              setSubmitFormText("Success!");
-              setTimeout(() => {
-                setSubmitFormColor("primary");
-                setSubmitFormText("Submit");
-                setModlogsButtonColor("primary");
-                setModlogsButtonText("Upload Modlogs");
-              }, 500);
+            if (props.isUpdate) {
+              let data = {
+                issue,
+                userInfo: JSON.parse(localStorage.getItem("userInfo")),
+              };
+              promise = axios
+                .put(`/api/issue/${props.issue._id}`, data)
+                .then(() => window.alert("issue updated!"));
             } else {
-              props.onSubmit(newIssue);
+              promise = axios.post("/api/issue", issue);
             }
-          });
-        } catch (error) {
-          console.log(error);
+            promise.then(() => {
+              if (!props.onSubmit) {
+                setNewIssue({
+                  status: "reported",
+                  summary: "",
+                  category: "general",
+                  type: "bug",
+                  priority: "medium",
+                  playerData: {
+                    name: !userInfo.username || null ? "" : userInfo.username,
+                    id: !userInfo.id || null ? "" : userInfo.id,
+                    avatar: !userInfo.avatar || null ? "" : userInfo.avatar,
+                  },
+                  version: "",
+                  description: "",
+                  modlogs: {
+                    title: "",
+                    body: "",
+                  },
+                  archived: false,
+                  attachments: {
+                    embedSource: "",
+                    generalUrl: "",
+                  },
+                });
+                setSubmitFormColor("success");
+                setSubmitFormText("Success!");
+                setTimeout(() => {
+                  setSubmitFormColor("primary");
+                  setSubmitFormText("Submit");
+                  setModlogsButtonColor("primary");
+                  setModlogsButtonText("Upload Modlogs");
+                }, 500);
+              } else {
+                props.onSubmit(newIssue);
+              }
+            });
+          } catch (error) {
+            console.log(error);
+          }
         }
-      }
-    });
+      });
+    } else {
+      window.alert("Please fill out all of the required fields!");
+    }
   };
 
-  return !tokenInfo.data ? (
+  return !userInfo ? (
     <div>
       <Alert severity="warning">
         <AlertTitle>Cannot Submit Form</AlertTitle>
@@ -242,6 +236,7 @@ export const UserForm = (props) => {
               label="Summary"
               placeholder="Summary"
               multiline
+              required
               value={newIssue.summary}
               onChange={(e) => updateNewIssue("summary", e.target.value)}
               fullWidth
@@ -254,11 +249,8 @@ export const UserForm = (props) => {
                 <TextField
                   id="category-select"
                   label="Category"
-                  value={newIssue.category
-                    .replace(/%20/g, " ")
-                    .split(" ")
-                    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-                    .join(" ")}
+                  required
+                  value={toTitleCase(newIssue.category)}
                   select
                   fullWidth
                   sx={{ pb: 2 }}
@@ -273,11 +265,13 @@ export const UserForm = (props) => {
               </Grid>
               <Grid item md={12}>
                 <TextField
+                  required
+                  disabled
                   id="player-name"
                   label="Player"
                   variant="standard"
                   value={newIssue.playerData.name}
-                  defaultValue={tokenInfo.username}
+                  defaultValue={userInfo.username}
                   onChange={(e) => updateNewIssue("playerName", e.target.value)}
                   sx={{ pb: 2 }}
                   fullWidth
