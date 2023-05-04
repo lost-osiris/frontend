@@ -136,7 +136,7 @@ export const UserForm = (props) => {
             if (props.isUpdate) {
               let data = {
                 issue,
-                userInfo: JSON.parse(localStorage.getItem("userInfo")),
+                userInfo: userInfo,
               };
               promise = axios
                 .put(`/api/issue/${props.issue._id}`, data)
