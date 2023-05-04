@@ -35,7 +35,7 @@ const theme = createTheme({
 const AUTH_REDIRECT =
   process.env.REACT_APP_IS_DEV === "true"
     ? encodeURI("http://localhost:3000/")
-    : encodeURI("https://issue-tracker-front.vercel.app/");
+    : encodeURI("https://modforge.gg/");
 
 export const Header = () => {
   const userInfo = useContext(UserContext);

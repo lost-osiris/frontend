@@ -16,6 +16,7 @@ import {
   DialogContent,
   CircularProgress,
   Box,
+  Divider,
 } from "@mui/material";
 import { UserForm } from "../SubmissionForm/form.component.jsx";
 
@@ -66,6 +67,15 @@ export const IssueCardList = () => {
 
   return (
     <div>
+      <Typography variant="h3" textAlign="center">
+        {/* <img src="/flair.png" height="100px" /> */}
+        {toTitleCase(params.category)}
+      </Typography>
+      <Box textAlign="center">
+        <img src="/flair.png" height="100px" />
+      </Box>
+
+      <Divider sx={{ mt: 1, mb: 1 }} />
       <Typography>
         <Switch
           onChange={(e) => {
