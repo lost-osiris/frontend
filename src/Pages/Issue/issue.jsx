@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import { IssueCard } from "../../Items/Cards/issueCard.component";
+import { IssueCard } from "../../Items/Cards/issueCard";
 import { toTitleCase } from "../../utils";
 
 import {
@@ -13,7 +13,7 @@ import {
   CircularProgress,
   Box,
 } from "@mui/material";
-import { UserForm } from "../SubmissionForm/form.component";
+import { UserForm } from "../SubmissionForm/form";
 
 export const IssuePage = () => {
   let params = useParams();

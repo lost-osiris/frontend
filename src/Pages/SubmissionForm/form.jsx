@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { UserContext } from "../../context/authprovider.component";
+import { UserContext } from "../../context/authprovider";
 import axios from "axios";
 import { toTitleCase } from "../../utils";
 

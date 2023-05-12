@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import { ProjectCard } from "../../Items/Cards/projectCard.component";
+import { ProjectCard } from "../../Items/Cards/projectCard";
 import { toTitleCase } from "../../utils";
 
 import {
@@ -16,7 +16,7 @@ import {
   CircularProgress,
   Box,
 } from "@mui/material";
-import { UserForm } from "../../Pages/SubmissionForm/form.component";
+import { UserForm } from "../SubmissionForm/form";
 
 export const ProjectCardList = () => {
   let params = useParams();
@@ -33,7 +33,7 @@ export const ProjectCardList = () => {
   useEffect(() => {
     if (projects === null) {
       axios.get(`/api/projects`).then((res) => setProjects(res.data));
-      console.log(projects);
+     
     }
   });
 

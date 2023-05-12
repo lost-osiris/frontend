@@ -13,7 +13,7 @@ import {
   CircularProgress,
   Box,
 } from "@mui/material";
-import { UserForm } from "../SubmissionForm/form.component";
+import { UserForm } from "../SubmissionForm/form";
 
 export const ProjectPage = () => {
   let params = useParams();

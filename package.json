@@ -14,6 +14,8 @@
     "mongoose": "^6.9.0",
     "nodemon": "^2.0.20",
     "react": "^18.2.0",
+    "react-dnd": "^16.0.1",
+    "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.8.0",
     "react-scripts": "5.0.1",
@@ -44,5 +46,8 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://127.0.0.1:8000"
+  "proxy": "http://127.0.0.1:8000",
+  "devDependencies": {
+    "dotenv": "^16.0.3"
+  }
 }
