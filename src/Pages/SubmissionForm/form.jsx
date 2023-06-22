@@ -24,7 +24,8 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 
 export const UserForm = (props) => {
   const userInfo = useContext(UserContext);
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState(["General"]);
+  const [version, setVersion] = useState("");
   const [modlogsButtonColor, setModlogsButtonColor] = useState("primary");
   const [modlogsButtonText, setModlogsButtonText] = useState("Upload Modlogs");
   const [embedHelperValidation, setEmbedHelperValidation] = useState("");
@@ -37,15 +38,18 @@ export const UserForm = (props) => {
     props.issue || {
       status: "reported",
       summary: "",
-      category: "general",
+      category: "General",
       type: "bug",
       priority: "medium",
       playerData: {
         name: !userInfo.username || null ? "" : userInfo.username,
         id: !userInfo.id || null ? "" : userInfo.id,
         avatar: !userInfo.avatar || null ? "" : userInfo.avatar,
+        banner: !userInfo.banner || null ? "" : userInfo.banner,
+        banner_color:
+          !userInfo.banner_color || null ? "" : userInfo.banner_color,
       },
-      version: "",
+      version: version === undefined || null ? "" : version,
       description: "",
       modlogs: {
         title: "",
@@ -84,6 +88,11 @@ export const UserForm = (props) => {
         ...newIssue,
         attachments: { ...newIssue.attachments, embedSource: value },
       });
+    } else if (field === "version") {
+      setNewIssue({
+        ...newIssue,
+        version: version,
+      });
     } else {
       let issue = { ...newIssue };
       issue[field] = value;
@@ -91,6 +100,14 @@ export const UserForm = (props) => {
       setNewIssue(issue);
     }
   };
+
+  useEffect(() => {
+    if (!version) {
+      axios
+        .get(`/api/project/63fe47296edfc3b387628861`)
+        .then((res) => setVersion(res.data.version));
+    }
+  }, [version]);
 
   useEffect(() => {
     if (!categories[0]) {
@@ -149,7 +166,7 @@ export const UserForm = (props) => {
                 setNewIssue({
                   status: "reported",
                   summary: "",
-                  category: "general",
+                  category: "General",
                   type: "bug",
                   priority: "medium",
                   playerData: {
@@ -257,8 +274,11 @@ export const UserForm = (props) => {
                   onChange={(e) => updateNewIssue("category", e.target.value)}
                 >
                   {categories.map((category) => (
-                    <MenuItem key={category} value={category}>
-                      {category}
+                    <MenuItem
+                      key={toTitleCase(category)}
+                      value={toTitleCase(category)}
+                    >
+                      {toTitleCase(category)}
                     </MenuItem>
                   ))}
                 </TextField>
@@ -271,7 +291,7 @@ export const UserForm = (props) => {
                   label="Player"
                   variant="standard"
                   value={newIssue.playerData.name}
-                  defaultValue={userInfo.username}
+                  // defaultValue={userInfo.username}
                   onChange={(e) => updateNewIssue("playerName", e.target.value)}
                   sx={{ pb: 2 }}
                   fullWidth
@@ -282,7 +302,8 @@ export const UserForm = (props) => {
                   id="version"
                   label="Version"
                   variant="standard"
-                  value={newIssue.version}
+                  value={version}
+                  // defaultValue={version}
                   onChange={(e) => updateNewIssue("version", e.target.value)}
                   fullWidth
                 />
@@ -458,11 +479,11 @@ export const UserForm = (props) => {
                   id="embed"
                   label="Embed"
                   placeholder="Embed"
-                  defaultValue={
-                    newIssue && newIssue.attachments.embedSource
-                      ? newIssue.attachments.embedSource
-                      : "Embed"
-                  }
+                  // defaultValue={
+                  //   newIssue && newIssue.attachments.embedSource
+                  //     ? newIssue.attachments.embedSource
+                  //     : "Embed"
+                  // }
                   value={newIssue.attachments.embedSource}
                   onChange={(e) =>
                     updateNewIssue("attachmentsEmbedSource", e.target.value)
@@ -477,11 +498,11 @@ export const UserForm = (props) => {
                   id="generic"
                   label="URL"
                   placeholder="URL"
-                  defaultValue={
-                    newIssue && newIssue.attachments.generalUrl
-                      ? newIssue.attachments.generalUrl
-                      : "Embed"
-                  }
+                  // defaultValue={
+                  //   newIssue && newIssue.attachments.generalUrl
+                  //     ? newIssue.attachments.generalUrl
+                  //     : "Embed"
+                  // }
                   value={newIssue.attachments.generalUrl}
                   onChange={(e) =>
                     updateNewIssue("attachmentsUrl", e.target.value)

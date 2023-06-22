@@ -5,7 +5,7 @@ import { Typography, Grid, Divider } from "@mui/material";
 
 import { IssueCard } from "../../Items/Cards/issueCard";
 import { IssuesContext } from "../../context/issuesprovider";
-import { toTitleCase, getStatusColor } from "../../utils";
+import { toTitleCase, getStatusColorHk, getStatusColor } from "../../utils";
 
 export const IssueListColumn = ({ name }) => {
   const { issues, updateIssue } = useContext(IssuesContext);
@@ -35,8 +35,10 @@ export const IssueListColumn = ({ name }) => {
           sx={{
             borderRadius: "5px",
             opacity: 0.9,
-            bgcolor: getStatusColor(name) + ".dark",
-            borderColor: getStatusColor(name) + ".dark",
+            // bgcolor: getStatusColor(name) + ".dark",
+            // borderColor: getStatusColor(name) + ".dark",
+            bgcolor: getStatusColorHk(name),
+            borderColor: getStatusColorHk(name),
           }}
         >
           {name

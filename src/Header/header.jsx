@@ -42,7 +42,6 @@ export const Header = () => {
   const userInfo = useContext(UserContext);
   const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
-  const location = useLocation();
 
   useEffect(() => {
     if (!categories[0]) {
@@ -60,7 +59,7 @@ export const Header = () => {
         sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
       >
         <Toolbar>
-          <Fab size="small" onClick={() => navigate("/")}>
+          <Fab size="small" onClick={() => (window.location.href = "/")}>
             <HomeIcon />
           </Fab>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1, pl: 1 }}>
@@ -81,11 +80,11 @@ export const Header = () => {
                 <Fab
                   color="discord"
                   variant="circular"
-                  onClick={() => navigate(`/user/${userInfo.id}`)}
+                  onClick={() => navigate(`/user/${userInfo.data.discord_id}`)}
                 >
                   <Avatar
-                    src={`https://cdn.discordapp.com/avatars/${userInfo.id}/${userInfo.avatar}.png`}
-                    alt={userInfo.username}
+                    src={`https://cdn.discordapp.com/avatars/${userInfo.data.discord_id}/${userInfo.data.avatar}.png`}
+                    alt={userInfo.data.username}
                     sx={{ width: 50, height: 50 }}
                   />
                 </Fab>

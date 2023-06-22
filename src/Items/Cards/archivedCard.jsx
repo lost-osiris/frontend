@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { UserContext } from "../../context/authprovider";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDrag } from "react-dnd";
 
 import axios from "axios";
@@ -33,7 +33,7 @@ import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
 
 import { toTitleCase } from "../../utils";
 
-export const IssueCard = (props) => {
+export const ArchivedCard = (props) => {
   const [menuOpen, setMenuOpen] = useState(null);
   let navigate = useNavigate();
   const issue = { ...props.issue };
@@ -63,34 +63,13 @@ export const IssueCard = (props) => {
 
   let cardProps = { sx: { opacity: isDragging ? 0 : 1 } };
   if (!issue.archived) {
-    if (userInfo.id === issue.playerData.id) {
-      cardProps.ref = drag;
-    }
+    cardProps.ref = drag;
   }
 
   return (
     <>
-      <Card
-        {...cardProps}
-        sx={{
-          "&:hover": {
-            boxShadow:
-              userInfo.id === issue.playerData.id
-                ? "0px 3px 5px -1px rgba(255,255,255,0.2), 0px 6px 2px 0px rgba(255,255,255,0.14), 0px 1px 5px 0px rgba(255,255,0.12)"
-                : "",
-          },
-        }}
-      >
-        <CardContent
-          sx={{
-            pt: 0,
-            pr: 0,
-            pl: 1,
-            pb: 0,
-            mb: -4,
-            cursor: userInfo.id === issue.playerData.id ? "grab" : "",
-          }}
-        >
+      <Card {...cardProps}>
+        <CardContent sx={{ pt: 0, pr: 0, pl: 1, pb: 0, mb: -4 }}>
           {!userInfo && (
             <Grid container>
               <Grid item lg={12}>
@@ -111,7 +90,7 @@ export const IssueCard = (props) => {
                     }}
                     onClick={() => navigate(`/issue/${issue._id}`)}
                   >
-                    <Typography>{issueSummary}</Typography>
+                    {issueSummary}
                   </Box>
                 </Box>
               </Grid>
@@ -367,7 +346,6 @@ export const IssueCard = (props) => {
               <Avatar
                 sx={{
                   mt: 0.7,
-                  ml: 7,
                   cursor: "pointer",
                   ":hover": {
                     boxShadow:

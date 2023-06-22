@@ -36,6 +36,23 @@ export const getStatusColor = (status) => {
   }
 };
 
+export const getStatusColorHk = (status) => {
+  switch (status) {
+    case "reported":
+      return "#ea6e48";
+    case "in-progress":
+      return "#eec96d";
+    case "completed":
+      return "#aea5a3";
+    case "won't-fix":
+      return "#2e212d";
+    case "closed":
+      return "#12152f";
+    default:
+      return "default";
+  }
+};
+
 export const getTypeColor = (type) => {
   switch (type) {
     case "bug":

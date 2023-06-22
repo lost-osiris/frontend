@@ -6,6 +6,7 @@ import axios from "axios";
 import { IssueCard } from "../../Items/Cards/issueCard";
 import { toTitleCase } from "../../utils";
 import { IssuesContext } from "../../context";
+import { ArchivedCard } from "../../Items/Cards/archivedCard";
 
 import {
   Typography,
@@ -131,8 +132,8 @@ export const IssueCardList = () => {
               .filter((el) => archived === el.archived)
               .map((el, index) => {
                 return (
-                  <Grid item md={4} key={`${index}-${JSON.stringify(el)}`}>
-                    <IssueCard issue={el} />
+                  <Grid item md={3} key={`${index}-${JSON.stringify(el._id)}`}>
+                    <ArchivedCard issue={el} />
                   </Grid>
                 );
               })}
