@@ -6,6 +6,8 @@ import { IssueCardList } from "./Pages/IssueList/issueList";
 import { IssuePage } from "./Pages/Issue/issue";
 import { ProjectCardList } from "./Pages/ProjectList/projectList";
 import { UserForm } from "./Pages/SubmissionForm/form.jsx";
+import { ManageWaitlist } from "./Pages/waitlist/manageWaitlist";
+import { JoinWaitlist } from "./Pages/waitlist/joinWaitlist";
 import { IssuesProvider, UserProvider } from "./context";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -26,6 +28,14 @@ const App = () => {
               <Routes>
                 <Route path="/" element={<Header />}>
                   <Route path="/projects" element={<ProjectCardList />} />
+                  <Route
+                    path="/project/joinwaitlist"
+                    element={<JoinWaitlist />}
+                  />
+                  <Route
+                    path="/project/managewaitlist"
+                    element={<ManageWaitlist />}
+                  />
                   <Route path="/form" element={<UserForm />} />
                   <Route
                     path="/issues/:category"

@@ -51,11 +51,13 @@ export const ArchivedCard = (props) => {
   }));
 
   const handleCardDelete = () => {
-    axios.delete(`/api/issue/${issue._id}`, { data: userInfo }).then(() => {
-      if (props.onDelete) {
-        props.onDelete();
-      }
-    });
+    axios
+      .delete(`/api/issue/${issue._id}`, { data: userInfo.data })
+      .then(() => {
+        if (props.onDelete) {
+          props.onDelete();
+        }
+      });
   };
 
   const issueSummary =
@@ -153,7 +155,15 @@ export const ArchivedCard = (props) => {
                           issue,
                           userInfo: userInfo,
                         };
-                        axios.put(`/api/issue/${props.issue._id}`, data);
+                        axios
+                          .get(
+                            `/api/project/Pale-Court/member/${userInfo.data.discord_id}`
+                          )
+                          .then((res) => {
+                            if (res.status === 204) {
+                              axios.put(`/api/issue/${props.issue.id}`, data);
+                            }
+                          });
                       } else {
                         window.alert(
                           'Status must be "Completed" or "Won\'t Fix" in order to archive'
@@ -353,7 +363,7 @@ export const ArchivedCard = (props) => {
                   },
                 }}
                 onClick={() => navigate(`/user/${issue.playerData.id}`)}
-                src={`https://cdn.discordapp.com/avatars/${issue.playerData.id}/${issue.playerData.avatar}.png`}
+                src={`https://cdn.discordapp.com/avatars/${issue.playerData.discord_id}/${issue.playerData.avatar}.png`}
                 alt={issue.playerData.name}
               />
             </Grid>

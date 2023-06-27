@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import { useDrop } from "react-dnd";
 import axios from "axios";
+import { UserContext } from "../../context";
 
 import { IssueCard } from "../../Items/Cards/issueCard";
 import { toTitleCase } from "../../utils";
@@ -11,6 +12,8 @@ import { ArchivedCard } from "../../Items/Cards/archivedCard";
 import {
   Typography,
   Grid,
+  Alert,
+  AlertTitle,
   FormGroup,
   FormControlLabel,
   Switch,
@@ -20,15 +23,19 @@ import {
   CircularProgress,
   Chip,
   Divider,
+  IconButton,
 } from "@mui/material";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import { UserForm } from "../SubmissionForm/form.jsx";
 import { IssueListColumn } from "./issueListColumn";
 
 export const IssueCardList = () => {
+  const userInfo = useContext(UserContext);
   const { issues } = useContext(IssuesContext);
   const params = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const archived = Boolean(searchParams.get("archived") === "true");
+  const navigate = useNavigate();
 
   const getNumOfArchived = () => {
     if (issues) {
@@ -41,6 +48,38 @@ export const IssueCardList = () => {
       }
     }
   };
+
+  if (
+    !userInfo.data.projects[0] ||
+    userInfo.data.projects[0].name !== "Pale-Court"
+  ) {
+    return (
+      <div>
+        <Alert severity="warning">
+          <AlertTitle>Not a project Member</AlertTitle>
+          You are not a member of the project and cannot see this issues
+          associated with it —{" "}
+          <strong>
+            Please navigate <a href="/project/joinwaitlist">here </a>
+            to request access to the project
+          </strong>
+          <br></br>
+          <Grid container>
+            <h3>
+              If you believe you already have access to the project, try
+              navigating home
+            </h3>
+            <IconButton
+              onClick={() => (window.location.href = "/")}
+              color="primary"
+            >
+              <RefreshIcon />
+            </IconButton>
+          </Grid>
+        </Alert>
+      </div>
+    );
+  }
 
   if (!issues) {
     return (

@@ -24,7 +24,7 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 
 export const UserForm = (props) => {
   const userInfo = useContext(UserContext);
-  const [categories, setCategories] = useState(["General"]);
+  const [categories, setCategories] = useState([]);
   const [version, setVersion] = useState("");
   const [modlogsButtonColor, setModlogsButtonColor] = useState("primary");
   const [modlogsButtonText, setModlogsButtonText] = useState("Upload Modlogs");
@@ -42,14 +42,15 @@ export const UserForm = (props) => {
       type: "bug",
       priority: "medium",
       playerData: {
-        name: !userInfo.username || null ? "" : userInfo.username,
-        id: !userInfo.id || null ? "" : userInfo.id,
-        avatar: !userInfo.avatar || null ? "" : userInfo.avatar,
-        banner: !userInfo.banner || null ? "" : userInfo.banner,
+        name: !userInfo.data.username || null ? "" : userInfo.data.username,
+        discord_id:
+          !userInfo.data.discord_id || null ? "" : userInfo.data.discord_id,
+        avatar: !userInfo.data.avatar || null ? "" : userInfo.data.avatar,
+        banner: !userInfo.data.banner || null ? "" : userInfo.data.banner,
         banner_color:
-          !userInfo.banner_color || null ? "" : userInfo.banner_color,
+          !userInfo.data.banner_color || null ? "" : userInfo.data.banner_color,
       },
-      version: version === undefined || null ? "" : version,
+      version: !version === undefined || null ? null : version,
       description: "",
       modlogs: {
         title: "",
@@ -153,7 +154,7 @@ export const UserForm = (props) => {
             if (props.isUpdate) {
               let data = {
                 issue,
-                userInfo: userInfo,
+                userInfo: userInfo.data,
               };
               promise = axios
                 .put(`/api/issue/${props.issue._id}`, data)
@@ -170,9 +171,14 @@ export const UserForm = (props) => {
                   type: "bug",
                   priority: "medium",
                   playerData: {
-                    name: !userInfo.username || null ? "" : userInfo.username,
-                    id: !userInfo.id || null ? "" : userInfo.id,
-                    avatar: !userInfo.avatar || null ? "" : userInfo.avatar,
+                    name:
+                      !userInfo.data.username || null
+                        ? ""
+                        : userInfo.data.username,
+                    discord_id:
+                      !userInfo.data.id || null ? "" : userInfo.data.id,
+                    avatar:
+                      !userInfo.data.avatar || null ? "" : userInfo.data.avatar,
                   },
                   version: "",
                   description: "",
@@ -267,7 +273,7 @@ export const UserForm = (props) => {
                   id="category-select"
                   label="Category"
                   required
-                  value={toTitleCase(newIssue.category)}
+                  value={newIssue.category}
                   select
                   fullWidth
                   sx={{ pb: 2 }}
@@ -291,7 +297,6 @@ export const UserForm = (props) => {
                   label="Player"
                   variant="standard"
                   value={newIssue.playerData.name}
-                  // defaultValue={userInfo.username}
                   onChange={(e) => updateNewIssue("playerName", e.target.value)}
                   sx={{ pb: 2 }}
                   fullWidth
@@ -303,7 +308,6 @@ export const UserForm = (props) => {
                   label="Version"
                   variant="standard"
                   value={version}
-                  // defaultValue={version}
                   onChange={(e) => updateNewIssue("version", e.target.value)}
                   fullWidth
                 />

@@ -35,10 +35,19 @@ import { toTitleCase } from "../../utils";
 
 export const IssueCard = (props) => {
   const [menuOpen, setMenuOpen] = useState(null);
-  let navigate = useNavigate();
-  const issue = { ...props.issue };
-
   const userInfo = useContext(UserContext);
+  const navigate = useNavigate();
+  const issue = { ...props.issue };
+  const issueSummary =
+    issue.summary.charAt(0).toUpperCase() + issue.summary.slice(1);
+
+  const handleCardDelete = () => {
+    axios.delete(`/api/issue/${issue.id}`, { data: userInfo.data }).then(() => {
+      if (props.onDelete) {
+        props.onDelete();
+      }
+    });
+  };
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "issue",
@@ -50,20 +59,13 @@ export const IssueCard = (props) => {
     }),
   }));
 
-  const handleCardDelete = () => {
-    axios.delete(`/api/issue/${issue._id}`, { data: userInfo }).then(() => {
-      if (props.onDelete) {
-        props.onDelete();
-      }
-    });
-  };
-
-  const issueSummary =
-    issue.summary.charAt(0).toUpperCase() + issue.summary.slice(1);
-
   let cardProps = { sx: { opacity: isDragging ? 0 : 1 } };
+
   if (!issue.archived) {
-    if (userInfo.id === issue.playerData.id) {
+    if (
+      userInfo.data.projects[0].name === "Pale-Court" &&
+      userInfo.data.projects[0].roles[0] === "contributor"
+    ) {
       cardProps.ref = drag;
     }
   }
@@ -75,7 +77,7 @@ export const IssueCard = (props) => {
         sx={{
           "&:hover": {
             boxShadow:
-              userInfo.id === issue.playerData.id
+              userInfo.data.discord_id === issue.playerData.discord_id
                 ? "0px 3px 5px -1px rgba(255,255,255,0.2), 0px 6px 2px 0px rgba(255,255,255,0.14), 0px 1px 5px 0px rgba(255,255,0.12)"
                 : "",
           },
@@ -88,7 +90,10 @@ export const IssueCard = (props) => {
             pl: 1,
             pb: 0,
             mb: -4,
-            cursor: userInfo.id === issue.playerData.id ? "grab" : "",
+            cursor:
+              userInfo.data.discord_id === issue.playerData.discord_id
+                ? "grab"
+                : "",
           }}
         >
           {!userInfo && (
@@ -174,7 +179,15 @@ export const IssueCard = (props) => {
                           issue,
                           userInfo: userInfo,
                         };
-                        axios.put(`/api/issue/${props.issue._id}`, data);
+                        axios
+                          .get(
+                            `/api/project/Pale-Court/member/${userInfo.data.discord_id}`
+                          )
+                          .then((res) => {
+                            if (res.status === 204) {
+                              axios.put(`/api/issue/${props.issue.id}`, data);
+                            }
+                          });
                       } else {
                         window.alert(
                           'Status must be "Completed" or "Won\'t Fix" in order to archive'
@@ -375,7 +388,7 @@ export const IssueCard = (props) => {
                   },
                 }}
                 onClick={() => navigate(`/user/${issue.playerData.id}`)}
-                src={`https://cdn.discordapp.com/avatars/${issue.playerData.id}/${issue.playerData.avatar}.png`}
+                src={`https://cdn.discordapp.com/avatars/${issue.playerData.discord_id}/${issue.playerData.avatar}.png`}
                 alt={issue.playerData.name}
               />
             </Grid>

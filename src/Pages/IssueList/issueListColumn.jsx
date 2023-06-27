@@ -1,19 +1,27 @@
 import React, { useContext } from "react";
 import { useDrop } from "react-dnd";
-
-import { Typography, Grid, Divider } from "@mui/material";
-
+import axios from "axios";
+import { UserContext } from "../../context";
 import { IssueCard } from "../../Items/Cards/issueCard";
 import { IssuesContext } from "../../context/issuesprovider";
 import { toTitleCase, getStatusColorHk, getStatusColor } from "../../utils";
+import { Typography, Grid, Divider } from "@mui/material";
 
 export const IssueListColumn = ({ name }) => {
   const { issues, updateIssue } = useContext(IssuesContext);
+  const userInfo = useContext(UserContext);
   const filteredIssues = issues.filter((issue) => issue.status === name);
 
   const [{ canDrop, isOver }, drop] = useDrop({
     accept: "issue",
-    drop: (item) => updateIssue({ ...item.issue, status: name }),
+    drop: (item) =>
+      axios
+        .get(`/api/project/Pale-Court/member/${userInfo.data.discord_id}`)
+        .then((res) => {
+          if (res.status === 204) {
+            updateIssue({ ...item.issue, status: name });
+          }
+        }),
     collect: (monitor) => {
       let item = monitor.getItem();
       let issue = item ? item.issue : {};

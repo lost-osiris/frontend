@@ -20,14 +20,14 @@ export const IssuesProvider = (props) => {
     let issues = [...allIssues];
 
     issues = issues.map((value) => {
-      if (value._id === issue._id) {
+      if (value.id === issue.id) {
         return issue;
       }
       return value;
     });
 
     utils
-      .requests("put", `/api/issue/${issue._id}`, {
+      .requests("put", `/api/issue/${issue.id}`, {
         data: { issue, userInfo: userInfo },
       })
       .then(() => {
@@ -35,7 +35,15 @@ export const IssuesProvider = (props) => {
       });
   };
 
-  const deleteIssue = (issue) => {};
+  const deleteIssue = (issue) => {
+    utils
+      .requests("delete", `/api/issue/${issue.id}`, {
+        data: { issue, userInfo: userInfo },
+      })
+      .then(() => {
+        setIssues();
+      });
+  };
 
   useEffect(() => {
     if (!allIssues) {
