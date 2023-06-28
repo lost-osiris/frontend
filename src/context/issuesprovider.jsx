@@ -29,6 +29,10 @@ export const IssuesProvider = (props) => {
     utils
       .requests("put", `/api/issue/${issue.id}`, {
         data: { issue, userInfo: userInfo },
+        alert: true,
+        alertMessage: `Successfully updated "${
+          issue.summary
+        }" with status "${utils.toTitleCase(issue.status)}"`,
       })
       .then(() => {
         setIssues(issues);

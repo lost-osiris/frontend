@@ -1,6 +1,7 @@
 import axios from "axios";
+import { store, addAlert } from './store'
 
-export const requests = async (method, url, options) => {
+export const requests =  async (method, url, options) => {
   if (!options) {
     options = {};
   }
@@ -21,5 +22,12 @@ export const requests = async (method, url, options) => {
     data: options.data,
     method: method,
     url: url,
-  }).then((res) => res.data);
+  }).then((res) => {
+    if (res.status >= 200 && options.alert) {
+      store.dispatch(addAlert({type: "success", message: options.alertMessage || "Success"}))
+    }
+
+    return res.data
+  });
+
 };
