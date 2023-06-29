@@ -3,8 +3,6 @@ import { UserContext } from "../../context/authprovider";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDrag } from "react-dnd";
 
-import axios from "axios";
-
 import * as utils from "../../utils";
 
 import {
@@ -42,11 +40,13 @@ export const IssueCard = (props) => {
     issue.summary.charAt(0).toUpperCase() + issue.summary.slice(1);
 
   const handleCardDelete = () => {
-    axios.delete(`/api/issue/${issue.id}`, { data: userInfo.data }).then(() => {
-      if (props.onDelete) {
-        props.onDelete();
-      }
-    });
+    utils
+      .requests("delete", `/api/issue/${issue.id}`, { data: userInfo.data })
+      .then(() => {
+        if (props.onDelete) {
+          props.onDelete();
+        }
+      });
   };
 
   const [{ isDragging }, drag] = useDrag(() => ({
@@ -179,13 +179,18 @@ export const IssueCard = (props) => {
                           issue,
                           userInfo: userInfo,
                         };
-                        axios
-                          .get(
+                        utils
+                          .requests(
+                            "get",
                             `/api/project/Pale-Court/member/${userInfo.data.discord_id}`
                           )
                           .then((res) => {
                             if (res.status === 204) {
-                              axios.put(`/api/issue/${props.issue.id}`, data);
+                              utils.requests(
+                                "put",
+                                `/api/issue/${props.issue.id}`,
+                                data
+                              );
                             }
                           });
                       } else {
