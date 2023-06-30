@@ -119,31 +119,30 @@ export const IssueCard = (props) => {
               </Grid>
             </Grid>
           )}
-          {userInfo && (
-            <Grid container>
-              <Grid item lg={10.5}>
+          <Grid container>
+            <Grid item lg={10.5}>
+              <Box
+                component="h4"
+                sx={{
+                  mt: 1,
+                }}
+              >
                 <Box
-                  component="h4"
+                  component="span"
                   sx={{
-                    mt: 1,
+                    "&:hover": {
+                      opacity: [0.9, 0.8, 0.7],
+                      cursor: "pointer",
+                      textDecoration: "underline",
+                    },
                   }}
+                  onClick={() => navigate(`/issue/${issue._id}`)}
                 >
-                  <Box
-                    component="span"
-                    sx={{
-                      "&:hover": {
-                        opacity: [0.9, 0.8, 0.7],
-                        cursor: "pointer",
-                        textDecoration: "underline",
-                      },
-                    }}
-                    onClick={() => navigate(`/issue/${issue._id}`)}
-                  >
-                    {issueSummary}
-                  </Box>
+                  {issueSummary}
                 </Box>
-              </Grid>
-
+              </Box>
+            </Grid>
+            {userInfo && canEdit && (
               <Grid item lg={1.5}>
                 <IconButton
                   sx={{ pt: 1 }}
@@ -220,8 +219,8 @@ export const IssueCard = (props) => {
                   </MenuItem>
                 </Menu>
               </Grid>
-            </Grid>
-          )}{" "}
+            )}
+          </Grid>
           <Grid container spacing={2}>
             {issue.type === "bug" && (
               <Grid item sx={{ mt: 1 }} lg={3.5}>
@@ -243,11 +242,15 @@ export const IssueCard = (props) => {
                     }}
                     lg={8}
                   >
-                    <Typography sx={{ fontWeight: 800, ml: 1 }}>
+                    <Typography sx={{ fontWeight: 800, ml: 3 }}>
                       Type
                     </Typography>
                   </Grid>
-                  <Grid item lg={3} sx={{ maxHeight: "20px", pr: 0.2 }}>
+                  <Grid
+                    item
+                    lg={3}
+                    sx={{ maxHeight: "20px", ml: 1.2, mr: 0.2 }}
+                  >
                     <BugReportIcon />
                   </Grid>
                 </Grid>
@@ -273,11 +276,15 @@ export const IssueCard = (props) => {
                     }}
                     lg={8}
                   >
-                    <Typography sx={{ fontWeight: 800, ml: 1 }}>
+                    <Typography sx={{ fontWeight: 800, ml: 3 }}>
                       Type
                     </Typography>
                   </Grid>
-                  <Grid item lg={3} sx={{ maxHeight: "20px", pr: 0.2 }}>
+                  <Grid
+                    item
+                    lg={3}
+                    sx={{ maxHeight: "20px", ml: 1.2, mr: 0.2 }}
+                  >
                     <QuestionMarkIcon />
                   </Grid>
                 </Grid>
