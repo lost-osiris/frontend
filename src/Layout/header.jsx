@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { UserContext } from "../context/authprovider";
+import { UserContext } from "../Context/authprovider";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -16,7 +16,7 @@ import AddIcon from "@mui/icons-material/Add";
 import LoginIcon from "@mui/icons-material/Login";
 import HomeIcon from "@mui/icons-material/Home";
 import Logout from "@mui/icons-material/Logout";
-import * as utils from "../utils";
+import * as utils from "../Utils";
 
 const AUTH_REDIRECT =
   process.env.REACT_APP_IS_DEV === "true"
@@ -34,14 +34,17 @@ const Header = () => {
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const logout = () => {
     localStorage.removeItem("userInfo");
-    window.location = "/";
+    window.location = "/project/63fe47296edfc3b387628861/issues/general";
   };
 
   useEffect(() => {
-    if (!categories[0]) {
+    if (!categories) {
       utils
-        .requests("get", `/api/project/Pale-Court/categories`)
+        .requests("get", `/api/project/63fe47296edfc3b387628861/categories`)
         .then((data) => setCategories(data));
     }
   }, [categories]);
@@ -56,14 +59,14 @@ const Header = () => {
           <HomeIcon />
         </Fab>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1, pl: 1 }}>
-          Project Management
+          ModForge
         </Typography>
 
         {userInfo ? (
           <div>
             <Fab
               variant="extended"
-              onClick={() => navigate("/form")}
+              onClick={() => navigate("/project/63fe47296edfc3b387628861/form")}
               sx={{ margin: 1 }}
             >
               Issue
@@ -127,7 +130,7 @@ const Header = () => {
                 />{" "}
                 Profile
               </MenuItem>
-              <MenuItem onClick={handleClose}>
+              <MenuItem onClick={logout}>
                 <ListItemIcon>
                   <Logout fontSize="small" />
                 </ListItemIcon>

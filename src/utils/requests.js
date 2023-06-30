@@ -13,10 +13,14 @@ export const requests =  async (method, url, options) => {
   if (!options.data) {
     options.data = {};
   }
+  
+  let localstorage = JSON.parse(localStorage.getItem("userInfo"));
 
   return axios({
     headers: {
       // TODO add authorization header
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localstorage?.data.token.access_token}`,
       ...options.headers,
     },
     data: options.data,

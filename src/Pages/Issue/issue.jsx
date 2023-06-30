@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
-import { UserContext } from "../../context/authprovider";
+import { UserContext } from "../../Context/authprovider";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import { IssueCard } from "../../Items/Cards/issueCard";
-import { toTitleCase } from "../../utils";
 
 import {
   Grid,

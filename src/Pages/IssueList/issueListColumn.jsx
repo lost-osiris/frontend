@@ -1,10 +1,9 @@
 import React, { useContext } from "react";
 import { useDrop } from "react-dnd";
 import axios from "axios";
-import { UserContext } from "../../context";
+import { UserContext, IssuesContext } from "../../Context";
 import { IssueCard } from "../../Items/Cards/issueCard";
-import { IssuesContext } from "../../context/issuesprovider";
-import { toTitleCase, getStatusColorHk, getStatusColor } from "../../utils";
+import { toTitleCase, getStatusColorHk, getStatusColor } from "../../Utils";
 import { Typography, Grid, Divider } from "@mui/material";
 
 export const IssueListColumn = ({ name }) => {

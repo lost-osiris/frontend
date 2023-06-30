@@ -7,7 +7,7 @@ import { ProjectCardList } from "./Pages/ProjectList/projectList";
 import { UserForm } from "./Pages/SubmissionForm/form.jsx";
 import { ManageWaitlist } from "./Pages/Waitlist/manageWaitlist";
 import { JoinWaitlist } from "./Pages/Waitlist/joinWaitlist";
-import { IssuesProvider } from "./context";
+import { IssuesProvider } from "./Context";
 
 const AppRoutes = () => { 
   return (
@@ -15,17 +15,17 @@ const AppRoutes = () => {
       <Route path="/" element={<Layout />}>
         <Route path="/projects" element={<ProjectCardList />} />
         <Route
-          path="/project/joinwaitlist"
+          path="/project/:projectId/joinwaitlist"
           element={<JoinWaitlist />}
         />
         {/* TODO: need to specify project id */}
         <Route
-          path="/project/managewaitlist"
+          path="/project/:projectId/managewaitlist"
           element={<ManageWaitlist />}
         />
         <Route path="/form" element={<UserForm />} />
         <Route
-          path="/issues/:category"
+          path="/project/:projectId/issues/:category"
           element={
             <IssuesProvider>
               <IssueCardList />

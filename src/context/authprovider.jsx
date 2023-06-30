@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
-import * as utils from "../utils";
+import * as utils from "../Utils";
 
 const currentDatetime = new Date();
 
@@ -19,7 +19,7 @@ export const UserProvider = (props) => {
       console.log("current is past the token, resetting and logging user out");
       localStorage.removeItem("userInfo");
       setTokenInfo({});
-      navigate("/");
+      navigate("/project/63fe47296edfc3b387628861/issues/general");
     }
   } else if (!tokenInfo && localStorage.getItem("userInfo")) {
     setTokenInfo(JSON.parse(localStorage.getItem("userInfo")));
@@ -37,7 +37,7 @@ export const UserProvider = (props) => {
         JSON.stringify({ data: data, expireDate: newDatetime })
       );
       setTokenInfo({ data: data, expireDate: newDatetime });
-      navigate("/");
+      navigate("/project/63fe47296edfc3b387628861/issues/general");
     });
   }
 
@@ -48,7 +48,9 @@ export const UserProvider = (props) => {
         .requests("get", `/api/user/${localstorage.data["discord_id"]}`)
         .then((data) => {
           // TODO update just the projects in userInfo local storage
+          let jwt = localstorage.data.token;
           localstorage.data = data;
+          localstorage.data.token = jwt;
           localStorage.setItem("userInfo", JSON.stringify(localstorage));
         })
         .catch(() => {

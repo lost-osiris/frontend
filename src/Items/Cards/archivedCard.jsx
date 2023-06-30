@@ -1,11 +1,9 @@
 import React, { useState, useContext } from "react";
-import { UserContext } from "../../context/authprovider";
+import { UserContext } from "../../Context/authprovider";
 import { useNavigate } from "react-router-dom";
 import { useDrag } from "react-dnd";
 
 import axios from "axios";
-
-import * as utils from "../../utils";
 
 import {
   Card,
@@ -30,8 +28,6 @@ import ArchiveIcon from "@mui/icons-material/Archive";
 import UnarchiveIcon from "@mui/icons-material/Unarchive";
 import BugReportIcon from "@mui/icons-material/BugReport";
 import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
-
-import { toTitleCase } from "../../utils";
 
 export const ArchivedCard = (props) => {
   const [menuOpen, setMenuOpen] = useState(null);

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, createContext, useContext } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 
-import * as utils from "../utils";
+import * as utils from "../Utils";
 
 import { UserContext } from "./authprovider";
 export const IssuesContext = createContext({
@@ -54,7 +54,7 @@ export const IssuesProvider = (props) => {
       utils
         .requests(
           "get",
-          `/api/project/Pale-Court/category/${params.category}/issues`
+          `/api/project/63fe47296edfc3b387628861/category/${params.category}/issues`
         )
         .then((data) => setIssues(data));
     }
@@ -65,7 +65,7 @@ export const IssuesProvider = (props) => {
       utils
         .requests(
           "get",
-          `/api/project/Pale-Court/category/${params.category}/issues`
+          `/api/project/63fe47296edfc3b387628861/category/${params.category}/issues`
         )
         .then((data) => setIssues(data));
     }

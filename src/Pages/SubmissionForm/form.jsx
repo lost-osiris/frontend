@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
-import { UserContext } from "../../context/authprovider";
+import { UserContext } from "../../Context/authprovider";
 import axios from "axios";
-import { toTitleCase } from "../../utils";
+import { toTitleCase } from "../../Utils";
 
 import {
   Radio,

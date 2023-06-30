@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
-import { UserContext } from "../../context/authprovider";
+import { UserContext } from "../../Context/authprovider";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDrag } from "react-dnd";
 
-import * as utils from "../../utils";
+import * as utils from "../../Utils";
 
 import {
   Card,
@@ -29,15 +29,21 @@ import UnarchiveIcon from "@mui/icons-material/Unarchive";
 import BugReportIcon from "@mui/icons-material/BugReport";
 import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
 
-import { toTitleCase } from "../../utils";
-
 export const IssueCard = (props) => {
   const [menuOpen, setMenuOpen] = useState(null);
   const userInfo = useContext(UserContext);
+  const params = useParams();
   const navigate = useNavigate();
   const issue = { ...props.issue };
   const issueSummary =
     issue.summary.charAt(0).toUpperCase() + issue.summary.slice(1);
+  const hasContributor = userInfo.data.projects.find(
+    (value) =>
+      value.id === params.projectId && value.roles.indexOf("contributor")
+  );
+
+  const canEdit =
+    hasContributor || issue.playerData.id === userInfo.data.discord_id;
 
   const handleCardDelete = () => {
     utils
@@ -61,13 +67,8 @@ export const IssueCard = (props) => {
 
   let cardProps = { sx: { opacity: isDragging ? 0 : 1 } };
 
-  if (!issue.archived) {
-    if (
-      userInfo.data.projects[0].name === "Pale-Court" &&
-      userInfo.data.projects[0].roles[0] === "contributor"
-    ) {
-      cardProps.ref = drag;
-    }
+  if (!issue.archived && canEdit) {
+    cardProps.ref = drag;
   }
 
   return (
@@ -76,10 +77,9 @@ export const IssueCard = (props) => {
         {...cardProps}
         sx={{
           "&:hover": {
-            boxShadow:
-              userInfo.data.discord_id === issue.playerData.discord_id
-                ? "0px 3px 5px -1px rgba(255,255,255,0.2), 0px 6px 2px 0px rgba(255,255,255,0.14), 0px 1px 5px 0px rgba(255,255,0.12)"
-                : "",
+            boxShadow: canEdit
+              ? "0px 3px 5px -1px rgba(255,255,255,0.2), 0px 6px 2px 0px rgba(255,255,255,0.14), 0px 1px 5px 0px rgba(255,255,0.12)"
+              : "",
           },
         }}
       >
@@ -90,10 +90,7 @@ export const IssueCard = (props) => {
             pl: 1,
             pb: 0,
             mb: -4,
-            cursor:
-              userInfo.data.discord_id === issue.playerData.discord_id
-                ? "grab"
-                : "",
+            cursor: canEdit ? "grab" : "",
           }}
         >
           {!userInfo && (
@@ -182,7 +179,7 @@ export const IssueCard = (props) => {
                         utils
                           .requests(
                             "get",
-                            `/api/project/Pale-Court/member/${userInfo.data.discord_id}`
+                            `/api/project/63fe47296edfc3b387628861/member/${userInfo.data.discord_id}`
                           )
                           .then((res) => {
                             if (res.status === 204) {

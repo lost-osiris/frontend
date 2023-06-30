@@ -6,7 +6,10 @@ export const ManageWaitlist = () => {
 
   const contributor = (member) => {
     axios
-      .put("/api/project/Pale-Court/members/updatewaitlist", member)
+      .put(
+        "/api/project/63fe47296edfc3b387628861/members/updatewaitlist",
+        member
+      )
       .then((res) => {
         console.log(res.data);
       })
@@ -23,7 +26,7 @@ export const ManageWaitlist = () => {
   useEffect(() => {
     if (!waitlist) {
       axios
-        .get("/api/project/Pale-Court/waitlist")
+        .get("/api/project/63fe47296edfc3b387628861/waitlist")
         .then((res) => setWaitlist(res.data.waitlist));
     }
   }, [waitlist]);

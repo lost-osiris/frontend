@@ -1,9 +1,8 @@
 import React, { useContext } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
-import { UserContext } from "../../context";
+import { UserContext, IssuesContext } from "../../Context";
 
-import { toTitleCase } from "../../utils";
-import { IssuesContext } from "../../context";
+import { toTitleCase } from "../../Utils";
 import { ArchivedCard } from "../../Items/Cards/archivedCard";
 
 import { Typography, Grid, Switch, Chip, Divider } from "@mui/material";

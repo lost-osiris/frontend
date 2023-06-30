@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { UserContext } from "../../context";
+import { UserContext } from "../../Context";
 import { Grid, Alert, AlertTitle, IconButton } from "@mui/material/";
 import axios from "axios";
 
@@ -11,7 +11,10 @@ export const JoinWaitlist = () => {
     e.preventDefault();
     console.log(waitlistInfo);
     axios
-      .post("/api/project/Pale-Court/members/joinwaitlist", waitlistInfo)
+      .post(
+        "/api/project/63fe47296edfc3b387628861/members/joinwaitlist",
+        waitlistInfo
+      )
       .then((res) => {
         console.log(res.data);
       });
