@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from "react";
-import { UserContext } from "../../Context/authprovider";
 import * as utils from "../../Utils";
 import { toTitleCase } from "../../Utils";
 
@@ -21,12 +20,17 @@ import {
 import RadioGroup from "@mui/material/RadioGroup";
 import SendIcon from "@mui/icons-material/Send";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
+import { CategoriesContext, UserContext } from "../../Context";
 
 export const UserForm = (props) => {
   const userInfo = useContext(UserContext);
+  const categories = useContext(CategoriesContext);
+
   let params = useParams();
-  const [categories, setCategories] = useState([]);
+  let location = useLocation();
+  let navigate = useNavigate();
+
   const [version, setVersion] = useState("");
   const [modlogsButtonColor, setModlogsButtonColor] = useState("primary");
   const [modlogsButtonText, setModlogsButtonText] = useState("Upload Modlogs");
@@ -34,31 +38,33 @@ export const UserForm = (props) => {
   const [generalHelperValidation, setGeneralHelperValidation] = useState("");
   const [embedFieldColor, setEmbedFieldColor] = useState("primary");
   const [generalFieldColor, setgeneralFieldColor] = useState("primary");
-  const [submitFormColor, setSubmitFormColor] = useState("primary");
-  const [submitFormText, setSubmitFormText] = useState("Submit");
-  const [newIssue, setNewIssue] = useState(
-    props.issue || {
-      status: "reported",
-      summary: "",
-      category: "General",
-      type: "bug",
-      priority: "medium",
-      discord_id:
-        !userInfo.user.discord_id || null ? "" : userInfo.user.discord_id,
-      version: !version === undefined || null ? null : version,
-      description: "",
-      modlogs: {
-        title: "",
-        body: "",
-      },
-      archived: false,
-      attachments: {
-        embedSource: "",
-        generalUrl: "",
-      },
-      project_id: params.projectId,
-    }
-  );
+
+  let defaultState = {
+    status: location.state?.status || "reported",
+    summary: location.state?.summary || "",
+    category: utils.toTitleCase(location.state?.category) || "General",
+    type: location.state?.type || "bug",
+    priority: location.state?.priority || "medium",
+    discord_id:
+      location.state?.discord_id ||
+      (!userInfo.user.discord_id || null ? "" : userInfo.user.discord_id),
+    version:
+      location.state?.version ||
+      (!version === undefined || null ? null : version),
+    description: location.state?.description || "",
+    modlogs: {
+      title: location.state?.modlogs.title || "",
+      body: location.state?.modlogs.body || "",
+    },
+    archived: location.state?.archived || false,
+    attachments: {
+      embedSource: location.state?.attachments.embedSource || "",
+      generalUrl: location.state?.attachments.generalUrl || "",
+    },
+    project_id: params.projectId,
+  };
+
+  const [newIssue, setNewIssue] = useState(defaultState);
 
   const updateNewIssue = (field, value) => {
     if (field === "modlogs") {
@@ -107,17 +113,9 @@ export const UserForm = (props) => {
   }, [version]);
 
   useEffect(() => {
-    if (!categories[0]) {
-      utils
-        .requests("get", `/api/project/63fe47296edfc3b387628861/categories`)
-        .then((data) => setCategories(data));
-    }
-  }, [categories]);
-
-  useEffect(() => {
     if (
       newIssue.attachments.generalUrl.match(
-        /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g
+        /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/g
       )
     ) {
       setGeneralHelperValidation("Valid URL!");
@@ -134,63 +132,51 @@ export const UserForm = (props) => {
       setEmbedHelperValidation("Please enter a valid embed link");
       setEmbedFieldColor("warning");
     }
-  }, [newIssue, submitFormColor, submitFormText]);
+  }, [newIssue]);
 
   const handleFormSubmit = async () => {
     if (newIssue.summary !== "") {
-      try {
-        let promise;
-        let issue = {
-          ...newIssue,
-          version: version,
-        };
-        if (props.isUpdate) {
-          let data = {
-            issue,
+      let issue = {
+        ...newIssue,
+        version: version,
+      };
+      let promise;
+
+      if (location.state?.id) {
+        promise = utils.requests("put", `/api/issue/${location.state.id}`, {
+          data: {
+            issue: { ...issue, id: location.state.id },
             userInfo: userInfo.user,
-          };
-          promise = utils
-            .requests("put", `/api/issue/${props.issue._id}`, data)
-            .then(() => window.alert("issue updated!"));
-        } else {
-          promise = utils.requests("post", "/api/issue", { data: issue });
-        }
-        promise.then(() => {
-          if (!props.onSubmit) {
-            // setNewIssue({
-            //   status: "reported",
-            //   summary: "",
-            //   category: "General",
-            //   type: "bug",
-            //   priority: "medium",
-            //   discord_id: !userInfo.user.id || null ? "" : userInfo.user.id,
-            //   version: "",
-            //   description: "",
-            //   modlogs: {
-            //     title: "",
-            //     body: "",
-            //   },
-            //   archived: false,
-            //   attachments: {
-            //     embedSource: "",
-            //     generalUrl: "",
-            //   },
-            // });
-            // setSubmitFormColor("success");
-            // setSubmitFormText("Success!");
-            // setTimeout(() => {
-            //   setSubmitFormColor("primary");
-            //   setSubmitFormText("Submit");
-            //   setModlogsButtonColor("primary");
-            //   setModlogsButtonText("Upload Modlogs");
-            // }, 500);
-          } else {
-            props.onSubmit(newIssue);
-          }
+          },
         });
-      } catch (error) {
-        console.log(error);
+      } else {
+        promise = utils.requests("post", "/api/issue", { data: issue });
       }
+      promise.then(() => {
+        setNewIssue({
+          status: "reported",
+          summary: "",
+          category: "General",
+          type: "bug",
+          priority: "medium",
+          discord_id: !userInfo.user.id || null ? "" : userInfo.user.id,
+          version: "",
+          description: "",
+          modlogs: {
+            title: "",
+            body: "",
+          },
+          archived: false,
+          attachments: {
+            embedSource: "",
+            generalUrl: "",
+          },
+        });
+
+        if (location.state?.id) {
+          navigate(`/issue/${location.state.id}`);
+        }
+      });
     } else {
       window.alert("Please fill out all of the required fields!");
     }
@@ -234,7 +220,7 @@ export const UserForm = (props) => {
   ) : (
     <div>
       <FormControl>
-        <Grid container spacing={3}>
+        <Grid container spacing={3} sx={{ mt: 4 }}>
           <Grid item md={12}>
             <TextField
               id="summary"
@@ -502,12 +488,11 @@ export const UserForm = (props) => {
           <Grid item md={12}>
             <Stack direction="row" spacing={2}>
               <Button
-                color={submitFormColor}
                 variant="contained"
                 onClick={handleFormSubmit}
                 endIcon={<SendIcon />}
               >
-                {submitFormText}
+                Submit
               </Button>
             </Stack>
           </Grid>

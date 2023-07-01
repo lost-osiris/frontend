@@ -266,13 +266,13 @@ export const IssueCard = (props) => {
                 sx={{
                   mt: 0.7,
                   ml: 0,
-                  cursor: "pointer",
-                  ":hover": {
-                    boxShadow:
-                      "0px 3px 5px -1px rgba(0,0,0,0.2), 0px 6px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0.12)",
-                  },
+                  // cursor: "pointer",
+                  // ":hover": {
+                  //   boxShadow:
+                  //     "0px 3px 5px -1px rgba(0,0,0,0.2), 0px 6px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0.12)",
+                  // },
                 }}
-                onClick={() => navigate(`/user/${issue.discord_id}`)}
+                // onClick={() => navigate(`/user/${issue.discord_id}`)}
                 src={`https://cdn.discordapp.com/avatars/${issue.discord_id}/${issue.playerData.avatar}.png`}
               />
             </Grid>
