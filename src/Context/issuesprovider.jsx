@@ -11,6 +11,7 @@ export const IssuesContext = createContext({
 
 export const IssuesProvider = (props) => {
   const [allIssues, setIssues] = useState();
+  const [loading, setLoading] = useState(true);
   const userInfo = useContext(UserContext);
   const params = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -50,27 +51,25 @@ export const IssuesProvider = (props) => {
   };
 
   useEffect(() => {
-    if (!allIssues) {
-      utils
-        .requests(
-          "get",
-          `/api/project/63fe47296edfc3b387628861/category/${params.category}/issues`
-        )
-        .then((data) => setIssues(data));
-    }
-  });
+    setIssues();
+    setLoading(true);
+  }, [params.category]);
 
   useEffect(() => {
-    if (allIssues) {
-      setIssues();
+    if (loading) {
       utils
         .requests(
           "get",
           `/api/project/63fe47296edfc3b387628861/category/${params.category}/issues`
         )
-        .then((data) => setIssues(data));
+        .then((data) => {
+          if (loading && data && data[0].category === params.category) {
+            setIssues(data);
+            setLoading(false);
+          }
+        });
     }
-  }, [params.category]); // eslint-disable-line
+  }, [loading, params.category]);
 
   return (
     <IssuesContext.Provider
