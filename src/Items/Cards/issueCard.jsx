@@ -44,6 +44,8 @@ export const IssueCard = (props) => {
       value.id === params.projectId && value.roles.indexOf("contributor")
   );
 
+  console.log(issue);
+
   const canEdit =
     hasContributor || issue.discord_id === userInfo.user.discord_id;
 

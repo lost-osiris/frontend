@@ -42,7 +42,7 @@ export const UserForm = (props) => {
       type: "bug",
       priority: "medium",
       discord_id:
-        !userInfo.data.discord_id || null ? "" : userInfo.data.discord_id,
+        !userInfo.discord.discord_id || null ? "" : userInfo.discord.discord_id,
       version: !version === undefined || null ? null : version,
       description: "",
       modlogs: {
@@ -166,7 +166,9 @@ export const UserForm = (props) => {
                     type: "bug",
                     priority: "medium",
                     discord_id:
-                      !userInfo.data.id || null ? "" : userInfo.data.id,
+                      !userInfo.discord.discord_id || null
+                        ? ""
+                        : userInfo.discord.discord_id,
                     version: "",
                     description: "",
                     modlogs: {
@@ -283,7 +285,7 @@ export const UserForm = (props) => {
                   id="player-name"
                   label="Player"
                   variant="standard"
-                  value={userInfo.data.username}
+                  value={userInfo.user.username}
                   onChange={(e) => updateNewIssue("playerName", e.target.value)}
                   sx={{ pb: 2 }}
                   fullWidth

@@ -36,8 +36,8 @@ const Layout = () => {
           <Alert severity="warning" variant="outlined">
             <AlertTitle>Please login with Discord!</AlertTitle>
             <Typography variant="body">
-              ModForge requires that all users first be logged in with Discord
-              before interacting with application.
+              We require all users to login in with Discord before interacting
+              with ModForge.
             </Typography>
           </Alert>
         )}
