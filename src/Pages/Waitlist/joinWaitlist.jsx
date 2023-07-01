@@ -13,7 +13,11 @@ export const JoinWaitlist = () => {
       .requests(
         "post",
         "/api/project/63fe47296edfc3b387628861/members/joinwaitlist",
-        userInfo.data
+        {
+          data: userInfo.data,
+          alert: true,
+          alertMessage: "Successfully requested to join waitlist",
+        }
       )
       .then((data) => {
         console.log(data);

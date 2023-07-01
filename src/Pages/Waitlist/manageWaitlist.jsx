@@ -10,7 +10,11 @@ export const ManageWaitlist = () => {
       .requests(
         "put",
         "/api/project/63fe47296edfc3b387628861/members/updatewaitlist",
-        memberWithRole
+        {
+          data: memberWithRole,
+          alert: true,
+          alertMessage: "Successfully approved waitlist",
+        }
       )
       .then((data) => {
         console.log(data);
