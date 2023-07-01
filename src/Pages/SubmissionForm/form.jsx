@@ -142,6 +142,7 @@ export const UserForm = (props) => {
         let promise;
         let issue = {
           ...newIssue,
+          version: version,
         };
         if (props.isUpdate) {
           let data = {
