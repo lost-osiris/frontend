@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "../../Context/authprovider";
-import axios from "axios";
+import * as utils from "../../Utils";
 import { toTitleCase } from "../../Utils";
 
 import {
@@ -41,15 +41,8 @@ export const UserForm = (props) => {
       category: "General",
       type: "bug",
       priority: "medium",
-      playerData: {
-        name: !userInfo.data.username || null ? "" : userInfo.data.username,
-        discord_id:
-          !userInfo.data.discord_id || null ? "" : userInfo.data.discord_id,
-        avatar: !userInfo.data.avatar || null ? "" : userInfo.data.avatar,
-        banner: !userInfo.data.banner || null ? "" : userInfo.data.banner,
-        banner_color:
-          !userInfo.data.banner_color || null ? "" : userInfo.data.banner_color,
-      },
+      discord_id:
+        !userInfo.data.discord_id || null ? "" : userInfo.data.discord_id,
       version: !version === undefined || null ? null : version,
       description: "",
       modlogs: {
@@ -104,17 +97,17 @@ export const UserForm = (props) => {
 
   useEffect(() => {
     if (!version) {
-      axios
-        .get(`/api/project/63fe47296edfc3b387628861`)
-        .then((res) => setVersion(res.data.version));
+      utils
+        .requests("get", `/api/project/63fe47296edfc3b387628861`)
+        .then((data) => setVersion(data.version));
     }
   }, [version]);
 
   useEffect(() => {
     if (!categories[0]) {
-      axios
-        .get(`/api/project/Pale-Court/categories`)
-        .then((res) => setCategories(res.data));
+      utils
+        .requests("get", `/api/project/63fe47296edfc3b387628861/categories`)
+        .then((data) => setCategories(data));
     }
   }, [categories]);
 
@@ -142,73 +135,67 @@ export const UserForm = (props) => {
 
   const handleFormSubmit = async () => {
     if (newIssue.summary !== "") {
-      await axios.post(`/api/issue/findexact`, newIssue).then((res) => {
-        if (res.data) {
-          window.alert("this issue already exists");
-        } else {
-          try {
-            let promise;
-            let issue = {
-              ...newIssue,
-            };
-            if (props.isUpdate) {
-              let data = {
-                issue,
-                userInfo: userInfo.data,
+      await utils
+        .requests("post", `/api/issue/findexact`, newIssue)
+        .then((data) => {
+          if (data) {
+            window.alert("this issue already exists");
+          } else {
+            try {
+              let promise;
+              let issue = {
+                ...newIssue,
               };
-              promise = axios
-                .put(`/api/issue/${props.issue._id}`, data)
-                .then(() => window.alert("issue updated!"));
-            } else {
-              promise = axios.post("/api/issue", issue);
-            }
-            promise.then(() => {
-              if (!props.onSubmit) {
-                setNewIssue({
-                  status: "reported",
-                  summary: "",
-                  category: "General",
-                  type: "bug",
-                  priority: "medium",
-                  playerData: {
-                    name:
-                      !userInfo.data.username || null
-                        ? ""
-                        : userInfo.data.username,
+              if (props.isUpdate) {
+                let data = {
+                  issue,
+                  userInfo: userInfo.data,
+                };
+                promise = utils
+                  .requests("put", `/api/issue/${props.issue._id}`, data)
+                  .then(() => window.alert("issue updated!"));
+              } else {
+                promise = utils.requests("post", "/api/issue", issue);
+              }
+              promise.then(() => {
+                if (!props.onSubmit) {
+                  setNewIssue({
+                    status: "reported",
+                    summary: "",
+                    category: "General",
+                    type: "bug",
+                    priority: "medium",
                     discord_id:
                       !userInfo.data.id || null ? "" : userInfo.data.id,
-                    avatar:
-                      !userInfo.data.avatar || null ? "" : userInfo.data.avatar,
-                  },
-                  version: "",
-                  description: "",
-                  modlogs: {
-                    title: "",
-                    body: "",
-                  },
-                  archived: false,
-                  attachments: {
-                    embedSource: "",
-                    generalUrl: "",
-                  },
-                });
-                setSubmitFormColor("success");
-                setSubmitFormText("Success!");
-                setTimeout(() => {
-                  setSubmitFormColor("primary");
-                  setSubmitFormText("Submit");
-                  setModlogsButtonColor("primary");
-                  setModlogsButtonText("Upload Modlogs");
-                }, 500);
-              } else {
-                props.onSubmit(newIssue);
-              }
-            });
-          } catch (error) {
-            console.log(error);
+                    version: "",
+                    description: "",
+                    modlogs: {
+                      title: "",
+                      body: "",
+                    },
+                    archived: false,
+                    attachments: {
+                      embedSource: "",
+                      generalUrl: "",
+                    },
+                  });
+                  setSubmitFormColor("success");
+                  setSubmitFormText("Success!");
+                  setTimeout(() => {
+                    setSubmitFormColor("primary");
+                    setSubmitFormText("Submit");
+                    setModlogsButtonColor("primary");
+                    setModlogsButtonText("Upload Modlogs");
+                  }, 500);
+                } else {
+                  props.onSubmit(newIssue);
+                }
+              });
+            } catch (error) {
+              console.log(error);
+            }
           }
-        }
-      });
+        });
     } else {
       window.alert("Please fill out all of the required fields!");
     }
@@ -296,7 +283,7 @@ export const UserForm = (props) => {
                   id="player-name"
                   label="Player"
                   variant="standard"
-                  value={newIssue.playerData.name}
+                  value={userInfo.data.username}
                   onChange={(e) => updateNewIssue("playerName", e.target.value)}
                   sx={{ pb: 2 }}
                   fullWidth

@@ -1,25 +1,25 @@
 import React, { useState, useContext } from "react";
 import { UserContext } from "../../Context/authprovider";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useDrag } from "react-dnd";
-
-import axios from "axios";
+import { CardChip } from "../../Components/Chip";
+import { HighPriorityIcon } from "../../Components/HighPrioIcon";
+import { MediumPriorityIcon } from "../../Components/MediumPrioIcon";
+import { LowPriorityIcon } from "../../Components/LowPrioIcon";
+import * as utils from "../../Utils";
 
 import {
   Card,
   CardContent,
   IconButton,
-  Chip,
   Menu,
   Box,
   Grid,
-  Typography,
   Divider,
   ListItemText,
   ListItemIcon,
   MenuItem,
   Avatar,
-  Fab,
 } from "@mui/material";
 
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
@@ -31,10 +31,18 @@ import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
 
 export const ArchivedCard = (props) => {
   const [menuOpen, setMenuOpen] = useState(null);
-  let navigate = useNavigate();
+  const navigate = useNavigate();
+  const params = useParams();
   const issue = { ...props.issue };
-
   const userInfo = useContext(UserContext);
+
+  const hasContributor = userInfo.data.projects.find(
+    (value) =>
+      value.id === params.projectId && value.roles.indexOf("contributor")
+  );
+
+  const canEdit =
+    hasContributor || issue.discord_id === userInfo.data.discord_id;
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "issue",
@@ -47,8 +55,8 @@ export const ArchivedCard = (props) => {
   }));
 
   const handleCardDelete = () => {
-    axios
-      .delete(`/api/issue/${issue._id}`, { data: userInfo.data })
+    utils
+      .requests("delete, "`/api/issue/${issue._id}`, { data: userInfo.data })
       .then(() => {
         if (props.onDelete) {
           props.onDelete();
@@ -56,7 +64,7 @@ export const ArchivedCard = (props) => {
       });
   };
 
-  const issueSummary =
+  let issueSummary =
     issue.summary.charAt(0).toUpperCase() + issue.summary.slice(1);
 
   let cardProps = { sx: { opacity: isDragging ? 0 : 1 } };
@@ -94,31 +102,30 @@ export const ArchivedCard = (props) => {
               </Grid>
             </Grid>
           )}
-          {userInfo && (
-            <Grid container>
-              <Grid item lg={10.5}>
+          <Grid container>
+            <Grid item lg={10.5}>
+              <Box
+                component="h4"
+                sx={{
+                  mt: 1,
+                }}
+              >
                 <Box
-                  component="h4"
+                  component="span"
                   sx={{
-                    mt: 1,
+                    "&:hover": {
+                      opacity: [0.9, 0.8, 0.7],
+                      cursor: "pointer",
+                      textDecoration: "underline",
+                    },
                   }}
+                  onClick={() => navigate(`/issue/${issue._id}`)}
                 >
-                  <Box
-                    component="span"
-                    sx={{
-                      "&:hover": {
-                        opacity: [0.9, 0.8, 0.7],
-                        cursor: "pointer",
-                        textDecoration: "underline",
-                      },
-                    }}
-                    onClick={() => navigate(`/issue/${issue._id}`)}
-                  >
-                    {issueSummary}
-                  </Box>
+                  {issueSummary}
                 </Box>
-              </Grid>
-
+              </Box>
+            </Grid>
+            {userInfo && canEdit && (
               <Grid item lg={1.5}>
                 <IconButton
                   sx={{ pt: 1 }}
@@ -151,13 +158,18 @@ export const ArchivedCard = (props) => {
                           issue,
                           userInfo: userInfo,
                         };
-                        axios
-                          .get(
-                            `/api/project/Pale-Court/member/${userInfo.data.discord_id}`
+                        utils
+                          .requests(
+                            "get",
+                            `/api/project/63fe47296edfc3b387628861/member/${userInfo.data.discord_id}`
                           )
                           .then((res) => {
                             if (res.status === 204) {
-                              axios.put(`/api/issue/${props.issue.id}`, data);
+                              utils.requests(
+                                "put",
+                                `/api/issue/${props.issue.id}`,
+                                data
+                              );
                             }
                           });
                       } else {
@@ -190,161 +202,48 @@ export const ArchivedCard = (props) => {
                   </MenuItem>
                 </Menu>
               </Grid>
-            </Grid>
-          )}{" "}
+            )}
+          </Grid>
           <Grid container spacing={2}>
             {issue.type === "bug" && (
               <Grid item sx={{ mt: 1 }} lg={3.5}>
-                <Grid
-                  container
-                  sx={{
-                    borderRadius: 5,
-                    borderStyle: "solid",
-                    borderColor: "info.dark",
-                  }}
-                >
-                  <Grid
-                    item
-                    sx={{
-                      ml: 0,
-                      borderTopLeftRadius: 10,
-                      borderBottomLeftRadius: 10,
-                      bgcolor: "info.dark",
-                    }}
-                    lg={8}
-                  >
-                    <Typography sx={{ fontWeight: 800, ml: 1 }}>
-                      Type
-                    </Typography>
-                  </Grid>
-                  <Grid item lg={3} sx={{ maxHeight: "20px", pr: 0.2 }}>
-                    <BugReportIcon />
-                  </Grid>
-                </Grid>
+                <CardChip color="info" label="Type" img={<BugReportIcon />} />
               </Grid>
             )}
             {issue.type === "suggestion" && (
               <Grid item sx={{ mt: 1 }} lg={3.5}>
-                <Grid
-                  container
-                  sx={{
-                    borderRadius: 5,
-                    borderStyle: "solid",
-                    borderColor: "info.dark",
-                  }}
-                >
-                  <Grid
-                    item
-                    sx={{
-                      ml: 0,
-                      borderTopLeftRadius: 10,
-                      borderBottomLeftRadius: 10,
-                      bgcolor: "info.dark",
-                    }}
-                    lg={8}
-                  >
-                    <Typography sx={{ fontWeight: 800, ml: 1 }}>
-                      Type
-                    </Typography>
-                  </Grid>
-                  <Grid item lg={3} sx={{ maxHeight: "20px", pr: 0.2 }}>
-                    <QuestionMarkIcon />
-                  </Grid>
-                </Grid>
+                <CardChip
+                  color="info"
+                  label="Type"
+                  img={<QuestionMarkIcon />}
+                />
               </Grid>
             )}
             {issue.priority === "low" && (
               <Grid item sx={{ mt: 1 }} lg={4}>
-                <Grid
-                  container
-                  sx={{
-                    borderRadius: 5,
-                    borderStyle: "solid",
-                    borderColor: "info.dark",
-                  }}
-                >
-                  <Grid
-                    item
-                    sx={{
-                      ml: 0,
-                      borderTopLeftRadius: 10,
-                      borderBottomLeftRadius: 10,
-                      bgcolor: "info.dark",
-                    }}
-                    lg={9}
-                  >
-                    <Typography sx={{ fontWeight: 800, ml: 1 }}>
-                      Priority
-                    </Typography>
-                  </Grid>
-                  <Grid item lg={3} sx={{ maxHeight: "20px", pr: 0.2 }}>
-                    <img src="/low.svg" alt="low" />
-                  </Grid>
-                </Grid>
+                <CardChip
+                  color="info"
+                  label="Priority"
+                  img={<LowPriorityIcon />}
+                />
               </Grid>
             )}
             {issue.priority === "medium" && (
               <Grid item sx={{ mt: 1 }} lg={4}>
-                <Grid
-                  container
-                  sx={{
-                    borderRadius: 5,
-                    borderStyle: "solid",
-                    borderColor: "warning.dark",
-                  }}
-                >
-                  <Grid
-                    item
-                    sx={{
-                      ml: 0,
-                      borderTopLeftRadius: 10,
-                      borderBottomLeftRadius: 10,
-                      bgcolor: "warning.dark",
-                    }}
-                    lg={9}
-                  >
-                    <Typography sx={{ fontWeight: 800, ml: 1 }}>
-                      Priority
-                    </Typography>
-                  </Grid>
-                  <Grid
-                    item
-                    lg={3}
-                    sx={{ maxHeight: "20px", pr: 0.2, pt: 0.22 }}
-                  >
-                    <img src="/medium.svg" alt="medium" />
-                  </Grid>
-                </Grid>
+                <CardChip
+                  color="warning"
+                  label="Priority"
+                  img={<MediumPriorityIcon />}
+                />
               </Grid>
             )}
             {issue.priority === "high" && (
               <Grid item sx={{ mt: 1 }} lg={4}>
-                <Grid
-                  container
-                  sx={{
-                    borderRadius: 5,
-                    borderStyle: "solid",
-                    borderColor: "error.main",
-                  }}
-                >
-                  <Grid
-                    item
-                    sx={{
-                      ml: 0,
-                      borderTopLeftRadius: 10,
-                      borderBottomLeftRadius: 10,
-                      bgcolor: "error.main",
-                    }}
-                    lg={9}
-                  >
-                    <Typography sx={{ fontWeight: 800, ml: 1 }}>
-                      Priority
-                    </Typography>
-                  </Grid>
-                  <Grid item lg={3} sx={{ maxHeight: "20px", pr: 0.2 }}>
-                    <img src="/high.svg" alt="high" />
-                  </Grid>
-                </Grid>
+                <CardChip
+                  color="error"
+                  label="Priority"
+                  img={<HighPriorityIcon />}
+                />
               </Grid>
             )}
 
@@ -359,8 +258,8 @@ export const ArchivedCard = (props) => {
                   },
                 }}
                 onClick={() => navigate(`/user/${issue.playerData.id}`)}
-                src={`https://cdn.discordapp.com/avatars/${issue.playerData.discord_id}/${issue.playerData.avatar}.png`}
-                alt={issue.playerData.name}
+                // src={`https://cdn.discordapp.com/avatars/${issue.playerData.discord_id}/${issue.playerData.avatar}.png`}
+                alt={"fix this"}
               />
             </Grid>
           </Grid>

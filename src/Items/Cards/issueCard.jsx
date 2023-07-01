@@ -1,7 +1,11 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { UserContext } from "../../Context/authprovider";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDrag } from "react-dnd";
+import { CardChip } from "../../Components/Chip";
+import { HighPriorityIcon } from "../../Components/HighPrioIcon";
+import { LowPriorityIcon } from "../../Components/LowPrioIcon";
+import { MediumPriorityIcon } from "../../Components/MediumPrioIcon";
 
 import * as utils from "../../Utils";
 
@@ -9,7 +13,6 @@ import {
   Card,
   CardContent,
   IconButton,
-  Chip,
   Menu,
   Box,
   Grid,
@@ -19,7 +22,6 @@ import {
   ListItemIcon,
   MenuItem,
   Avatar,
-  Fab,
 } from "@mui/material";
 
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
@@ -43,7 +45,7 @@ export const IssueCard = (props) => {
   );
 
   const canEdit =
-    hasContributor || issue.playerData?.id === userInfo.user.discord_id;
+    hasContributor || issue.discord_id === userInfo.user.discord_id;
 
   const handleCardDelete = () => {
     utils
@@ -224,164 +226,43 @@ export const IssueCard = (props) => {
           <Grid container spacing={2}>
             {issue.type === "bug" && (
               <Grid item sx={{ mt: 1 }} lg={3.5}>
-                <Grid
-                  container
-                  sx={{
-                    borderRadius: 5,
-                    borderStyle: "solid",
-                    borderColor: "info.dark",
-                  }}
-                >
-                  <Grid
-                    item
-                    sx={{
-                      ml: 0,
-                      borderTopLeftRadius: 10,
-                      borderBottomLeftRadius: 10,
-                      bgcolor: "info.dark",
-                    }}
-                    lg={8}
-                  >
-                    <Typography sx={{ fontWeight: 800, ml: 3 }}>
-                      Type
-                    </Typography>
-                  </Grid>
-                  <Grid
-                    item
-                    lg={3}
-                    sx={{ maxHeight: "20px", ml: 1.2, mr: 0.2 }}
-                  >
-                    <BugReportIcon />
-                  </Grid>
-                </Grid>
+                <CardChip color="info" label="Type" img={<BugReportIcon />} />
               </Grid>
             )}
             {issue.type === "suggestion" && (
               <Grid item sx={{ mt: 1 }} lg={3.5}>
-                <Grid
-                  container
-                  sx={{
-                    borderRadius: 5,
-                    borderStyle: "solid",
-                    borderColor: "info.dark",
-                  }}
-                >
-                  <Grid
-                    item
-                    sx={{
-                      ml: 0,
-                      borderTopLeftRadius: 10,
-                      borderBottomLeftRadius: 10,
-                      bgcolor: "info.dark",
-                    }}
-                    lg={8}
-                  >
-                    <Typography sx={{ fontWeight: 800, ml: 3 }}>
-                      Type
-                    </Typography>
-                  </Grid>
-                  <Grid
-                    item
-                    lg={3}
-                    sx={{ maxHeight: "20px", ml: 1.2, mr: 0.2 }}
-                  >
-                    <QuestionMarkIcon />
-                  </Grid>
-                </Grid>
+                <CardChip
+                  color="info"
+                  label="Type"
+                  img={<QuestionMarkIcon />}
+                />
               </Grid>
             )}
             {issue.priority === "low" && (
               <Grid item sx={{ mt: 1 }} lg={4}>
-                <Grid
-                  container
-                  sx={{
-                    borderRadius: 5,
-                    borderStyle: "solid",
-                    borderColor: "info.dark",
-                  }}
-                >
-                  <Grid
-                    item
-                    sx={{
-                      ml: 0,
-                      borderTopLeftRadius: 10,
-                      borderBottomLeftRadius: 10,
-                      bgcolor: "info.dark",
-                    }}
-                    lg={9}
-                  >
-                    <Typography sx={{ fontWeight: 800, ml: 1 }}>
-                      Priority
-                    </Typography>
-                  </Grid>
-                  <Grid item lg={3} sx={{ maxHeight: "20px", pr: 0.2 }}>
-                    <img src="/low.svg" alt="low" />
-                  </Grid>
-                </Grid>
+                <CardChip
+                  color="info"
+                  label="Priority"
+                  img={<LowPriorityIcon />}
+                />
               </Grid>
             )}
             {issue.priority === "medium" && (
               <Grid item sx={{ mt: 1 }} lg={4}>
-                <Grid
-                  container
-                  sx={{
-                    borderRadius: 5,
-                    borderStyle: "solid",
-                    borderColor: "warning.dark",
-                  }}
-                >
-                  <Grid
-                    item
-                    sx={{
-                      ml: 0,
-                      borderTopLeftRadius: 10,
-                      borderBottomLeftRadius: 10,
-                      bgcolor: "warning.dark",
-                    }}
-                    lg={9}
-                  >
-                    <Typography sx={{ fontWeight: 800, ml: 1 }}>
-                      Priority
-                    </Typography>
-                  </Grid>
-                  <Grid
-                    item
-                    lg={3}
-                    sx={{ maxHeight: "20px", pr: 0.2, pt: 0.22 }}
-                  >
-                    <img src="/medium.svg" alt="medium" />
-                  </Grid>
-                </Grid>
+                <CardChip
+                  color="warning"
+                  label="Priority"
+                  img={<MediumPriorityIcon />}
+                />
               </Grid>
             )}
             {issue.priority === "high" && (
               <Grid item sx={{ mt: 1 }} lg={4}>
-                <Grid
-                  container
-                  sx={{
-                    borderRadius: 5,
-                    borderStyle: "solid",
-                    borderColor: "error.main",
-                  }}
-                >
-                  <Grid
-                    item
-                    sx={{
-                      ml: 0,
-                      borderTopLeftRadius: 10,
-                      borderBottomLeftRadius: 10,
-                      bgcolor: "error.main",
-                    }}
-                    lg={9}
-                  >
-                    <Typography sx={{ fontWeight: 800, ml: 1 }}>
-                      Priority
-                    </Typography>
-                  </Grid>
-                  <Grid item lg={3} sx={{ maxHeight: "20px", pr: 0.2 }}>
-                    <img src="/high.svg" alt="high" />
-                  </Grid>
-                </Grid>
+                <CardChip
+                  color="error"
+                  label="Priority"
+                  img={<HighPriorityIcon />}
+                />
               </Grid>
             )}
 
@@ -396,9 +277,9 @@ export const IssueCard = (props) => {
                       "0px 3px 5px -1px rgba(0,0,0,0.2), 0px 6px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0.12)",
                   },
                 }}
-                onClick={() => navigate(`/user/${issue.playerData.id}`)}
-                src={`https://cdn.discordapp.com/avatars/${issue.playerData.discord_id}/${issue.playerData.avatar}.png`}
-                alt={issue.playerData.name}
+                onClick={() => navigate(`/user/${issue.discord_id}`)}
+                // src={`https://cdn.discordapp.com/avatars/${issue.discord_id}/${issue.playerData.avatar}.png`}
+                alt={"asdfasdf"}
               />
             </Grid>
           </Grid>
