@@ -3,12 +3,13 @@ import axios from "axios";
 
 export const ManageWaitlist = () => {
   const [waitlist, setWaitlist] = useState();
+  console.log(waitlist);
 
-  const contributor = (member) => {
+  const addToProject = (memberWithRole) => {
     axios
       .put(
         "/api/project/63fe47296edfc3b387628861/members/updatewaitlist",
-        member
+        memberWithRole
       )
       .then((res) => {
         console.log(res.data);
@@ -37,19 +38,37 @@ export const ManageWaitlist = () => {
         <ul>
           {waitlist.map((member) => (
             <li key={member.discord_id}>
-              {member.name}
+              {member.username}
               <button
                 onClick={() =>
-                  contributor({
-                    discord_id: member.discord_id,
+                  addToProject({
+                    member,
                     role: "contributor",
                   })
                 }
               >
                 add as contributor
               </button>
-              <button>add as maintainer</button>
-              <button>delete from waitlist</button>
+              <button
+                onClick={() =>
+                  addToProject({
+                    member,
+                    role: "maintainer",
+                  })
+                }
+              >
+                add as maintainer
+              </button>
+              <button
+                onClick={() =>
+                  addToProject({
+                    member,
+                    role: "remove",
+                  })
+                }
+              >
+                delete from waitlist
+              </button>
             </li>
           ))}
         </ul>

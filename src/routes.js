@@ -1,15 +1,15 @@
-import React from 'react'
+import React from "react";
 import { Route, Routes } from "react-router-dom";
 import Layout from "./Layout/main";
 import { IssueCardList } from "./Pages/IssueList/issueList";
 import { IssuePage } from "./Pages/Issue/issue";
 import { ProjectCardList } from "./Pages/ProjectList/projectList";
 import { UserForm } from "./Pages/SubmissionForm/form.jsx";
-import { ManageWaitlist } from "./Pages/Waitlist/manageWaitlist";
 import { JoinWaitlist } from "./Pages/Waitlist/joinWaitlist";
+import { ManageWaitlist } from "./Pages/Waitlist/manageWaitlist";
 import { IssuesProvider } from "./Context";
 
-const AppRoutes = () => { 
+const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
@@ -35,7 +35,7 @@ const AppRoutes = () => {
         <Route path="/issue/:issueId" element={<IssuePage />} />
       </Route>
     </Routes>
-  )
-}
+  );
+};
 
-export default AppRoutes
+export default AppRoutes;

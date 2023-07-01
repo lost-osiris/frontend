@@ -7,13 +7,12 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 
 export const JoinWaitlist = () => {
   const userInfo = useContext(UserContext);
-  const joinList = (e, waitlistInfo) => {
+  const joinList = (e) => {
     e.preventDefault();
-    console.log(waitlistInfo);
     axios
       .post(
         "/api/project/63fe47296edfc3b387628861/members/joinwaitlist",
-        waitlistInfo
+        userInfo.data
       )
       .then((res) => {
         console.log(res.data);
@@ -28,15 +27,7 @@ export const JoinWaitlist = () => {
         entry —{" "}
         <strong>
           Please click{" "}
-          <a
-            onClick={(e) =>
-              joinList(e, {
-                discord_id: userInfo.data.discord_id,
-                name: userInfo.data.username,
-              })
-            }
-            href="/"
-          >
+          <a onClick={(e) => joinList(e)} href="/">
             here{" "}
           </a>
           to join the waitlist
