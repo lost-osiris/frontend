@@ -278,8 +278,7 @@ export const IssueCard = (props) => {
                   },
                 }}
                 onClick={() => navigate(`/user/${issue.discord_id}`)}
-                // src={`https://cdn.discordapp.com/avatars/${issue.discord_id}/${issue.playerData.avatar}.png`}
-                alt={"asdfasdf"}
+                src={`https://cdn.discordapp.com/avatars/${issue.discord_id}/${issue.playerData.avatar}.png`}
               />
             </Grid>
           </Grid>

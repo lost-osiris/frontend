@@ -10,7 +10,7 @@ export const IssuesContext = createContext({
 });
 
 export const IssuesProvider = (props) => {
-  const [allIssues, setIssues] = useState([]);
+  const [allIssues, setIssues] = useState();
   const userInfo = useContext(UserContext);
   const params = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -62,6 +62,7 @@ export const IssuesProvider = (props) => {
 
   useEffect(() => {
     if (allIssues) {
+      setIssues();
       utils
         .requests(
           "get",
