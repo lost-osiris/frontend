@@ -6,7 +6,7 @@ const AUTH_REDIRECT =
     ? encodeURI(
         "http://localhost:3000/api/auth/discord?redirect_uri=http://localhost:3000"
       )
-    : encodeURI("https://modforge.gg/api/auth/discord");
+    : encodeURI("https://modforge.gg/api/auth/discord?redirect_uri=https://modforge.gg");
 
 export const AUTH_REDIRECT_URL = `https://discord.com/api/oauth2/authorize?client_id=1074939657902637058&redirect_uri=${AUTH_REDIRECT}&response_type=code&scope=identify`
 
