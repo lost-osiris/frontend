@@ -30,7 +30,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import ArchiveIcon from "@mui/icons-material/Archive";
 import UnarchiveIcon from "@mui/icons-material/Unarchive";
 import BugReportIcon from "@mui/icons-material/BugReport";
-import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
+import SuggectionIcon from "@mui/icons-material/TipsAndUpdates";
 
 export const IssueCard = (props) => {
   const [menuOpen, setMenuOpen] = useState(null);
@@ -40,14 +40,13 @@ export const IssueCard = (props) => {
   const issue = { ...props.issue };
   const issueSummary =
     issue.summary.charAt(0).toUpperCase() + issue.summary.slice(1);
-  const hasContributor = userInfo.user.projects.find(
+  const hasMaintainer = userInfo.user.projects.find(
     (value) =>
-      (value.id === params.projectId && value.roles.indexOf("contributor")) ||
-      value.roles.indexOf("maintainer")
+      value.id === params.projectId && value.roles.indexOf("maintainer") >= 0
   );
 
   const canEdit =
-    hasContributor || issue.discord_id === userInfo.user.discord_id;
+    hasMaintainer || issue.discord_id === userInfo.user.discord_id;
 
   const handleCardDelete = () => {
     utils
@@ -86,9 +85,10 @@ export const IssueCard = (props) => {
         {...cardProps}
         sx={{
           "&:hover": {
-            boxShadow: canEdit
-              ? "0px 3px 5px -1px rgba(255,255,255,0.2), 0px 6px 2px 0px rgba(255,255,255,0.14), 0px 1px 5px 0px rgba(255,255,0.12)"
-              : "",
+            boxShadow:
+              canEdit && !issue.archived
+                ? "0px 3px 5px -1px rgba(255,255,255,0.2), 0px 6px 2px 0px rgba(255,255,255,0.14), 0px 1px 5px 0px rgba(255,255,0.12)"
+                : "",
           },
         }}
       >
@@ -99,7 +99,7 @@ export const IssueCard = (props) => {
             pl: 1,
             pb: 0,
             mb: -4,
-            cursor: canEdit ? "grab" : "",
+            cursor: canEdit && !issue.archived ? "grab" : "",
           }}
         >
           {!userInfo && (
@@ -240,7 +240,7 @@ export const IssueCard = (props) => {
                   <CardChip
                     color="info"
                     label="Type"
-                    img={<QuestionMarkIcon />}
+                    img={<SuggectionIcon />}
                   />
                 )}
                 {issue.priority === "low" && (

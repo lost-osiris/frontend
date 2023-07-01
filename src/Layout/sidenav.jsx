@@ -35,7 +35,8 @@ const Sidenav = () => {
       <Box sx={{ overflow: "auto" }}>
         <List>
           {userInfo &&
-            categories?.map((el, index) => {
+            categories !== undefined &&
+            categories.map((el, index) => {
               return (
                 <ListItem
                   disablePadding

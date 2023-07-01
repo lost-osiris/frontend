@@ -12,16 +12,12 @@ import {
   Button,
   Stack,
   Grid,
-  Alert,
-  AlertTitle,
-  CircularProgress,
-  IconButton,
 } from "@mui/material/";
 import RadioGroup from "@mui/material/RadioGroup";
 import SendIcon from "@mui/icons-material/Send";
-import RefreshIcon from "@mui/icons-material/Refresh";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { CategoriesContext, UserContext } from "../../Context";
+import Loading from "../../Components/Loading";
 
 export const UserForm = (props) => {
   const userInfo = useContext(UserContext);
@@ -194,42 +190,11 @@ export const UserForm = (props) => {
     }
   };
 
-  return !userInfo ? (
-    <div>
-      <Alert severity="warning">
-        <AlertTitle>Cannot Submit Form</AlertTitle>
-        You cannot submit a form —{" "}
-        <strong>
-          Please login{" "}
-          <a href="https://discord.com/api/oauth2/authorize?client_id=1074939657902637058&redirect_uri=https%3A%2F%2Fissue-tracker-front.vercel.app%2F&response_type=code&scope=identify">
-            here{" "}
-          </a>
-          to be able to submit a form for this project
-        </strong>
-        <br></br>
-        <Grid container>
-          <h3>
-            If you are already logged in and are still seeing this, try
-            refreshing the page
-          </h3>
+  if (categories === undefined) {
+    return <Loading />;
+  }
 
-          <IconButton onClick={() => window.location.reload()} color="primary">
-            <RefreshIcon />
-          </IconButton>
-        </Grid>
-      </Alert>
-      <div
-        style={{
-          position: "absolute",
-          left: "55%",
-          top: "52%",
-          transform: "translate(-50%, -50%)",
-        }}
-      >
-        <CircularProgress />
-      </div>
-    </div>
-  ) : (
+  return (
     <div>
       <FormControl>
         <Grid container spacing={3} sx={{ mt: 4 }}>
@@ -259,14 +224,15 @@ export const UserForm = (props) => {
                   sx={{ pb: 2 }}
                   onChange={(e) => updateNewIssue("category", e.target.value)}
                 >
-                  {categories.map((category) => (
-                    <MenuItem
-                      key={toTitleCase(category)}
-                      value={toTitleCase(category)}
-                    >
-                      {toTitleCase(category)}
-                    </MenuItem>
-                  ))}
+                  {categories &&
+                    categories.map((category) => (
+                      <MenuItem
+                        key={toTitleCase(category)}
+                        value={toTitleCase(category)}
+                      >
+                        {toTitleCase(category)}
+                      </MenuItem>
+                    ))}
                 </TextField>
               </Grid>
               <Grid item md={12}>
