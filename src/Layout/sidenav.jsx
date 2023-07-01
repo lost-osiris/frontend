@@ -61,25 +61,6 @@ const Sidenav = () => {
                 </ListItem>
               );
             })}
-          <ListItem
-            disablePadding
-            onClick={() =>
-              window.open(
-                "https://www.paypal.com/donate/?hosted_button_id=YWNUFXPDDYNSL",
-                "_blank"
-              )
-            }
-            sx={{
-              mt: 19,
-              border: 2,
-              borderColor: "gold",
-              borderRadius: 10,
-            }}
-          >
-            <ListItemButton sx={{ borderRadius: 10 }}>
-              <ListItemText sx={{ textAlign: "center" }} primary={"Donate"} />
-            </ListItemButton>
-          </ListItem>
         </List>
       </Box>
     </Drawer>

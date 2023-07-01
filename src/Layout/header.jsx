@@ -16,6 +16,7 @@ import AddIcon from "@mui/icons-material/Add";
 import LoginIcon from "@mui/icons-material/Login";
 import HomeIcon from "@mui/icons-material/Home";
 import Logout from "@mui/icons-material/Logout";
+import MoneyIcon from "@mui/icons-material/AttachMoney";
 import * as utils from "../Utils";
 
 const Header = () => {
@@ -66,6 +67,23 @@ const Header = () => {
             >
               Issue
               <AddIcon sx={{ pl: 0.5 }} />
+            </Fab>
+            <Fab
+              variant="extended"
+              onClick={() =>
+                window.open(
+                  "https://www.paypal.com/donate/?hosted_button_id=YWNUFXPDDYNSL",
+                  "_blank"
+                )
+              }
+              sx={{
+                //   mt: 19,
+                margin: 1,
+                backgroundColor: "gold",
+              }}
+            >
+              Donate
+              <MoneyIcon sx={{ pl: 0.5 }} />
             </Fab>
             <Fab
               color="discord"
