@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import * as utils from "../../Utils";
 
 export const ManageWaitlist = () => {
   const [waitlist, setWaitlist] = useState();
   console.log(waitlist);
 
   const addToProject = (memberWithRole) => {
-    axios
-      .put(
+    utils
+      .requests(
+        "put",
         "/api/project/63fe47296edfc3b387628861/members/updatewaitlist",
         memberWithRole
       )
-      .then((res) => {
-        console.log(res.data);
+      .then((data) => {
+        console.log(data);
       })
       .catch((error) => {
         // Handle error
@@ -26,9 +27,9 @@ export const ManageWaitlist = () => {
 
   useEffect(() => {
     if (!waitlist) {
-      axios
-        .get("/api/project/63fe47296edfc3b387628861/waitlist")
-        .then((res) => setWaitlist(res.data.waitlist));
+      utils
+        .requests("get", "/api/project/63fe47296edfc3b387628861/waitlist")
+        .then((data) => setWaitlist(data.waitlist));
     }
   }, [waitlist]);
 
