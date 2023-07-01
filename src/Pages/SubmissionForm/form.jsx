@@ -148,9 +148,19 @@ export const UserForm = (props) => {
             issue: { ...issue, id: location.state.id },
             userInfo: userInfo.user,
           },
+          alert: true,
+          alertMessage: `Successfully update "${
+            issue.summary
+          }" with status "${utils.toTitleCase(issue.status)}"`,
         });
       } else {
-        promise = utils.requests("post", "/api/issue", { data: issue });
+        promise = utils.requests("post", "/api/issue", {
+          data: issue,
+          alert: true,
+          alertMessage: `Successfully added "${
+            issue.summary
+          }" with status "${utils.toTitleCase(issue.status)}"`,
+        });
       }
       promise.then(() => {
         setNewIssue({
@@ -159,7 +169,8 @@ export const UserForm = (props) => {
           category: "General",
           type: "bug",
           priority: "medium",
-          discord_id: !userInfo.user.id || null ? "" : userInfo.user.id,
+          discord_id:
+            !userInfo.user.discord_id || null ? "" : userInfo.user.discord_id,
           version: "",
           description: "",
           modlogs: {
@@ -171,6 +182,7 @@ export const UserForm = (props) => {
             embedSource: "",
             generalUrl: "",
           },
+          project_id: params.projectId,
         });
 
         if (location.state?.id) {

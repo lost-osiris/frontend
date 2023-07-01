@@ -50,7 +50,12 @@ export const IssueCard = (props) => {
 
   const handleCardDelete = () => {
     utils
-      .requests("delete", `/api/issue/${issue.id}`, { data: userInfo.user })
+      .requests("delete", `/api/issue/${issue.id}`, {
+        alert: true,
+        alertMessage: `Successfully deleted "${
+          issue.summary
+        }" with status "${utils.toTitleCase(issue.status)}"`,
+      })
       .then(() => {
         if (props.onDelete) {
           props.onDelete();

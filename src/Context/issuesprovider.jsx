@@ -39,13 +39,7 @@ export const IssuesProvider = (props) => {
   };
 
   const deleteIssue = (issue) => {
-    utils
-      .requests("delete", `/api/issue/${issue.id}`, {
-        data: { issue, userInfo: userInfo },
-      })
-      .then(() => {
-        setIssues();
-      });
+    setIssues([...allIssues.filter((value) => value.id !== issue.id)]);
   };
 
   useEffect(() => {
