@@ -42,7 +42,7 @@ export const UserForm = (props) => {
       type: "bug",
       priority: "medium",
       discord_id:
-        !userInfo.data.discord_id || null ? "" : userInfo.data.discord_id,
+        !userInfo.user.discord_id || null ? "" : userInfo.user.discord_id,
       version: !version === undefined || null ? null : version,
       description: "",
       modlogs: {
@@ -135,67 +135,58 @@ export const UserForm = (props) => {
 
   const handleFormSubmit = async () => {
     if (newIssue.summary !== "") {
-      await utils
-        .requests("post", `/api/issue/findexact`, newIssue)
-        .then((data) => {
-          if (data) {
-            window.alert("this issue already exists");
+      try {
+        let promise;
+        let issue = {
+          ...newIssue,
+        };
+        if (props.isUpdate) {
+          let data = {
+            issue,
+            userInfo: userInfo.user,
+          };
+          promise = utils
+            .requests("put", `/api/issue/${props.issue._id}`, data)
+            .then(() => window.alert("issue updated!"));
+        } else {
+          promise = utils.requests("post", "/api/issue", issue);
+        }
+        promise.then(() => {
+          if (!props.onSubmit) {
+            setNewIssue({
+              status: "reported",
+              summary: "",
+              category: "General",
+              type: "bug",
+              priority: "medium",
+              discord_id: !userInfo.user.id || null ? "" : userInfo.user.id,
+              version: "",
+              description: "",
+              modlogs: {
+                title: "",
+                body: "",
+              },
+              archived: false,
+              attachments: {
+                embedSource: "",
+                generalUrl: "",
+              },
+            });
+            setSubmitFormColor("success");
+            setSubmitFormText("Success!");
+            setTimeout(() => {
+              setSubmitFormColor("primary");
+              setSubmitFormText("Submit");
+              setModlogsButtonColor("primary");
+              setModlogsButtonText("Upload Modlogs");
+            }, 500);
           } else {
-            try {
-              let promise;
-              let issue = {
-                ...newIssue,
-              };
-              if (props.isUpdate) {
-                let data = {
-                  issue,
-                  userInfo: userInfo.data,
-                };
-                promise = utils
-                  .requests("put", `/api/issue/${props.issue._id}`, data)
-                  .then(() => window.alert("issue updated!"));
-              } else {
-                promise = utils.requests("post", "/api/issue", issue);
-              }
-              promise.then(() => {
-                if (!props.onSubmit) {
-                  setNewIssue({
-                    status: "reported",
-                    summary: "",
-                    category: "General",
-                    type: "bug",
-                    priority: "medium",
-                    discord_id:
-                      !userInfo.data.id || null ? "" : userInfo.data.id,
-                    version: "",
-                    description: "",
-                    modlogs: {
-                      title: "",
-                      body: "",
-                    },
-                    archived: false,
-                    attachments: {
-                      embedSource: "",
-                      generalUrl: "",
-                    },
-                  });
-                  setSubmitFormColor("success");
-                  setSubmitFormText("Success!");
-                  setTimeout(() => {
-                    setSubmitFormColor("primary");
-                    setSubmitFormText("Submit");
-                    setModlogsButtonColor("primary");
-                    setModlogsButtonText("Upload Modlogs");
-                  }, 500);
-                } else {
-                  props.onSubmit(newIssue);
-                }
-              });
-            } catch (error) {
-              console.log(error);
-            }
+            props.onSubmit(newIssue);
           }
         });
+      } catch (error) {
+        console.log(error);
+      }
     } else {
       window.alert("Please fill out all of the required fields!");
     }
@@ -283,7 +274,7 @@ export const UserForm = (props) => {
                   id="player-name"
                   label="Player"
                   variant="standard"
-                  value={userInfo.data.username}
+                  value={userInfo.user.username}
                   onChange={(e) => updateNewIssue("playerName", e.target.value)}
                   sx={{ pb: 2 }}
                   fullWidth
