@@ -1,20 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "../../Context/authprovider";
-import { useParams, useSearchParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import { IssueCard } from "../../Items/Cards/issueCard";
-
-import {
-  Grid,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  Avatar,
-  CircularProgress,
-  Box,
-  Typography,
-} from "@mui/material";
+import { Grid, Avatar, CircularProgress, Box, Typography } from "@mui/material";
 import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
 import BugReportIcon from "@mui/icons-material/BugReport";
 

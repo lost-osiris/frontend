@@ -33,6 +33,7 @@ const AppRoutes = () => {
           }
         />
         <Route path="/issue/:issueId" element={<IssuePage />} />
+        <Route path="/project/:projectId/form" element={<UserForm />} />
       </Route>
     </Routes>
   );

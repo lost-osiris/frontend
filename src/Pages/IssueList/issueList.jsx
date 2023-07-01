@@ -11,11 +11,11 @@ import { IssueListColumn } from "./issueListColumn";
 import Loading from "../../Components/Loading";
 
 export const IssueCardList = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const archived = Boolean(searchParams.get("archived") === "true");
   const userInfo = useContext(UserContext);
   const { issues } = useContext(IssuesContext);
   const params = useParams();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const archived = Boolean(searchParams.get("archived") === "true");
 
   const getNumOfArchived = () => {
     if (issues) {
