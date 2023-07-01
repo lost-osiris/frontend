@@ -94,7 +94,7 @@ export const ArchivedCard = (props) => {
                         textDecoration: "underline",
                       },
                     }}
-                    onClick={() => navigate(`/issue/${issue._id}`)}
+                    onClick={() => navigate(`/issue/${issue.id}`)}
                   >
                     {issueSummary}
                   </Box>
@@ -119,7 +119,7 @@ export const ArchivedCard = (props) => {
                       textDecoration: "underline",
                     },
                   }}
-                  onClick={() => navigate(`/issue/${issue._id}`)}
+                  onClick={() => navigate(`/issue/${issue.id}`)}
                 >
                   {issueSummary}
                 </Box>
@@ -249,8 +249,7 @@ export const ArchivedCard = (props) => {
                   },
                 }}
                 onClick={() => navigate(`/user/${issue.playerData.id}`)}
-                // src={`https://cdn.discordapp.com/avatars/${issue.playerData.discord_id}/${issue.playerData.avatar}.png`}
-                alt={"fix this"}
+                src={`https://cdn.discordapp.com/avatars/${issue.playerData.discord_id}/${issue.playerData.avatar}.png`}
               />
             </Grid>
           </Grid>

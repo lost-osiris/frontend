@@ -22,6 +22,7 @@ import {
   ListItemIcon,
   MenuItem,
   Avatar,
+  Stack,
 } from "@mui/material";
 
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
@@ -225,54 +226,48 @@ export const IssueCard = (props) => {
               </Grid>
             )}
           </Grid>
-          <Grid container spacing={2}>
-            {issue.type === "bug" && (
-              <Grid item sx={{ mt: 1 }} lg={3.5}>
-                <CardChip color="info" label="Type" img={<BugReportIcon />} />
-              </Grid>
-            )}
-            {issue.type === "suggestion" && (
-              <Grid item sx={{ mt: 1 }} lg={3.5}>
-                <CardChip
-                  color="info"
-                  label="Type"
-                  img={<QuestionMarkIcon />}
-                />
-              </Grid>
-            )}
-            {issue.priority === "low" && (
-              <Grid item sx={{ mt: 1 }} lg={4}>
-                <CardChip
-                  color="info"
-                  label="Priority"
-                  img={<LowPriorityIcon />}
-                />
-              </Grid>
-            )}
-            {issue.priority === "medium" && (
-              <Grid item sx={{ mt: 1 }} lg={4}>
-                <CardChip
-                  color="warning"
-                  label="Priority"
-                  img={<MediumPriorityIcon />}
-                />
-              </Grid>
-            )}
-            {issue.priority === "high" && (
-              <Grid item sx={{ mt: 1 }} lg={4}>
-                <CardChip
-                  color="error"
-                  label="Priority"
-                  img={<HighPriorityIcon />}
-                />
-              </Grid>
-            )}
+          <Grid container spacing={0}>
+            <Grid item sx={{ mt: 1, textAlign: "left" }} lg={11}>
+              <Stack direction="row" spacing={1}>
+                {issue.type === "bug" && (
+                  <CardChip color="info" label="Type" img={<BugReportIcon />} />
+                )}
+                {issue.type === "suggestion" && (
+                  <CardChip
+                    color="info"
+                    label="Type"
+                    img={<QuestionMarkIcon />}
+                  />
+                )}
+                {issue.priority === "low" && (
+                  <CardChip
+                    color="info"
+                    label="Priority"
+                    img={<LowPriorityIcon />}
+                  />
+                )}
+                {issue.priority === "medium" && (
+                  <CardChip
+                    color="warning"
+                    label="Priority"
+                    img={<MediumPriorityIcon />}
+                  />
+                )}
+                {issue.priority === "high" && (
+                  <CardChip
+                    color="error"
+                    label="Priority"
+                    img={<HighPriorityIcon />}
+                  />
+                )}
+              </Stack>
+            </Grid>
 
-            <Grid item lg={4}>
+            <Grid item lg={1}>
               <Avatar
                 sx={{
                   mt: 0.7,
-                  ml: 7,
+                  ml: 0,
                   cursor: "pointer",
                   ":hover": {
                     boxShadow:

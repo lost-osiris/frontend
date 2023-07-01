@@ -3,7 +3,7 @@ import { useParams, useSearchParams } from "react-router-dom";
 import { UserContext, IssuesContext } from "../../Context";
 
 import { toTitleCase } from "../../Utils";
-import { ArchivedCard } from "../../Items/Cards/archivedCard";
+import { IssueCard } from "../../Items/Cards/issueCard";
 
 import { Typography, Grid, Switch, Chip, Divider } from "@mui/material";
 import ProjectMemberAlert from "../../Components/ProjectMemberAlert";
@@ -116,7 +116,7 @@ export const IssueCardList = () => {
               .map((el, index) => {
                 return (
                   <Grid item md={3} key={`${index}-${JSON.stringify(el._id)}`}>
-                    <ArchivedCard issue={el} />
+                    <IssueCard issue={el} />
                   </Grid>
                 );
               })}
