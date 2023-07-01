@@ -178,22 +178,14 @@ export const IssueCard = (props) => {
                         issue.archived = !issue.archived;
                         let data = {
                           issue,
-                          userInfo: userInfo,
+                          userInfo: userInfo.user,
                         };
-                        utils
-                          .requests(
-                            "get",
-                            `/api/project/63fe47296edfc3b387628861/member/${userInfo.user.discord_id}`
-                          )
-                          .then((res) => {
-                            if (res.status === 204) {
-                              utils.requests(
-                                "put",
-                                `/api/issue/${props.issue.id}`,
-                                data
-                              );
-                            }
-                          });
+
+                        utils.requests(
+                          "put",
+                          `/api/issue/${props.issue.id}`,
+                          data
+                        );
                       } else {
                         window.alert(
                           'Status must be "Completed" or "Won\'t Fix" in order to archive'
