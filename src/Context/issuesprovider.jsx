@@ -27,9 +27,11 @@ export const IssuesProvider = (props) => {
       return value;
     });
 
+    console.log(issues);
+
     utils
       .requests("put", `/api/issue/${issue.id}`, {
-        data: { issue, userInfo: userInfo },
+        data: { issue, userInfo: userInfo.user },
         alert: true,
         alertMessage: `Successfully updated "${
           issue.summary

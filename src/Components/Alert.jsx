@@ -14,7 +14,7 @@ export default function AlertNotification({ value }) {
       TransitionComponent={TransitionLeft}
       open={open}
       onClose={() => setOpen(false)}
-      autoHideDuration={value.duration || 3000}
+      autoHideDuration={value.duration || 5000}
       anchorOrigin={{ vertical: "top", horizontal: "right" }}
     >
       <Alert severity={value.type} sx={{ width: "100%" }} variant="outlined">
