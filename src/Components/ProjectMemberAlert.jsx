@@ -2,6 +2,7 @@ import React from "react";
 import { Grid, Alert, AlertTitle, IconButton, Typography } from "@mui/material";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { useNavigate } from "react-router-dom";
+import { AUTH_REDIRECT_URL } from "../Utils";
 
 const ProjectMemberAlert = () => {
   const navigate = useNavigate();
@@ -29,10 +30,13 @@ const ProjectMemberAlert = () => {
         <Grid container>
           <Grid item>
             <Typography variant="body" sx={{ textDecoration: "bold" }}>
-              If you believe you already have access to the project, try
-              navigating home
+              If you believe you already have access to the project, please try
+              reauthenticating!
               <IconButton
-                onClick={() => (window.location.href = "/")}
+                onClick={() => {
+                  localStorage.removeItem("jwt");
+                  window.location = AUTH_REDIRECT_URL;
+                }}
                 color="primary"
               >
                 <RefreshIcon />

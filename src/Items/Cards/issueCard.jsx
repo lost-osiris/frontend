@@ -37,17 +37,17 @@ export const IssueCard = (props) => {
   const issue = { ...props.issue };
   const issueSummary =
     issue.summary.charAt(0).toUpperCase() + issue.summary.slice(1);
-  const hasContributor = userInfo.data.projects.find(
+  const hasContributor = userInfo.user.projects.find(
     (value) =>
       value.id === params.projectId && value.roles.indexOf("contributor")
   );
 
   const canEdit =
-    hasContributor || issue.playerData.id === userInfo.data.discord_id;
+    hasContributor || issue.playerData?.id === userInfo.user.discord_id;
 
   const handleCardDelete = () => {
     utils
-      .requests("delete", `/api/issue/${issue.id}`, { data: userInfo.data })
+      .requests("delete", `/api/issue/${issue.id}`, { data: userInfo.user })
       .then(() => {
         if (props.onDelete) {
           props.onDelete();

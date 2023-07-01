@@ -30,8 +30,8 @@ export const IssueCardList = () => {
   };
 
   if (
-    !userInfo?.data.projects[0] ||
-    userInfo?.data.projects[0].name !== "Pale-Court"
+    !userInfo?.user.projects[0] ||
+    userInfo?.user.projects[0].id !== "63fe47296edfc3b387628861"
   ) {
     return <ProjectMemberAlert />;
   }

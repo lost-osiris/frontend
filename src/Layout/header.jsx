@@ -18,11 +18,6 @@ import HomeIcon from "@mui/icons-material/Home";
 import Logout from "@mui/icons-material/Logout";
 import * as utils from "../Utils";
 
-const AUTH_REDIRECT =
-  process.env.REACT_APP_IS_DEV === "true"
-    ? encodeURI("http://localhost:3000/")
-    : encodeURI("https://modforge.gg/");
-
 const Header = () => {
   const userInfo = useContext(UserContext);
   const [categories, setCategories] = useState([]);
@@ -37,7 +32,7 @@ const Header = () => {
   };
 
   const logout = () => {
-    localStorage.removeItem("userInfo");
+    localStorage.removeItem("jwt");
     window.location = "/project/63fe47296edfc3b387628861/issues/general";
   };
 
@@ -79,8 +74,8 @@ const Header = () => {
               onClick={handleClick}
             >
               <Avatar
-                src={`https://cdn.discordapp.com/avatars/${userInfo.data.discord_id}/${userInfo.data.avatar}.png`}
-                alt={userInfo.data.username}
+                src={`https://cdn.discordapp.com/avatars/${userInfo.user.discord_id}/${userInfo.user.avatar}.png`}
+                alt={userInfo.user.username}
                 sx={{ width: 50, height: 50 }}
               />
             </Fab>
@@ -123,8 +118,8 @@ const Header = () => {
             >
               <MenuItem onClick={handleClose}>
                 <Avatar
-                  src={`https://cdn.discordapp.com/avatars/${userInfo.data.discord_id}/${userInfo.data.avatar}.png`}
-                  alt={userInfo.data.username}
+                  src={`https://cdn.discordapp.com/avatars/${userInfo.user.discord_id}/${userInfo.user.avatar}.png`}
+                  alt={userInfo.username}
                   sx={{ width: 50, height: 50 }}
                   onClick={handleClick}
                 />{" "}
@@ -143,7 +138,7 @@ const Header = () => {
             <Fab
               color="discord"
               variant="extended"
-              href={`https://discord.com/api/oauth2/authorize?client_id=1074939657902637058&redirect_uri=${AUTH_REDIRECT}&response_type=code&scope=identify`}
+              href={utils.AUTH_REDIRECT_URL}
             >
               Discord Login
               <LoginIcon sx={{ pl: 0.5 }} />

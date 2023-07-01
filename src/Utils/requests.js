@@ -1,5 +1,6 @@
 import axios from "axios";
 import { store, addAlert } from './store'
+import * as utils from '../Utils'
 
 export const requests =  async (method, url, options) => {
   if (!options) {
@@ -14,13 +15,19 @@ export const requests =  async (method, url, options) => {
     options.data = {};
   }
   
-  let localstorage = JSON.parse(localStorage.getItem("userInfo"));
+  let jwt = localStorage.getItem("jwt");
+  // console.log(utils.parseJwt(localstorage));
+
+  // console.log(Date.now(), localstorage.expires)
+  // if (Date.now() >= new Date(localstorage.expires)) {
+  //   console.log("need to refresh token")
+  // }
 
   return axios({
     headers: {
       // TODO add authorization header
       "Content-Type": "application/json",
-      Authorization: `Bearer ${localstorage?.data.token.access_token}`,
+      Authorization: `Bearer ${jwt}`,
       ...options.headers,
     },
     data: options.data,
@@ -32,6 +39,10 @@ export const requests =  async (method, url, options) => {
     }
 
     return res.data
+  }).catch((error) => {
+    if (error.response.status === 403) {
+      store.dispatch(addAlert({type: "error", message: "Forbidden"}))
+    }
   });
 
 };
