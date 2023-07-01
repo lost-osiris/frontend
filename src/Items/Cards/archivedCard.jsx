@@ -36,13 +36,13 @@ export const ArchivedCard = (props) => {
   const issue = { ...props.issue };
   const userInfo = useContext(UserContext);
 
-  const hasContributor = userInfo.data.projects.find(
+  const hasContributor = userInfo.user.projects.find(
     (value) =>
       value.id === params.projectId && value.roles.indexOf("contributor")
   );
 
   const canEdit =
-    hasContributor || issue.discord_id === userInfo.data.discord_id;
+    hasContributor || issue.discord_id === userInfo.user.discord_id;
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "issue",
@@ -56,7 +56,7 @@ export const ArchivedCard = (props) => {
 
   const handleCardDelete = () => {
     utils
-      .requests("delete, "`/api/issue/${issue._id}`, { data: userInfo.data })
+      .requests("delete, "`/api/issue/${issue._id}`, { data: userInfo.user })
       .then(() => {
         if (props.onDelete) {
           props.onDelete();
@@ -156,22 +156,13 @@ export const ArchivedCard = (props) => {
                         issue.archived = !issue.archived;
                         let data = {
                           issue,
-                          userInfo: userInfo,
+                          userInfo: userInfo.user,
                         };
-                        utils
-                          .requests(
-                            "get",
-                            `/api/project/63fe47296edfc3b387628861/member/${userInfo.data.discord_id}`
-                          )
-                          .then((res) => {
-                            if (res.status === 204) {
-                              utils.requests(
-                                "put",
-                                `/api/issue/${props.issue.id}`,
-                                data
-                              );
-                            }
-                          });
+                        utils.requests(
+                          "put",
+                          `/api/issue/${props.issue.id}`,
+                          data
+                        );
                       } else {
                         window.alert(
                           'Status must be "Completed" or "Won\'t Fix" in order to archive'
