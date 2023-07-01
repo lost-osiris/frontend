@@ -45,8 +45,6 @@ export const IssueCard = (props) => {
       value.id === params.projectId && value.roles.indexOf("maintainer") >= 0
   );
 
-  console.log(issue);
-
   const canEdit =
     hasMaintainer || issue.discord_id === userInfo.user.discord_id;
 
@@ -224,8 +222,8 @@ export const IssueCard = (props) => {
               </Grid>
             )}
           </Grid>
-          <Grid container spacing={0}>
-            <Grid item sx={{ mt: 1, textAlign: "left" }} lg={11}>
+          <Grid container spacing={1} justifyContent="space-between">
+            <Grid item sx={{ mt: 1 }} justifyContent="left">
               <Stack direction="row" spacing={1}>
                 {issue.type === "bug" && (
                   <CardChip color="info" label="Type" img={<BugReportIcon />} />
@@ -261,11 +259,11 @@ export const IssueCard = (props) => {
               </Stack>
             </Grid>
 
-            <Grid item lg={1}>
+            <Grid item justifyContent="right">
               <Avatar
                 sx={{
                   mt: 0.7,
-                  ml: 0,
+                  mr: 1,
                   // cursor: "pointer",
                   // ":hover": {
                   //   boxShadow:
