@@ -3,7 +3,12 @@ import { useDrop } from "react-dnd";
 import axios from "axios";
 import { UserContext, IssuesContext } from "../../Context";
 import { IssueCard } from "../../Items/Cards/issueCard";
-import { toTitleCase, getStatusColorHk, getStatusColor } from "../../Utils";
+import {
+  toTitleCase,
+  getStatusColorHk,
+  getStatusColor,
+  requests,
+} from "../../Utils";
 import { Typography, Grid, Divider } from "@mui/material";
 
 export const IssueListColumn = ({ name }) => {
@@ -14,13 +19,14 @@ export const IssueListColumn = ({ name }) => {
   const [{ canDrop, isOver }, drop] = useDrop({
     accept: "issue",
     drop: (item) =>
-      axios
-        .get(`/api/project/Pale-Court/member/${userInfo.data.discord_id}`)
-        .then((res) => {
-          if (res.status === 204) {
-            updateIssue({ ...item.issue, status: name });
-          }
-        }),
+      requests(
+        "get",
+        `/api/project/63fe47296edfc3b387628861/member/${userInfo.user.discord_id}`
+      ).then((res) => {
+        if (res.status === 204) {
+          updateIssue({ ...item.issue, status: name });
+        }
+      }),
     collect: (monitor) => {
       let item = monitor.getItem();
       let issue = item ? item.issue : {};

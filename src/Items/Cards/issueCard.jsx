@@ -113,7 +113,7 @@ export const IssueCard = (props) => {
                         textDecoration: "underline",
                       },
                     }}
-                    onClick={() => navigate(`/issue/${issue._id}`)}
+                    onClick={() => navigate(`/issue/${issue.id}`)}
                   >
                     <Typography>{issueSummary}</Typography>
                   </Box>
@@ -138,7 +138,7 @@ export const IssueCard = (props) => {
                       textDecoration: "underline",
                     },
                   }}
-                  onClick={() => navigate(`/issue/${issue._id}`)}
+                  onClick={() => navigate(`/issue/${issue.id}`)}
                 >
                   {issueSummary}
                 </Box>
@@ -180,7 +180,7 @@ export const IssueCard = (props) => {
                         utils
                           .requests(
                             "get",
-                            `/api/project/63fe47296edfc3b387628861/member/${userInfo.data.discord_id}`
+                            `/api/project/63fe47296edfc3b387628861/member/${userInfo.user.discord_id}`
                           )
                           .then((res) => {
                             if (res.status === 204) {
