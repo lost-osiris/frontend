@@ -43,7 +43,8 @@ export const IssuePage = () => {
   const userInfo = useContext(UserContext);
   const hasContributor = userInfo.user.projects.find(
     (value) =>
-      value.id === params.projectId && value.roles.indexOf("contributor")
+      (value.id === params.projectId && value.roles.indexOf("contributor")) ||
+      value.roles.indexOf("maintainer")
   );
   const canEdit =
     hasContributor || issue?.discord_id === userInfo.user.discord_id;
