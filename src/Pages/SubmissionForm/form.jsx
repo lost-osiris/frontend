@@ -240,9 +240,12 @@ export const UserForm = (props) => {
             }
           }
         });
+      } catch (error) {
+        console.log(error);
+      }
     } else {
       window.alert("Please fill out all of the required fields!");
-    }.catch((err) => {console.error(err)})
+    }
   };
 
   return !userInfo ? (
