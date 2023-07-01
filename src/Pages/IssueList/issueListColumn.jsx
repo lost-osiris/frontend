@@ -1,22 +1,15 @@
 import React, { useContext } from "react";
 import { useDrop } from "react-dnd";
-import axios from "axios";
-import { UserContext, IssuesContext } from "../../Context";
+import { IssuesContext } from "../../Context";
 import { IssueCard } from "../../Items/Cards/issueCard";
-import {
-  toTitleCase,
-  getStatusColorHk,
-  getStatusColor,
-  requests,
-} from "../../Utils";
+import { toTitleCase, getStatusColorHk, getStatusColor } from "../../Utils";
 import { Typography, Grid, Divider } from "@mui/material";
 
 export const IssueListColumn = ({ name }) => {
   const { issues, updateIssue } = useContext(IssuesContext);
-  const userInfo = useContext(UserContext);
   const filteredIssues = issues.filter((issue) => issue.status === name);
 
-  const [{ canDrop, isOver }, drop] = useDrop({
+  const [{ canDrop }, drop] = useDrop({
     accept: "issue",
     drop: (item) => updateIssue({ ...item.issue, status: name }),
     collect: (monitor) => {
@@ -66,15 +59,15 @@ export const IssueListColumn = ({ name }) => {
         }}
         ref={drop}
       >
-        {filteredIssues.map((el, index) => {
-          if (!el.archived) {
+        {filteredIssues
+          .filter((value) => !value.archived)
+          .map((el, index) => {
             return (
               <Grid item key={`${index}-${JSON.stringify(el)}`} sx={{ pb: 1 }}>
                 <IssueCard issue={el} />
               </Grid>
             );
-          }
-        })}
+          })}
       </Grid>
     </Grid>
   );

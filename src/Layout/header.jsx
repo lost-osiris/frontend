@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { UserContext } from "../Context/authprovider";
+
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -21,7 +22,7 @@ import * as utils from "../Utils";
 
 const Header = () => {
   const userInfo = useContext(UserContext);
-  const [categories, setCategories] = useState([]);
+
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState();
   const open = Boolean(anchorEl);
@@ -36,14 +37,6 @@ const Header = () => {
     localStorage.removeItem("jwt");
     window.location = "/project/63fe47296edfc3b387628861/issues/general";
   };
-
-  useEffect(() => {
-    if (!categories) {
-      utils
-        .requests("get", `/api/project/63fe47296edfc3b387628861/categories`)
-        .then((data) => setCategories(data));
-    }
-  }, [categories]);
 
   return (
     <AppBar

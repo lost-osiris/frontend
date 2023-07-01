@@ -1,7 +1,7 @@
 import React from "react";
 import Routes from './routes'
 import { BrowserRouter } from "react-router-dom";
-import { UserProvider } from "./Context";
+import { UserProvider, CategoriesProvider } from "./Context";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { Provider as ReduxProvider  } from "react-redux";
@@ -18,9 +18,11 @@ const App = () => {
         <div className="App">
           <BrowserRouter>
             <UserProvider>
-              <DndProvider backend={HTML5Backend}>
-              <Routes /> 
-              </DndProvider>
+              <CategoriesProvider>
+                <DndProvider backend={HTML5Backend}>
+                <Routes /> 
+                </DndProvider>
+              </CategoriesProvider>
             </UserProvider>
           </BrowserRouter>
         </div>

@@ -11,6 +11,10 @@ const AUTH_REDIRECT =
 export const AUTH_REDIRECT_URL = `https://discord.com/api/oauth2/authorize?client_id=1074939657902637058&redirect_uri=${AUTH_REDIRECT}&response_type=code&scope=identify`
 
 export const toTitleCase = (str) => {
+  if (!str) {
+    return str
+  }
+  
   return str.replace("-", " ").replace(/\w\S*/g, function (txt) {
     return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
   });

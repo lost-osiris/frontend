@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext, useContext } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import * as utils from "../Utils";
 
@@ -14,8 +14,6 @@ export const IssuesProvider = (props) => {
   const [loading, setLoading] = useState(true);
   const userInfo = useContext(UserContext);
   const params = useParams();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const archived = searchParams.get("archived") === "true";
 
   const updateIssue = (issue) => {
     let issues = [...allIssues];
@@ -26,8 +24,6 @@ export const IssuesProvider = (props) => {
       }
       return value;
     });
-
-    console.log(issues);
 
     utils
       .requests("put", `/api/issue/${issue.id}`, {
@@ -75,7 +71,11 @@ export const IssuesProvider = (props) => {
 
   return (
     <IssuesContext.Provider
-      value={{ issues: allIssues, updateIssue: updateIssue }}
+      value={{
+        issues: allIssues,
+        updateIssue: updateIssue,
+        deleteIssue: deleteIssue,
+      }}
     >
       {props.children}
     </IssuesContext.Provider>

@@ -8,7 +8,7 @@ export const UserContext = createContext({});
 export const UserProvider = (props) => {
   const [userInfo, setUserInfo] = useState();
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, _] = useSearchParams(); // eslint-disable-line
 
   useEffect(() => {
     let token = searchParams.get("token");
@@ -21,7 +21,7 @@ export const UserProvider = (props) => {
         setUserInfo(utils.parseJwt(localStorage.getItem("jwt")));
       }
     }
-  }, [userInfo, searchParams]);
+  }, [userInfo, searchParams]); // eslint-disable-line
 
   return (
     <UserContext.Provider value={userInfo}>
