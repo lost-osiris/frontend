@@ -16,33 +16,38 @@ export const requests =  async (method, url, options) => {
   }
   
   let jwt = localStorage.getItem("jwt");
-  // console.log(utils.parseJwt(localstorage));
 
-  // console.log(Date.now(), localstorage.expires)
-  // if (Date.now() >= new Date(localstorage.expires)) {
-  //   console.log("need to refresh token")
-  // }
+  if (!jwt) {
+    window.location = "/"
+  }
 
-  return axios({
-    headers: {
-      // TODO add authorization header
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${jwt}`,
-      ...options.headers,
-    },
-    data: options.data,
-    method: method,
-    url: url,
-  }).then((res) => {
-    if (res.status >= 200 && options.alert) {
-      store.dispatch(addAlert({type: "success", message: options.alertMessage || "Success"}))
-    }
-
-    return res.data
-  }).catch((error) => {
-    if (error.response.status === 403) {
-      store.dispatch(addAlert({type: "error", message: "Forbidden"}))
-    }
-  });
-
+  if (Date.now() >= utils.parseJwt(jwt).exp * 1000 ) {
+      store.dispatch(addAlert({type: "error", message: "Session expired! Automatically redirecting in 5 seconds", duration: 5000}))
+      localStorage.removeItem("jwt")
+      setTimeout(() => {
+        window.location = "/";
+      }, 5000)
+  } else {
+    return axios({
+      headers: {
+        // TODO add authorization header
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${jwt}`,
+        ...options.headers,
+      },
+      data: options.data,
+      method: method,
+      url: url,
+    }).then((res) => {
+      if (res.status >= 200 && options.alert) {
+        store.dispatch(addAlert({type: "success", message: options.alertMessage || "Success"}))
+      }
+  
+      return res.data
+    }).catch((error) => {
+      if (error.response.status === 403) {
+        store.dispatch(addAlert({type: "error", message: "Forbidden"}))
+      }
+    });
+  }
 };
