@@ -42,7 +42,7 @@ export const UserForm = (props) => {
       type: "bug",
       priority: "medium",
       discord_id:
-        !userInfo.discord.discord_id || null ? "" : userInfo.discord.discord_id,
+        !userInfo.user.discord_id || null ? "" : userInfo.user.discord_id,
       version: !version === undefined || null ? null : version,
       description: "",
       modlogs: {
@@ -166,9 +166,7 @@ export const UserForm = (props) => {
                     type: "bug",
                     priority: "medium",
                     discord_id:
-                      !userInfo.discord.discord_id || null
-                        ? ""
-                        : userInfo.discord.discord_id,
+                      !userInfo.data.id || null ? "" : userInfo.data.id,
                     version: "",
                     description: "",
                     modlogs: {
