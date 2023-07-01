@@ -20,7 +20,9 @@ const ProjectMemberAlert = () => {
               ":hover": { cursor: "pointer", textDecoration: "underline" },
             }}
             component="span"
-            onClick={() => navigate("/project/joinwaitlist")}
+            onClick={() =>
+              navigate("/project/63fe47296edfc3b387628861/joinwaitlist")
+            }
           >
             HERE
           </Typography>{" "}
