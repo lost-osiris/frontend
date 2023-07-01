@@ -156,33 +156,33 @@ export const UserForm = (props) => {
         }
         promise.then(() => {
           if (!props.onSubmit) {
-            setNewIssue({
-              status: "reported",
-              summary: "",
-              category: "General",
-              type: "bug",
-              priority: "medium",
-              discord_id: !userInfo.user.id || null ? "" : userInfo.user.id,
-              version: "",
-              description: "",
-              modlogs: {
-                title: "",
-                body: "",
-              },
-              archived: false,
-              attachments: {
-                embedSource: "",
-                generalUrl: "",
-              },
-            });
-            setSubmitFormColor("success");
-            setSubmitFormText("Success!");
-            setTimeout(() => {
-              setSubmitFormColor("primary");
-              setSubmitFormText("Submit");
-              setModlogsButtonColor("primary");
-              setModlogsButtonText("Upload Modlogs");
-            }, 500);
+            // setNewIssue({
+            //   status: "reported",
+            //   summary: "",
+            //   category: "General",
+            //   type: "bug",
+            //   priority: "medium",
+            //   discord_id: !userInfo.user.id || null ? "" : userInfo.user.id,
+            //   version: "",
+            //   description: "",
+            //   modlogs: {
+            //     title: "",
+            //     body: "",
+            //   },
+            //   archived: false,
+            //   attachments: {
+            //     embedSource: "",
+            //     generalUrl: "",
+            //   },
+            // });
+            // setSubmitFormColor("success");
+            // setSubmitFormText("Success!");
+            // setTimeout(() => {
+            //   setSubmitFormColor("primary");
+            //   setSubmitFormText("Submit");
+            //   setModlogsButtonColor("primary");
+            //   setModlogsButtonText("Upload Modlogs");
+            // }, 500);
           } else {
             props.onSubmit(newIssue);
           }

@@ -18,15 +18,7 @@ export const IssueListColumn = ({ name }) => {
 
   const [{ canDrop, isOver }, drop] = useDrop({
     accept: "issue",
-    drop: (item) =>
-      requests(
-        "get",
-        `/api/project/63fe47296edfc3b387628861/member/${userInfo.user.discord_id}`
-      ).then((res) => {
-        if (res.status === 204) {
-          updateIssue({ ...item.issue, status: name });
-        }
-      }),
+    drop: (item) => updateIssue({ ...item.issue, status: name }),
     collect: (monitor) => {
       let item = monitor.getItem();
       let issue = item ? item.issue : {};
