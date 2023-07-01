@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { UserContext } from "../../Context/authprovider";
+import { UserContext, CategoriesContext } from "../../Context";
 import { useParams, useNavigate } from "react-router-dom";
 
 import {
@@ -13,11 +13,11 @@ import {
   Tab,
   Button,
 } from "@mui/material";
-import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
 import BugReportIcon from "@mui/icons-material/BugReport";
 import DoubleArrowIcon from "@mui/icons-material/DoubleArrow";
 import DragHandleIcon from "@mui/icons-material/DragHandle";
 import EditIcon from "@mui/icons-material/Edit";
+import SuggectionIcon from "@mui/icons-material/TipsAndUpdates";
 
 import * as utils from "../../Utils";
 import Loading from "../../Components/Loading";
@@ -41,12 +41,14 @@ export const IssuePage = () => {
   let [issue, setIssue] = useState(null);
   let [tabValue, setTabValue] = useState(0);
   const userInfo = useContext(UserContext);
-  const hasContributor = userInfo.user.projects.find(
+  const categories = useContext(CategoriesContext);
+  const hasMaintainer = userInfo.user.projects.find(
     (value) =>
-      value.id === params.projectId && value.roles.indexOf("contributor")
+      value.id === params.projectId && value.roles.indexOf("maintainer") >= 0
   );
+
   const canEdit =
-    hasContributor || issue?.discord_id === userInfo.user.discord_id;
+    hasMaintainer || issue?.discord_id === userInfo.user.discord_id;
 
   const handleTabChange = (_, tab) => {
     setTabValue(tab);
@@ -60,7 +62,7 @@ export const IssuePage = () => {
     }
   });
 
-  if (!issue) {
+  if (!issue || categories === undefined) {
     return <Loading />;
   }
 
@@ -137,7 +139,7 @@ export const IssuePage = () => {
                         />
                       )}
                       {issue.type === "suggestion" && (
-                        <QuestionMarkIcon sx={{ fontSize: "3rem" }} />
+                        <SuggectionIcon sx={{ fontSize: "3rem" }} />
                       )}
                     </Grid>
                   </Grid>

@@ -6,7 +6,7 @@ import { toTitleCase, getStatusColorHk, getStatusColor } from "../../Utils";
 import { Typography, Grid, Divider } from "@mui/material";
 
 export const IssueListColumn = ({ name }) => {
-  const { issues, updateIssue } = useContext(IssuesContext);
+  const { issues, updateIssue, deleteIssue } = useContext(IssuesContext);
   const filteredIssues = issues.filter((issue) => issue.status === name);
 
   const [{ canDrop }, drop] = useDrop({
@@ -64,7 +64,7 @@ export const IssueListColumn = ({ name }) => {
           .map((el, index) => {
             return (
               <Grid item key={`${index}-${JSON.stringify(el)}`} sx={{ pb: 1 }}>
-                <IssueCard issue={el} />
+                <IssueCard issue={el} onDelete={() => deleteIssue(el)} />
               </Grid>
             );
           })}

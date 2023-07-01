@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
-import { UserContext, IssuesContext } from "../../Context";
+import { UserContext, IssuesContext, CategoriesContext } from "../../Context";
 
 import { toTitleCase } from "../../Utils";
 import { IssueCard } from "../../Items/Cards/issueCard";
@@ -15,6 +15,7 @@ export const IssueCardList = () => {
   const archived = Boolean(searchParams.get("archived") === "true");
   const userInfo = useContext(UserContext);
   const { issues } = useContext(IssuesContext);
+  const categories = useContext(CategoriesContext);
   const params = useParams();
 
   const getNumOfArchived = () => {
@@ -36,7 +37,7 @@ export const IssueCardList = () => {
     return <ProjectMemberAlert />;
   }
 
-  if (!issues) {
+  if (!issues || categories === undefined) {
     return <Loading />;
   }
 
