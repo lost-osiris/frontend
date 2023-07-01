@@ -21,9 +21,11 @@ import {
 import RadioGroup from "@mui/material/RadioGroup";
 import SendIcon from "@mui/icons-material/Send";
 import RefreshIcon from "@mui/icons-material/Refresh";
+import { useParams } from "react-router-dom";
 
 export const UserForm = (props) => {
   const userInfo = useContext(UserContext);
+  let params = useParams();
   const [categories, setCategories] = useState([]);
   const [version, setVersion] = useState("");
   const [modlogsButtonColor, setModlogsButtonColor] = useState("primary");
@@ -54,6 +56,7 @@ export const UserForm = (props) => {
         embedSource: "",
         generalUrl: "",
       },
+      project_id: params.projectId,
     }
   );
 
@@ -149,7 +152,7 @@ export const UserForm = (props) => {
             .requests("put", `/api/issue/${props.issue._id}`, data)
             .then(() => window.alert("issue updated!"));
         } else {
-          promise = utils.requests("post", "/api/issue", issue);
+          promise = utils.requests("post", "/api/issue", { data: issue });
         }
         promise.then(() => {
           if (!props.onSubmit) {

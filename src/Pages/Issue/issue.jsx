@@ -1,19 +1,22 @@
 import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "../../Context/authprovider";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { CardChip } from "../../Components/Chip";
+import { HighPriorityIcon } from "../../Components/HighPrioIcon";
+import { LowPriorityIcon } from "../../Components/LowPrioIcon";
+import { MediumPriorityIcon } from "../../Components/MediumPrioIcon";
 
 import {
   Grid,
   Avatar,
-  CircularProgress,
   Box,
   Typography,
   CardContent,
   Card,
-  CardHeader,
   Tabs,
   Tab,
+  Divider,
+  Stack,
 } from "@mui/material";
 import QuestionMarkIcon from "@mui/icons-material/QuestionMark";
 import BugReportIcon from "@mui/icons-material/BugReport";
@@ -40,7 +43,7 @@ export const IssuePage = () => {
   let params = useParams();
   let navigate = useNavigate();
   let [issue, setIssue] = useState(null);
-  let [tabValue, setTabValue] = useState("details");
+  let [tabValue, setTabValue] = useState(0);
   let [editIssue, setEditIssue] = useState({ issue: null, toggle: false });
 
   const handleTabChange = (_, tab) => {
@@ -70,9 +73,24 @@ export const IssuePage = () => {
           <Card>
             <CardContent>
               <Grid container>
-                <Grid item lg={12}>
-                  <Typography variant="h4" sx={{ textAlign: "center" }}>
-                    {issue.summary}
+                <Grid item lg={8}>
+                  <Typography variant="h4">{issue.summary}</Typography>
+                </Grid>
+                <Grid item lg={4}>
+                  <Typography
+                    variant="h4"
+                    textAlign="center"
+                    sx={{
+                      borderRadius: "5px",
+                      opacity: 0.9,
+                      bgcolor: utils.getStatusColorHk(issue.status),
+                      borderColor: utils.getStatusColorHk(issue.status),
+                    }}
+                  >
+                    {issue.status
+                      .split(" ")
+                      .map((s) => utils.toTitleCase(s))
+                      .join(" ")}
                   </Typography>
                 </Grid>
                 <Grid item lg={12} sx={{ mt: 5 }}>
@@ -86,13 +104,70 @@ export const IssuePage = () => {
                     <Tab label="Mod Logs" id="mog-logs" />
                   </Tabs>
                   <TabPanel value={tabValue} index={0}>
-                    <pre>{JSON.stringify(issue, null, 2)}</pre>
+                    <Grid container spacing={2}>
+                      <Grid item lg={8}>
+                        <Stack direction="row" spacing={1}>
+                          {issue.type === "bug" && (
+                            <CardChip
+                              color="info"
+                              label="Type"
+                              img={<BugReportIcon />}
+                            />
+                          )}
+                          {issue.type === "suggestion" && (
+                            <CardChip
+                              color="info"
+                              label="Type"
+                              img={<QuestionMarkIcon />}
+                            />
+                          )}
+                          {issue.priority === "low" && (
+                            <CardChip
+                              color="info"
+                              label="Priority"
+                              img={<LowPriorityIcon />}
+                            />
+                          )}
+                          {issue.priority === "medium" && (
+                            <CardChip
+                              color="warning"
+                              label="Priority"
+                              img={<MediumPriorityIcon />}
+                            />
+                          )}
+                          {issue.priority === "high" && (
+                            <CardChip
+                              color="error"
+                              label="Priority"
+                              img={<HighPriorityIcon />}
+                            />
+                          )}
+                        </Stack>
+                      </Grid>
+                      <Grid item lg={4}>
+                        User Shit
+                      </Grid>
+                    </Grid>
+                    <Grid container spacing={2}>
+                      <Grid item lg={12}>
+                        <Typography sx={{}} variant="h5">
+                          Description
+                        </Typography>
+                      </Grid>
+                      <Grid item lg={12}>
+                        <Typography variant="body">
+                          {issue.description}
+                        </Typography>
+                      </Grid>
+                    </Grid>
                   </TabPanel>
                   <TabPanel value={tabValue} index={1}>
                     Attachments
+                    <pre>{JSON.stringify(issue, null, 2)}</pre>
                   </TabPanel>
                   <TabPanel value={tabValue} index={2}>
                     Mod Logs
+                    <pre>{JSON.stringify(issue, null, 2)}</pre>
                   </TabPanel>
                 </Grid>
               </Grid>
