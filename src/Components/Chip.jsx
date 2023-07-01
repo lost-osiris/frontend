@@ -9,7 +9,7 @@ export const CardChip = ({ label, color, img }) => {
       color={color}
       variant="outlined"
       avatar={img}
-      sx={{ pl: 0.1 }}
+      sx={{ pl: 1 }}
     />
   );
 };
