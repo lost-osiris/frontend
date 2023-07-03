@@ -55,7 +55,7 @@ export const IssuesProvider = (props) => {
           `/api/project/63fe47296edfc3b387628861/category/${params.category}/issues`
         )
         .then((data) => {
-          if (loading && data && data[0].category === params.category) {
+          if (loading && data) {
             setIssues(data);
             setLoading(false);
           }
@@ -67,6 +67,7 @@ export const IssuesProvider = (props) => {
     <IssuesContext.Provider
       value={{
         issues: allIssues,
+        issuesLoading: loading,
         updateIssue: updateIssue,
         deleteIssue: deleteIssue,
       }}

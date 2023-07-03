@@ -159,27 +159,27 @@ export const UserForm = (props) => {
         });
       }
       promise.then(() => {
-        setNewIssue({
-          status: "reported",
-          summary: "",
-          category: "General",
-          type: "bug",
-          priority: "medium",
-          discord_id:
-            !userInfo.user.discord_id || null ? "" : userInfo.user.discord_id,
-          version: "",
-          description: "",
-          modlogs: {
-            title: "",
-            body: "",
-          },
-          archived: false,
-          attachments: {
-            embedSource: "",
-            generalUrl: "",
-          },
-          project_id: params.projectId,
-        });
+        // setNewIssue({
+        //   status: "reported",
+        //   summary: "",
+        //   category: "General",
+        //   type: "bug",
+        //   priority: "medium",
+        //   discord_id:
+        //     !userInfo.user.discord_id || null ? "" : userInfo.user.discord_id,
+        //   version: "",
+        //   description: "",
+        //   modlogs: {
+        //     title: "",
+        //     body: "",
+        //   },
+        //   archived: false,
+        //   attachments: {
+        //     embedSource: "",
+        //     generalUrl: "",
+        //   },
+        //   project_id: params.projectId,
+        // });
 
         if (location.state?.id) {
           navigate(`/issue/${location.state.id}`);

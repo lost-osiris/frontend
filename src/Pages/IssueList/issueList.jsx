@@ -14,7 +14,7 @@ export const IssueCardList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const archived = Boolean(searchParams.get("archived") === "true");
   const userInfo = useContext(UserContext);
-  const { issues } = useContext(IssuesContext);
+  const { issues, issuesLoading } = useContext(IssuesContext);
   const categories = useContext(CategoriesContext);
   const params = useParams();
 
@@ -37,8 +37,20 @@ export const IssueCardList = () => {
     return <ProjectMemberAlert />;
   }
 
-  if (!issues || categories === undefined) {
+  if (issuesLoading || categories === undefined) {
     return <Loading />;
+  }
+
+  console.log(issues, issuesLoading);
+
+  if (issues.length === 0 && !issuesLoading) {
+    return (
+      <Grid container justifyContent="center">
+        <Grid item>
+          <Typography variant="h2">No issues found!</Typography>
+        </Grid>
+      </Grid>
+    );
   }
 
   return (
