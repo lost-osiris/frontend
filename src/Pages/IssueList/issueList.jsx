@@ -41,8 +41,6 @@ export const IssueCardList = () => {
     return <Loading />;
   }
 
-  console.log(issues, issuesLoading);
-
   if (issues.length === 0 && !issuesLoading) {
     return (
       <Grid container justifyContent="center">
