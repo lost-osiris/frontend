@@ -43,7 +43,6 @@ export const IssuePage = () => {
   const userInfo = useContext(UserContext);
   const categories = useContext(CategoriesContext);
   let project = userInfo.user.projects.find((value) => value);
-  console.log(project);
 
   const hasMaintainer =
     project.roles.indexOf("maintainer") === 0 ? true : false;
