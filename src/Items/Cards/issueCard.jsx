@@ -40,10 +40,10 @@ export const IssueCard = (props) => {
   const issue = { ...props.issue };
   const issueSummary =
     issue.summary.charAt(0).toUpperCase() + issue.summary.slice(1);
-  const hasMaintainer = userInfo.user.projects.find(
-    (value) =>
-      value.id === params.projectId && value.roles.indexOf("maintainer") >= 0
-  );
+  let project = userInfo.user.projects.find((value) => value);
+
+  const hasMaintainer =
+    project.roles.indexOf("maintainer") === 0 ? true : false;
 
   const canEdit =
     hasMaintainer || issue.discord_id === userInfo.user.discord_id;

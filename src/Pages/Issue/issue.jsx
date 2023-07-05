@@ -42,10 +42,11 @@ export const IssuePage = () => {
   let [tabValue, setTabValue] = useState(0);
   const userInfo = useContext(UserContext);
   const categories = useContext(CategoriesContext);
-  const hasMaintainer = userInfo.user.projects.find(
-    (value) =>
-      value.id === params.projectId && value.roles.indexOf("maintainer") >= 0
-  );
+  let project = userInfo.user.projects.find((value) => value);
+  console.log(project);
+
+  const hasMaintainer =
+    project.roles.indexOf("maintainer") === 0 ? true : false;
 
   const canEdit =
     hasMaintainer || issue?.discord_id === userInfo.user.discord_id;

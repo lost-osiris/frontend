@@ -52,7 +52,9 @@ export const IssuesProvider = (props) => {
       utils
         .requests(
           "get",
-          `/api/project/63fe47296edfc3b387628861/category/${params.category}/issues`
+          `/api/project/63fe47296edfc3b387628861/category/${decodeURIComponent(
+            params.category
+          )}/issues`
         )
         .then((data) => {
           if (loading && data) {
