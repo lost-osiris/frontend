@@ -18,7 +18,7 @@ export default function AlertNotification({ value }) {
       disableWindowBlurListener={true}
       anchorOrigin={{ vertical: "top", horizontal: "right" }}
     >
-      <Alert severity={value.type} sx={{ width: "100%" }} variant="outlined">
+      <Alert severity={value.type} sx={{ width: "100%" }}>
         {value.message}
       </Alert>
     </Snackbar>
