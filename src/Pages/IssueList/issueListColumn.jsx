@@ -52,9 +52,13 @@ export const IssueListColumn = ({ name }) => {
         sx={{
           minHeight: "400px",
           maxHeight: "800px",
+          display: "flex",
+          flexDirection: "column",
+          height: "100%",
+          overflow: "auto",
           p: 1,
           borderStyle: canDrop ? "dotted" : "",
-          borderColor: canDrop ? getStatusColor(name) + ".light" : "",
+          borderColor: canDrop ? getStatusColorHk(name) : "",
           borderRadius: canDrop ? "10px" : "",
         }}
         ref={drop}
