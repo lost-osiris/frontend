@@ -1,42 +1,42 @@
-import React from "react";
-import { Route, Routes } from "react-router-dom";
-import Layout from "./Layout/main";
-import { IssueCardList } from "./Pages/IssueList/issueList";
-import { IssuePage } from "./Pages/Issue/issue";
-import { ProjectCardList } from "./Pages/ProjectList/projectList";
-import { UserForm } from "./Pages/SubmissionForm/form.jsx";
-import { JoinWaitlist } from "./Pages/Waitlist/joinWaitlist";
-import { ManageWaitlist } from "./Pages/Waitlist/manageWaitlist";
-import { IssuesProvider } from "./Context";
+import React from 'react'
+import { Route, Routes } from 'react-router-dom'
+import Layout from './layout/main'
+import { KanbanBoardPage } from '~/pages/KanbanBoard'
+import { IssuePage } from './pages/Issue'
+import { ProjectList } from './pages/ProjectList'
+import { CreateIssue } from './pages/CreateIssue'
+import { JoinWaitlist } from './pages/joinWaitlist'
+import { ManageWaitlist } from '~/pages/manageWaitlist'
+import { KanbanBoardProvider } from '~/context'
 
 const AppRoutes = () => {
   return (
     <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route path="/projects" element={<ProjectCardList />} />
+      <Route element={<Layout />} path='/'>
+        <Route element={<ProjectList />} path='/projects' />
         <Route
-          path="/project/:projectId/joinwaitlist"
           element={<JoinWaitlist />}
+          path='/project/:projectId/joinwaitlist'
         />
         {/* TODO: need to specify project id */}
         <Route
-          path="/project/:projectId/managewaitlist"
           element={<ManageWaitlist />}
+          path='/project/:projectId/managewaitlist'
         />
-        <Route path="/form" element={<UserForm />} />
+        <Route element={<CreateIssue />} path='/create-issue' />
         <Route
-          path="/project/:projectId/issues/:category"
           element={
-            <IssuesProvider>
-              <IssueCardList />
-            </IssuesProvider>
+            <KanbanBoardProvider>
+              <KanbanBoardPage />
+            </KanbanBoardProvider>
           }
+          path='/project/:projectId/issues/:category'
         />
-        <Route path="/issue/:issueId" element={<IssuePage />} />
-        <Route path="/project/:projectId/form" element={<UserForm />} />
+        <Route element={<IssuePage />} path='/issue/:issueId' />
+        <Route element={<CreateIssue />} path='/project/:projectId/form' />
       </Route>
     </Routes>
-  );
-};
+  )
+}
 
-export default AppRoutes;
+export default AppRoutes

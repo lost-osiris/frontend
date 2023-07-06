@@ -1,3 +1,4 @@
-export { IssuesProvider, IssuesContext } from "./issuesprovider";
-export { UserProvider, UserContext } from "./authprovider";
-export { CategoriesProvider, CategoriesContext } from "./categories";
+export { KanbanBoardProvider, KanbanBoardContext } from './KanbanBoard'
+export { UserProvider, UserContext } from './Authentication'
+export { CategoriesProvider, CategoriesContext } from './Categories'
+export { AlertsProvider, AlertsContext } from './Alerts'

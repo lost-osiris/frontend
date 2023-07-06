@@ -1,12 +1,12 @@
-import { createTheme } from "@mui/material/styles";
+import { createTheme } from '@mui/material/styles'
 
 const theme = createTheme({
   palette: {
-    mode: "dark",
     discord: {
-      main: "#5865F2",
+      main: '#5865F2',
     },
+    mode: 'dark',
   },
-});
+})
 
 export default theme

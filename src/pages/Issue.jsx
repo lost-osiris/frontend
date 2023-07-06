@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext } from "react";
-import { UserContext, CategoriesContext } from "../../Context";
-import { useParams, useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useContext } from 'react'
+import { UserContext, CategoriesContext } from '~/context'
+import { useParams, useNavigate } from 'react-router-dom'
 
 import {
   Grid,
@@ -12,72 +12,70 @@ import {
   Tabs,
   Tab,
   Button,
-} from "@mui/material";
-import BugReportIcon from "@mui/icons-material/BugReport";
-import DoubleArrowIcon from "@mui/icons-material/DoubleArrow";
-import DragHandleIcon from "@mui/icons-material/DragHandle";
-import EditIcon from "@mui/icons-material/Edit";
-import SuggectionIcon from "@mui/icons-material/TipsAndUpdates";
+} from '@mui/material'
+import BugReportIcon from '@mui/icons-material/BugReport'
+import DoubleArrowIcon from '@mui/icons-material/DoubleArrow'
+import DragHandleIcon from '@mui/icons-material/DragHandle'
+import EditIcon from '@mui/icons-material/Edit'
+import SuggectionIcon from '@mui/icons-material/TipsAndUpdates'
 
-import * as utils from "../../Utils";
-import Loading from "../../Components/Loading";
+import * as api from '~/api'
+import { getStatusColorHk, toTitleCase } from '~/utils'
+
+import Loading from '~/components/Loading'
 
 const TabPanel = (props) => {
-  const { children, value, index, ...other } = props;
+  const { children, value, index, ...other } = props
   return (
-    <div role="tabpanel" hidden={value !== index} id={value} {...other}>
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
+    <div hidden={value !== index} id={value} role='tabpanel' {...other}>
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
     </div>
-  );
-};
+  )
+}
 
 export const IssuePage = () => {
-  let params = useParams();
-  let navigate = useNavigate();
-  let [issue, setIssue] = useState(null);
-  let [tabValue, setTabValue] = useState(0);
-  const userInfo = useContext(UserContext);
-  const categories = useContext(CategoriesContext);
-  let project = userInfo.user.projects.find((value) => value);
+  let params = useParams()
+  let navigate = useNavigate()
+  let [issue, setIssue] = useState(null)
+  let [tabValue, setTabValue] = useState(0)
+  const userInfo = useContext(UserContext)
+  const categories = useContext(CategoriesContext)
+  let project = userInfo.user.projects.find((value) => value)
 
-  const hasMaintainer =
-    project.roles.indexOf("maintainer") === 0 ? true : false;
+  const hasMaintainer = project.roles.indexOf('maintainer') === 0 ? true : false
 
   const canEdit =
-    hasMaintainer || issue?.discord_id === userInfo.user.discord_id;
+    hasMaintainer || issue?.discord_id === userInfo.user.discord_id
 
   const handleTabChange = (_, tab) => {
-    setTabValue(tab);
-  };
+    setTabValue(tab)
+  }
 
   useEffect(() => {
     if (issue === null) {
-      utils
-        .requests("get", `/api/issue/${params.issueId}`)
-        .then((data) => setIssue(data));
+      api
+        .requests('get', `/api/issue/${params.issueId}`)
+        .then((data) => setIssue(data))
     }
-  });
+  })
 
   if (!issue || categories === undefined) {
-    return <Loading />;
+    return <Loading />
   }
 
   return (
     <div>
-      <Grid container sx={{ mb: 4, ml: 4 }} justifyContent="center">
+      <Grid container justifyContent='center' sx={{ mb: 4, ml: 4 }}>
         <Grid item lg={2} sx={{ mt: 2 }}>
-          <Grid container spacing={1} direction="row" justifyContent="left">
+          <Grid container direction='row' justifyContent='left' spacing={1}>
             <Grid item>
-              <Typography variant="h4" textAlign="center">
+              <Typography textAlign='center' variant='h4'>
                 {issue.playerData.username}
               </Typography>
             </Grid>
             <Grid item>
               <Avatar
+                src={`https://cdn.discordapp.com/avatars/${issue.discord_id}/${issue.playerData.avatar}.png`}
                 sx={{
                   // mt: 0.7,
                   ml: 0,
@@ -88,25 +86,24 @@ export const IssuePage = () => {
                   // },
                 }}
                 // onClick={() => navigate(`/user/${issue.discord_id}`)}
-                src={`https://cdn.discordapp.com/avatars/${issue.discord_id}/${issue.playerData.avatar}.png`}
               />
             </Grid>
           </Grid>
         </Grid>
         <Grid item lg={canEdit ? 9 : 10}>
-          <Typography variant="h3" sx={{ textAlign: "center" }}>
+          <Typography sx={{ textAlign: 'center' }} variant='h3'>
             {issue.summary}
           </Typography>
         </Grid>
         {canEdit && (
           <Grid item lg={1} sx={{ mt: 2 }}>
             <Button
-              variant="contained"
               onClick={() =>
-                navigate(`/project/63fe47296edfc3b387628861/form`, {
+                navigate('/project/63fe47296edfc3b387628861/form', {
                   state: issue,
                 })
               }
+              variant='contained'
             >
               <EditIcon />
               Edit
@@ -122,24 +119,24 @@ export const IssuePage = () => {
                 <Grid item lg={4}>
                   <Grid
                     container
+                    direction='row'
+                    justifyContent='center'
                     spacing={1}
-                    direction="row"
-                    justifyContent="center"
                   >
                     <Grid item>
-                      <Typography variant="h4" textAlign="center">
+                      <Typography textAlign='center' variant='h4'>
                         Type:
                       </Typography>
                     </Grid>
                     <Grid item>
-                      {issue.type === "bug" && (
+                      {issue.type === 'bug' && (
                         <BugReportIcon
-                          sx={{ fontSize: "3rem" }}
-                          color="warning"
+                          color='warning'
+                          sx={{ fontSize: '3rem' }}
                         />
                       )}
-                      {issue.type === "suggestion" && (
-                        <SuggectionIcon sx={{ fontSize: "3rem" }} />
+                      {issue.type === 'suggestion' && (
+                        <SuggectionIcon sx={{ fontSize: '3rem' }} />
                       )}
                     </Grid>
                   </Grid>
@@ -147,35 +144,38 @@ export const IssuePage = () => {
                 <Grid item lg={4}>
                   <Grid
                     container
+                    direction='row'
+                    justifyContent='center'
                     spacing={1}
-                    direction="row"
-                    justifyContent="center"
                   >
                     <Grid item>
-                      <Typography variant="h4" textAlign="center">
+                      <Typography textAlign='center' variant='h4'>
                         Priority:
                       </Typography>
                     </Grid>
                     <Grid item>
-                      {issue.priority === "low" && (
+                      {issue.priority === 'low' && (
                         <DoubleArrowIcon
-                          color="info"
+                          color='info'
                           sx={{
-                            transform: "rotate(90deg)",
-                            fontSize: "3rem",
+                            fontSize: '3rem',
+                            transform: 'rotate(90deg)',
                           }}
                         />
                       )}
-                      {issue.priority === "medium" && (
+                      {issue.priority === 'medium' && (
                         <DragHandleIcon
-                          color="warning"
-                          sx={{ fontSize: "3rem" }}
+                          color='warning'
+                          sx={{ fontSize: '3rem' }}
                         />
                       )}
-                      {issue.priority === "high" && (
+                      {issue.priority === 'high' && (
                         <DoubleArrowIcon
-                          color="error"
-                          sx={{ transform: "rotate(-90deg)", fontSize: "3rem" }}
+                          color='error'
+                          sx={{
+                            fontSize: '3rem',
+                            transform: 'rotate(-90deg)',
+                          }}
                         />
                       )}
                     </Grid>
@@ -183,48 +183,48 @@ export const IssuePage = () => {
                 </Grid>
                 <Grid item lg={4}>
                   <Typography
-                    variant="h4"
-                    textAlign="center"
                     sx={{
-                      borderRadius: "5px",
+                      bgcolor: getStatusColorHk(issue.status),
+                      borderColor: getStatusColorHk(issue.status),
+                      borderRadius: '5px',
                       opacity: 0.9,
-                      bgcolor: utils.getStatusColorHk(issue.status),
-                      borderColor: utils.getStatusColorHk(issue.status),
                     }}
+                    textAlign='center'
+                    variant='h4'
                   >
                     {issue.status
-                      .split(" ")
-                      .map((s) => utils.toTitleCase(s))
-                      .join(" ")}
+                      .split(' ')
+                      .map((s) => toTitleCase(s))
+                      .join(' ')}
                   </Typography>
                 </Grid>
                 <Grid item lg={12} sx={{ mt: 5 }}>
                   <Tabs
-                    value={tabValue}
                     onChange={handleTabChange}
-                    variant="fullWidth"
+                    value={tabValue}
+                    variant='fullWidth'
                   >
-                    <Tab label="Description" id="Description" />
-                    <Tab label="Attachments" id="attachments" />
-                    <Tab label="Mod Logs" id="mog-logs" />
+                    <Tab id='Description' label='Description' />
+                    <Tab id='attachments' label='Attachments' />
+                    <Tab id='mog-logs' label='Mod Logs' />
                   </Tabs>
-                  <TabPanel value={tabValue} index={0}>
+                  <TabPanel index={0} value={tabValue}>
                     <Grid container>
                       <Grid item lg={12}>
-                        <Typography variant="h5">
-                          {issue.description}
+                        <Typography variant='h5'>
+                          {issue.description || ''}
                         </Typography>
                       </Grid>
                     </Grid>
                   </TabPanel>
-                  <TabPanel value={tabValue} index={1}>
+                  <TabPanel index={1} value={tabValue}>
                     {!issue.attachments.embedSource &
                     !issue.attachments.generalUrl ? (
-                      <Grid container justifyContent="center">
+                      <Grid container justifyContent='center'>
                         <Grid item>
                           <Typography
-                            variant="h6"
-                            sx={{ fontStyle: "italic", textAlign: "center" }}
+                            sx={{ fontStyle: 'italic', textAlign: 'center' }}
+                            variant='h6'
                           >
                             No Attachments Set
                           </Typography>
@@ -232,48 +232,47 @@ export const IssuePage = () => {
                       </Grid>
                     ) : (
                       <>
-                        <Grid container justifyContent="center">
+                        <Grid container justifyContent='center'>
                           <Grid item>
                             <Box
-                              component="span"
-                              sx={{
-                                "&:hover": {
-                                  opacity: [0.9, 0.8, 0.7],
-                                  cursor: "pointer",
-                                  textDecoration: "underline",
-                                },
-                              }}
+                              component='span'
                               onClick={() =>
                                 window.open(
                                   issue.attachments.generalUrl,
-                                  "_blank"
+                                  '_blank',
                                 )
                               }
+                              sx={{
+                                '&:hover': {
+                                  cursor: 'pointer',
+                                  opacity: [0.9, 0.8, 0.7],
+                                  textDecoration: 'underline',
+                                },
+                              }}
                             >
                               <Typography
-                                variant="h6"
                                 sx={{
-                                  fontStyle: "italic",
-                                  textAlign: "center",
+                                  fontStyle: 'italic',
+                                  textAlign: 'center',
                                 }}
+                                variant='h6'
                               >
                                 View Attachment URL
                               </Typography>
                             </Box>
                           </Grid>
                         </Grid>
-                        <Grid container justifyContent="center" sx={{ mt: 2 }}>
+                        <Grid container justifyContent='center' sx={{ mt: 2 }}>
                           {issue.attachments.generalUrl && (
                             <Grid item>
                               <iframe
-                                title="issue-attachment-general-url"
                                 src={`${issue.attachments.generalUrl}`}
                                 style={{
-                                  width: "75vw",
-                                  height: "95vh",
-                                  overflow: "visible",
+                                  height: '95vh',
+                                  overflow: 'visible',
+                                  width: '75vw',
                                 }}
-                                frameBorder="0"
+                                title='issue-attachment-general-url'
                               />
                             </Grid>
                           )}
@@ -290,12 +289,12 @@ export const IssuePage = () => {
                       </>
                     )}
                   </TabPanel>
-                  <TabPanel value={tabValue} index={2}>
-                    <Grid container justifyContent="center">
+                  <TabPanel index={2} value={tabValue}>
+                    <Grid container justifyContent='center'>
                       <Grid item>
                         <Typography
-                          variant="h6"
-                          sx={{ fontStyle: "italic", textAlign: "center" }}
+                          sx={{ fontStyle: 'italic', textAlign: 'center' }}
+                          variant='h6'
                         >
                           {issue.modlogs.title}
                         </Typography>
@@ -310,5 +309,5 @@ export const IssuePage = () => {
         </Grid>
       </Grid>
     </div>
-  );
-};
+  )
+}

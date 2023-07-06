@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from 'react'
 
-import { Card, CardContent, Grid, Box, Typography } from "@mui/material";
+import { Card, CardContent, Grid, Box, Typography } from '@mui/material'
 
 export const ProjectCard = ({ project }) => {
   return (
@@ -10,18 +10,18 @@ export const ProjectCard = ({ project }) => {
           <Grid container>
             <Grid item lg={12}>
               <Box
-                component="h4"
+                component='h4'
                 sx={{
                   mt: 1,
                 }}
               >
                 <Box
-                  component="span"
+                  component='span'
                   sx={{
-                    "&:hover": {
+                    '&:hover': {
+                      cursor: 'pointer',
                       opacity: [0.9, 0.8, 0.7],
-                      cursor: "pointer",
-                      textDecoration: "underline",
+                      textDecoration: 'underline',
                     },
                   }}
                   // onClick={() => navigate(`/issue/${issue._id}`)}
@@ -34,5 +34,5 @@ export const ProjectCard = ({ project }) => {
         </CardContent>
       </Card>
     </>
-  );
-};
+  )
+}

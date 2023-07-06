@@ -1,7 +1,15 @@
-import React from "react";
+import React from 'react'
 
-import DragHandleIcon from "@mui/icons-material/DragHandle";
+import DragHandleIcon from '@mui/icons-material/DragHandle'
 
 export const MediumPriorityIcon = () => {
-  return <DragHandleIcon color="warning" sx={{ pl: 0, ml: 0.3 }} />;
-};
+  return (
+    <DragHandleIcon
+      color='warning'
+      sx={{
+        ml: 0.3,
+        pl: 0,
+      }}
+    />
+  )
+}

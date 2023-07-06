@@ -1,7 +1,7 @@
-import React, { useState, useContext } from "react";
-import { UserContext } from "../Context/authprovider";
+import React, { useState, useContext } from 'react'
+import { UserContext } from '~/context'
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom'
 
 import {
   Avatar,
@@ -12,133 +12,133 @@ import {
   Menu,
   MenuItem,
   ListItemIcon,
-} from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import LoginIcon from "@mui/icons-material/Login";
-import HomeIcon from "@mui/icons-material/Home";
-import Logout from "@mui/icons-material/Logout";
-import MoneyIcon from "@mui/icons-material/AttachMoney";
-import * as utils from "../Utils";
+} from '@mui/material'
+import AddIcon from '@mui/icons-material/Add'
+import LoginIcon from '@mui/icons-material/Login'
+import HomeIcon from '@mui/icons-material/Home'
+import Logout from '@mui/icons-material/Logout'
+import MoneyIcon from '@mui/icons-material/AttachMoney'
+import { AUTH_REDIRECT_URL } from '~/constants'
 
 const Header = () => {
-  const userInfo = useContext(UserContext);
+  const userInfo = useContext(UserContext)
 
-  const navigate = useNavigate();
-  const [anchorEl, setAnchorEl] = useState();
-  const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
+  const navigate = useNavigate()
+  const [anchorEl, setAnchorEl] = useState()
+  const open = Boolean(anchorEl)
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget)
+  }
   const handleClose = () => {
-    setAnchorEl(null);
-  };
+    setAnchorEl(null)
+  }
 
   const logout = () => {
-    localStorage.removeItem("jwt");
-    window.location = "/project/63fe47296edfc3b387628861/issues/general";
-  };
+    localStorage.removeItem('jwt')
+    window.location = '/project/63fe47296edfc3b387628861/issues/general'
+  }
 
   return (
     <AppBar
-      position="fixed"
+      position='fixed'
       sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
     >
       <Toolbar>
-        <Fab size="small" onClick={() => (window.location.href = "/")}>
+        <Fab onClick={() => (window.location.href = '/')} size='small'>
           <HomeIcon />
         </Fab>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1, pl: 1 }}>
+        <Typography component='div' sx={{ flexGrow: 1, pl: 1 }} variant='h6'>
           ModForge
         </Typography>
 
         {userInfo ? (
           <div>
             <Fab
-              variant="extended"
-              onClick={() => navigate("/project/63fe47296edfc3b387628861/form")}
+              onClick={() => navigate('/project/63fe47296edfc3b387628861/form')}
               sx={{ margin: 1 }}
+              variant='extended'
             >
               Issue
               <AddIcon sx={{ pl: 0.5 }} />
             </Fab>
             <Fab
-              variant="extended"
               onClick={() =>
                 window.open(
-                  "https://www.paypal.com/donate/?hosted_button_id=YWNUFXPDDYNSL",
-                  "_blank"
+                  'https://www.paypal.com/donate/?hosted_button_id=YWNUFXPDDYNSL',
+                  '_blank',
                 )
               }
               sx={{
                 //   mt: 19,
+                backgroundColor: 'gold',
                 margin: 1,
-                backgroundColor: "gold",
               }}
+              variant='extended'
             >
               Donate
               <MoneyIcon sx={{ pl: 0.5 }} />
             </Fab>
             <Fab
-              color="discord"
-              variant="circular"
+              color='discord'
               // onClick={() => navigate(`/user/${userInfo.data.discord_id}`)}
               onClick={handleClick}
+              variant='circular'
             >
               <Avatar
-                src={`https://cdn.discordapp.com/avatars/${userInfo.user.discord_id}/${userInfo.user.avatar}.png`}
                 alt={userInfo.user.username}
-                sx={{ width: 50, height: 50 }}
+                src={`https://cdn.discordapp.com/avatars/${userInfo.user.discord_id}/${userInfo.user.avatar}.png`}
+                sx={{ height: 50, width: 50 }}
               />
             </Fab>
             <Menu
               anchorEl={anchorEl}
-              id="account-menu"
-              open={open}
-              onClose={handleClose}
+              anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+              id='account-menu'
               onClick={handleClose}
+              onClose={handleClose}
+              open={open}
               PaperProps={{
                 elevation: 0,
                 sx: {
-                  overflow: "visible",
-                  filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-                  mt: 1.5,
-                  width: 250,
-                  height: 50,
-                  "& .MuiAvatar-root": {
-                    width: 32,
+                  '& .MuiAvatar-root': {
                     height: 32,
                     ml: -0.5,
                     mr: 1,
+                    width: 32,
                   },
-                  "&:before": {
+                  '&:before': {
+                    bgcolor: 'background.paper',
                     content: '""',
-                    display: "block",
-                    position: "absolute",
-                    top: 0,
-                    right: 23,
-                    width: 10,
+                    display: 'block',
                     height: 10,
-                    bgcolor: "background.paper",
-                    transform: "translateY(-50%) rotate(45deg)",
+                    position: 'absolute',
+                    right: 23,
+                    top: 0,
+                    transform: 'translateY(-50%) rotate(45deg)',
+                    width: 10,
                     zIndex: 0,
                   },
+                  filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                  height: 50,
+                  mt: 1.5,
+                  overflow: 'visible',
+                  width: 250,
                 },
               }}
-              transformOrigin={{ horizontal: "right", vertical: "top" }}
-              anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+              transformOrigin={{ horizontal: 'right', vertical: 'top' }}
             >
               <MenuItem onClick={handleClose}>
                 <Avatar
-                  src={`https://cdn.discordapp.com/avatars/${userInfo.user.discord_id}/${userInfo.user.avatar}.png`}
                   alt={userInfo.username}
-                  sx={{ width: 50, height: 50 }}
                   onClick={handleClick}
-                />{" "}
+                  src={`https://cdn.discordapp.com/avatars/${userInfo.user.discord_id}/${userInfo.user.avatar}.png`}
+                  sx={{ height: 50, width: 50 }}
+                />{' '}
                 Profile
               </MenuItem>
               <MenuItem onClick={logout}>
                 <ListItemIcon>
-                  <Logout fontSize="small" />
+                  <Logout fontSize='small' />
                 </ListItemIcon>
                 Logout
               </MenuItem>
@@ -146,11 +146,7 @@ const Header = () => {
           </div>
         ) : (
           <div>
-            <Fab
-              color="discord"
-              variant="extended"
-              href={utils.AUTH_REDIRECT_URL}
-            >
+            <Fab color='discord' href={AUTH_REDIRECT_URL} variant='extended'>
               Discord Login
               <LoginIcon sx={{ pl: 0.5 }} />
             </Fab>
@@ -158,7 +154,7 @@ const Header = () => {
         )}
       </Toolbar>
     </AppBar>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header

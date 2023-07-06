@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   Box,
   Drawer,
@@ -8,31 +8,31 @@ import {
   ListItem,
   ListItemText,
   Toolbar,
-} from "@mui/material";
+} from '@mui/material'
 
-import { CategoriesContext, UserContext } from "../Context";
+import { CategoriesContext, UserContext } from '~/context'
 
-const drawerWidth = 240;
+const drawerWidth = 240
 
 const Sidenav = () => {
-  const navigate = useNavigate();
-  const userInfo = useContext(UserContext);
-  const categories = useContext(CategoriesContext);
+  const navigate = useNavigate()
+  const userInfo = useContext(UserContext)
+  const categories = useContext(CategoriesContext)
 
   return (
     <Drawer
-      variant="permanent"
       sx={{
-        width: drawerWidth,
-        flexShrink: 0,
-        [`& .MuiDrawer-paper`]: {
+        '& .MuiDrawer-paper': {
+          boxSizing: 'border-box',
           width: drawerWidth,
-          boxSizing: "border-box",
         },
+        flexShrink: 0,
+        width: drawerWidth,
       }}
+      variant='permanent'
     >
       <Toolbar />
-      <Box sx={{ overflow: "auto" }}>
+      <Box sx={{ overflow: 'auto' }}>
         <List>
           {userInfo &&
             categories !== undefined &&
@@ -43,7 +43,7 @@ const Sidenav = () => {
                   key={`${el.route}-${index}`}
                   onClick={() =>
                     navigate(
-                      `/project/63fe47296edfc3b387628861/issues/${el.toLowerCase()}`
+                      `/project/63fe47296edfc3b387628861/issues/${el.toLowerCase()}`,
                     )
                   }
                 >
@@ -51,12 +51,12 @@ const Sidenav = () => {
                     <ListItemText primary={el} />
                   </ListItemButton>
                 </ListItem>
-              );
+              )
             })}
         </List>
       </Box>
     </Drawer>
-  );
-};
+  )
+}
 
-export default Sidenav;
+export default Sidenav
