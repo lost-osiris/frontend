@@ -11,7 +11,7 @@ const prodConfig = require('./webpack.prod.js')
 const devConfig = require('./webpack.dev.js')
 
 const devMode = process.env.NODE_ENV !== 'production'
-const publicPath = devMode ? '/' : '/development/libraries/ui/components/'
+const publicPath = '/'
 
 const commonConfig = {
   context: resolve(__dirname, 'src/'),
@@ -112,10 +112,10 @@ const commonConfig = {
     //   logo: '../assets/img/favicon.png',
     //   inject: true,
     // }),
-    new BundleAnalyzerPlugin({
-      analyzerMode: 'disabled',
-      generateStatsFile: true,
-    }),
+    // new BundleAnalyzerPlugin({
+    //   analyzerMode: 'disabled',
+    //   generateStatsFile: true,
+    // }),
   ],
   resolve: {
     alias: {

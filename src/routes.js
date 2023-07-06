@@ -1,12 +1,12 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
-import Layout from './layout/main'
+import Layout from './layout/Main'
 import { KanbanBoardPage } from '~/pages/KanbanBoard'
 import { IssuePage } from './pages/Issue'
 import { ProjectList } from './pages/ProjectList'
 import { CreateIssue } from './pages/CreateIssue'
-import { JoinWaitlist } from './pages/joinWaitlist'
-import { ManageWaitlist } from '~/pages/manageWaitlist'
+import { JoinWaitlist } from './pages/JoinWaitList'
+import { ManageWaitlist } from './pages/ManageWaitList'
 import { KanbanBoardProvider } from '~/context'
 
 const AppRoutes = () => {
