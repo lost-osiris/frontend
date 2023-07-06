@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react'
 import { UserContext } from '~/context'
 
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import {
   Avatar,
@@ -24,6 +24,7 @@ const Header = () => {
   const userInfo = useContext(UserContext)
 
   const navigate = useNavigate()
+  const params = useParams()
   const [anchorEl, setAnchorEl] = useState()
   const open = Boolean(anchorEl)
   const handleClick = (event) => {
@@ -54,7 +55,11 @@ const Header = () => {
         {userInfo ? (
           <div>
             <Fab
-              onClick={() => navigate('/project/63fe47296edfc3b387628861/form')}
+              onClick={() =>
+                navigate(
+                  `/project/63fe47296edfc3b387628861/create-issue/${params.category}`,
+                )
+              }
               sx={{ margin: 1 }}
               variant='extended'
             >

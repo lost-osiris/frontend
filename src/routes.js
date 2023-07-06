@@ -23,7 +23,7 @@ const AppRoutes = () => {
           element={<ManageWaitlist />}
           path='/project/:projectId/managewaitlist'
         />
-        <Route element={<CreateIssue />} path='/create-issue' />
+        <Route element={<CreateIssue />} path='/create-issue/:category' />
         <Route
           element={
             <KanbanBoardProvider>
@@ -33,7 +33,10 @@ const AppRoutes = () => {
           path='/project/:projectId/issues/:category'
         />
         <Route element={<IssuePage />} path='/issue/:issueId' />
-        <Route element={<CreateIssue />} path='/project/:projectId/form' />
+        <Route
+          element={<CreateIssue />}
+          path='/project/:projectId/create-issue/:category'
+        />
       </Route>
     </Routes>
   )

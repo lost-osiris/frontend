@@ -41,7 +41,10 @@ export const CreateIssue = () => {
       embedSource: location.state?.attachments.embedSource || '',
       generalUrl: location.state?.attachments.generalUrl || '',
     },
-    category: toTitleCase(location.state?.category) || 'General',
+    category:
+      toTitleCase(location.state?.category) ||
+      toTitleCase(decodeURI(params.category)) ||
+      'General',
     description: location.state?.description || '',
     discord_id:
       location.state?.discord_id ||
