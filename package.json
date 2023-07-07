@@ -35,7 +35,6 @@
     "@babel/preset-react": "^7.22.5",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.10",
     "autoprefixer": "^10.4.14",
-    "babel-eslint": "^10.1.0",
     "babel-loader": "^9.1.2",
     "css-loader": "^6.8.1",
     "dotenv": "^16.0.3",

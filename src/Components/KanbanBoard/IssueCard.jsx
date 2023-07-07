@@ -223,7 +223,7 @@ export const IssueCard = ({ issue, sx }) => {
           <Grid item justifyContent='left' sx={{ mt: 1 }}>
             <Stack direction='row' spacing={1}>
               {issue.type === 'bug' && (
-                <CardChip color='info' img={<BugReportIcon />} label='Type' />
+                <CardChip color='error' img={<BugReportIcon />} label='Type' />
               )}
               {issue.type === 'suggestion' && (
                 <CardChip color='info' img={<SuggectionIcon />} label='Type' />
