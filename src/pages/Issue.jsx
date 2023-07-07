@@ -268,7 +268,7 @@ export const IssuePage = () => {
                                   Category:
                                 </Typography>
                               </Grid>
-                              <Grid item>
+                              <Grid item sx={{ mt: 0.5 }}>
                                 <Typography sx={{ ml: 1.5 }} variant='body'>
                                   {toTitleCase(issue.category)}
                                 </Typography>
@@ -289,7 +289,7 @@ export const IssuePage = () => {
                                   Version:
                                 </Typography>
                               </Grid>
-                              <Grid item>
+                              <Grid item sx={{ mt: 0.5 }}>
                                 <Typography sx={{ ml: 3 }} variant='body'>
                                   {issue.version}
                                 </Typography>
