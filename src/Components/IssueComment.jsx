@@ -134,12 +134,12 @@ export const CreateIssueComment = ({ issue, updateIssue }) => {
         <Grid item lg={12}>
           <TextField
             fullWidth
-            label='Create comment'
+            label='Add comment'
             maxRows={20}
             minRows={6}
             multiline
             onChange={(e) => setComment(e.target.value)}
-            placeholder='Create comment'
+            placeholder='Add comment'
             value={comment}
             variant='filled'
           />

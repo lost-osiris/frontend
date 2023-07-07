@@ -321,11 +321,6 @@ export const IssuePage = () => {
       </Grid>
       <Grid container sx={{ mt: 5 }}>
         <Grid item lg={12}>
-          {issue.comments.length === 0 && (
-            <Typography textAlign='center' variant='h4'>
-              No Comments
-            </Typography>
-          )}
           {issue.comments.map((el) => {
             return (
               <IssueComment
