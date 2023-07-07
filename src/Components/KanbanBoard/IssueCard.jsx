@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react'
-import { UserContext } from '~/context'
+import { UserContext, KanbanBoardContext } from '~/context'
 import { useNavigate } from 'react-router-dom'
 import { useDrag } from 'react-dnd'
 import { CardChip } from '~/components/Chip'
@@ -32,11 +32,13 @@ import ArchiveIcon from '@mui/icons-material/Archive'
 import UnarchiveIcon from '@mui/icons-material/Unarchive'
 import BugReportIcon from '@mui/icons-material/BugReport'
 import SuggectionIcon from '@mui/icons-material/TipsAndUpdates'
+import { dispatchAlert } from '~/store'
 
-export const IssueCard = ({ issue, sx, ...props }) => {
+export const IssueCard = ({ issue, sx }) => {
   const [menuOpen, setMenuOpen] = useState(null)
   const userInfo = useContext(UserContext)
   const navigate = useNavigate()
+  const { updateIssue, deleteIssue } = useContext(KanbanBoardContext)
   const issueSummary =
     issue.summary.charAt(0).toUpperCase() + issue.summary.slice(1)
   let project = userInfo.user.projects.find((value) => value)
@@ -54,10 +56,26 @@ export const IssueCard = ({ issue, sx, ...props }) => {
         }" with status "${toTitleCase(issue.status)}"`,
       })
       .then(() => {
-        if (props.onDelete) {
-          props.onDelete()
-        }
+        deleteIssue(issue)
       })
+  }
+
+  const handleCardArchive = () => {
+    if (issue.status === 'completed' || issue.status === "won't-fix") {
+      issue.archived = !issue.archived
+
+      if (issue.archived) {
+        issue.status = 'reported'
+      }
+
+      updateIssue(issue)
+    } else {
+      dispatchAlert({
+        message:
+          'Status must be "Completed" or "Won\'t Fix" in order to archive',
+        type: 'error',
+      })
+    }
   }
 
   const [{ isDragging }, drag, preview] = useDrag(() => ({
@@ -175,26 +193,7 @@ export const IssueCard = ({ issue, sx, ...props }) => {
                 open={Boolean(menuOpen)}
                 transformOrigin={{ horizontal: 'right', vertical: 'top' }}
               >
-                <MenuItem
-                  onClick={() => {
-                    if (
-                      issue.status === 'completed' ||
-                      issue.status === "won't-fix"
-                    ) {
-                      issue.archived = !issue.archived
-                      let data = {
-                        issue,
-                        userInfo: userInfo.user,
-                      }
-
-                      api.requests('put', `/api/issue/${props.issue.id}`, data)
-                    } else {
-                      window.alert(
-                        'Status must be "Completed" or "Won\'t Fix" in order to archive',
-                      )
-                    }
-                  }}
-                >
+                <MenuItem onClick={handleCardArchive}>
                   <ListItemIcon>
                     {issue.archived ? (
                       <UnarchiveIcon color='warning' fontSize='small' />

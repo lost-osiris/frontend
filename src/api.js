@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { store, addAlert } from './store'
+import { dispatchAlert } from './store'
 import { parseJwt } from './utils'
 
 export const requests = async (method, url, options) => {
@@ -22,13 +22,11 @@ export const requests = async (method, url, options) => {
   }
 
   if (Date.now() >= parseJwt(jwt).exp * 1000) {
-    store.dispatch(
-      addAlert({
-        duration: 5000,
-        message: 'Session expired! Automatically redirecting in 5 seconds',
-        type: 'error',
-      }),
-    )
+    dispatchAlert({
+      duration: 5000,
+      message: 'Session expired! Automatically redirecting in 5 seconds',
+      type: 'error',
+    })
     localStorage.removeItem('jwt')
     setTimeout(() => {
       window.location = '/'
@@ -47,24 +45,20 @@ export const requests = async (method, url, options) => {
     })
       .then((res) => {
         if (res.status >= 200 && options.alert) {
-          store.dispatch(
-            addAlert({
-              message: options.alertMessage || 'Success',
-              type: 'success',
-            }),
-          )
+          dispatchAlert({
+            message: options.alertMessage || 'Success',
+            type: 'success',
+          })
         }
 
         return res.data
       })
       .catch((error) => {
         if (error.response.status === 403) {
-          store.dispatch(
-            addAlert({
-              message: 'Forbidden',
-              type: 'error',
-            }),
-          )
+          dispatchAlert({
+            message: 'Forbidden',
+            type: 'error',
+          })
         }
       })
   }

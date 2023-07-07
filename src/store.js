@@ -16,8 +16,12 @@ export const alertsSlice = createSlice({
   },
 })
 
-export const { addAlert } = alertsSlice.actions
+const { addAlert } = alertsSlice.actions
 
 export const store = configureStore({
   reducer: alertsSlice.reducer,
 })
+
+export const dispatchAlert = (newAlert) => {
+  store.dispatch(addAlert(newAlert))
+}
