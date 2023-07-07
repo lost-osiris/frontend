@@ -23,6 +23,7 @@ import * as api from '~/api'
 import { getStatusColorHk, toTitleCase } from '~/utils'
 
 import Loading from '~/components/Loading'
+import { CreateIssueComment, IssueComment } from '../components/IssueComment'
 
 const TabPanel = (props) => {
   const { children, value, index, ...other } = props
@@ -51,11 +52,15 @@ export const IssuePage = () => {
     setTabValue(tab)
   }
 
+  const fetchIssue = () => {
+    api
+      .requests('get', `/api/issue/${params.issueId}`)
+      .then((data) => setIssue(data))
+  }
+
   useEffect(() => {
     if (issue === null) {
-      api
-        .requests('get', `/api/issue/${params.issueId}`)
-        .then((data) => setIssue(data))
+      fetchIssue()
     }
   })
 
@@ -304,8 +309,32 @@ export const IssuePage = () => {
                   </TabPanel>
                 </Grid>
               </Grid>
+              <Grid item lg={12}>
+                <CreateIssueComment
+                  issue={issue}
+                  updateIssue={() => fetchIssue()}
+                />
+              </Grid>
             </CardContent>
           </Card>
+        </Grid>
+      </Grid>
+      <Grid container sx={{ mt: 5 }}>
+        <Grid item lg={12}>
+          {issue.comments.length === 0 && (
+            <Typography textAlign='center' variant='h4'>
+              No Comments
+            </Typography>
+          )}
+          {issue.comments.map((el) => {
+            return (
+              <IssueComment
+                comment={el}
+                key={`issue-comment-${el.id}`}
+                updateIssue={() => fetchIssue()}
+              />
+            )
+          })}
         </Grid>
       </Grid>
     </div>
