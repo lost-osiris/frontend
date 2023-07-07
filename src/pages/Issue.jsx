@@ -99,7 +99,7 @@ export const IssuePage = () => {
           <Grid item lg={1} sx={{ mt: 2 }}>
             <Button
               onClick={() =>
-                navigate('/project/63fe47296edfc3b387628861/form', {
+                navigate('/project/63fe47296edfc3b387628861/create-issue', {
                   state: issue,
                 })
               }
