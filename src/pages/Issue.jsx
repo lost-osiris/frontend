@@ -140,8 +140,12 @@ export const IssuePage = () => {
                             <Grid item>
                               <Typography
                                 sx={{
-                                  bgcolor: getStatusColorHk(issue.status),
-                                  borderColor: getStatusColorHk(issue.status),
+                                  bgcolor: getStatusColorHk(
+                                    issue.archived ? 'archived' : issue.status,
+                                  ),
+                                  borderColor: getStatusColorHk(
+                                    issue.archived ? 'archived' : issue.status,
+                                  ),
                                   borderRadius: '5px',
                                   ml: 2,
                                   mr: 2,
@@ -152,10 +156,12 @@ export const IssuePage = () => {
                                 textAlign='center'
                                 variant='h6'
                               >
-                                {issue.status
-                                  .split(' ')
-                                  .map((s) => toTitleCase(s))
-                                  .join(' ')}
+                                {issue.archived
+                                  ? 'Archived'
+                                  : issue.status
+                                      .split(' ')
+                                      .map((s) => toTitleCase(s))
+                                      .join(' ')}
                               </Typography>
                             </Grid>
                           </Grid>

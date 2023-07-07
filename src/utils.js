@@ -33,6 +33,8 @@ export const getStatusColor = (status) => {
       return 'success'
     case 'closed':
       return 'success'
+    case 'archive':
+      return 'info'
     default:
       return 'default'
   }
@@ -50,6 +52,8 @@ export const getStatusColorHk = (status) => {
       return '#2e212d'
     case 'closed':
       return '#12152f'
+    case 'archived':
+      return '#42a5f5'
     default:
       return 'default'
   }
