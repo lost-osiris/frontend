@@ -70,38 +70,14 @@ export const IssuePage = () => {
 
   return (
     <div>
-      <Grid container justifyContent='center' sx={{ mb: 4, ml: 4 }}>
-        <Grid item lg={2} sx={{ mt: 2 }}>
-          <Grid container direction='row' justifyContent='left' spacing={1}>
-            <Grid item>
-              <Typography textAlign='center' variant='h4'>
-                {issue.playerData.username}
-              </Typography>
-            </Grid>
-            <Grid item>
-              <Avatar
-                src={`https://cdn.discordapp.com/avatars/${issue.discord_id}/${issue.playerData.avatar}.png`}
-                sx={{
-                  // mt: 0.7,
-                  ml: 0,
-                  // cursor: "pointer",
-                  // ":hover": {
-                  //   boxShadow:
-                  //     "0px 3px 5px -1px rgba(0,0,0,0.2), 0px 6px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0.12)",
-                  // },
-                }}
-                // onClick={() => navigate(`/user/${issue.discord_id}`)}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item lg={canEdit ? 9 : 10}>
-          <Typography sx={{ textAlign: 'center' }} variant='h3'>
+      <Grid container sx={{ mb: 4 }}>
+        <Grid item lg={canEdit ? 11 : 10}>
+          <Typography sx={{ textAlign: 'left' }} variant='h3'>
             {issue.summary}
           </Typography>
         </Grid>
         {canEdit && (
-          <Grid item lg={1} sx={{ mt: 2 }}>
+          <Grid item lg={1} sx={{ mt: 2, textAlign: 'right' }}>
             <Button
               onClick={() =>
                 navigate('/project/63fe47296edfc3b387628861/create-issue', {
@@ -121,7 +97,36 @@ export const IssuePage = () => {
           <Card>
             <CardContent>
               <Grid container>
-                <Grid item lg={4}>
+                <Grid item lg={2} sx={{ mt: 1, pl: 2 }}>
+                  <Grid
+                    container
+                    direction='row'
+                    justifyContent='left'
+                    spacing={1}
+                  >
+                    <Grid item>
+                      <Typography textAlign='center' variant='h4'>
+                        {issue.playerData.username}
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Avatar
+                        src={`https://cdn.discordapp.com/avatars/${issue.discord_id}/${issue.playerData.avatar}.png`}
+                        sx={{
+                          // mt: 0.7,
+                          ml: 0,
+                          // cursor: "pointer",
+                          // ":hover": {
+                          //   boxShadow:
+                          //     "0px 3px 5px -1px rgba(0,0,0,0.2), 0px 6px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0.12)",
+                          // },
+                        }}
+                        // onClick={() => navigate(`/user/${issue.discord_id}`)}
+                      />
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item lg={3}>
                   <Grid
                     container
                     direction='row'
@@ -146,7 +151,7 @@ export const IssuePage = () => {
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid item lg={4}>
+                <Grid item lg={3}>
                   <Grid
                     container
                     direction='row'
