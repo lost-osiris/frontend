@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
+import { Editor } from '@tinymce/tinymce-react'
 
 import {
   Card,
@@ -6,7 +7,6 @@ import {
   Typography,
   Grid,
   Button,
-  TextField,
   IconButton,
   Menu,
   MenuItem,
@@ -18,6 +18,8 @@ import {
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import EditIcon from '@mui/icons-material/Edit'
 import CloseIcon from '@mui/icons-material/Close'
+import SendIcon from '@mui/icons-material/Send'
+import AddCommentIcon from '@mui/icons-material/AddComment'
 
 import * as api from '~/api'
 
@@ -37,15 +39,15 @@ export const IssueComment = ({ comment, updateIssue }) => {
   }
 
   return (
-    <Card>
+    <Card sx={{ mt: 5 }}>
       <CardContent>
         <Grid
-          alignItems='center'
+          alignItems='top'
           container
           direction='row'
           justifyContent='space-between'
         >
-          <Grid item lg={0.3} md={1} sx={{ pr: 1 }}>
+          <Grid item lg={0.3} md={1} sx={{ pr: 1, pt: 1 }}>
             <Avatar
               src={`https://cdn.discordapp.com/avatars/${comment.discord_id}/${comment.discord.avatar}.png`}
               sx={{
@@ -61,9 +63,7 @@ export const IssueComment = ({ comment, updateIssue }) => {
             />
           </Grid>
           <Grid item lg={8.7} md={8}>
-            <Typography sx={{ pl: 1 }} variant='body'>
-              {comment.comment}
-            </Typography>
+            <div dangerouslySetInnerHTML={{ __html: comment.comment }}></div>
           </Grid>
           <Grid item lg={3} md={3} sx={{ textAlign: 'right' }}>
             <Typography sx={{ mr: 3 }} variant='overline'>
@@ -113,6 +113,9 @@ export const IssueComment = ({ comment, updateIssue }) => {
 
 export const CreateIssueComment = ({ issue, updateIssue }) => {
   let [comment, setComment] = useState('')
+  let [show, setShow] = useState(false)
+
+  const editorRef = useRef(null)
   const submitComment = () => {
     api
       .requests('post', `/api/issue/${issue.id}/comment`, {
@@ -132,20 +135,76 @@ export const CreateIssueComment = ({ issue, updateIssue }) => {
     <div>
       <Grid container spacing={2}>
         <Grid item lg={12}>
-          <TextField
+          {/* <Button ></Button>Add Comment</Typography> */}
+          <Button
+            endIcon={<AddCommentIcon />}
+            onClick={() => setShow(!show)}
+            variant='outlined'
+          >
+            Comment
+          </Button>
+        </Grid>
+        <Grid item lg={12} sx={{ display: show ? '' : 'none' }}>
+          <Editor
+            apiKey='dtvbj54k907ax86riigixvtbjry1ve8he1ys3jkh3qemdu3o'
+            init={{
+              content_css: 'dark',
+              height: 400,
+              icons: 'material',
+              menubar: false,
+              plugins: [
+                'advlist',
+                'autolink',
+                'lists',
+                'link',
+                'image',
+                'charmap',
+                'preview',
+                'anchor',
+                'searchreplace',
+                'visualblocks',
+                'code',
+                'fullscreen',
+                'insertdatetime',
+                'media',
+                'table',
+                'code',
+                'help',
+                'wordcount',
+              ],
+              skin: 'oxide-dark',
+              toolbar:
+                'undo redo | blocks | ' +
+                'bold italic forecolor | alignleft aligncenter ' +
+                'alignright alignjustify | bullist numlist outdent indent | ' +
+                'removeformat | help',
+            }}
+            // initialValue='<h3>Add Comment</h3>'
+            onEditorChange={(e) => setComment(e)}
+            onInit={(evt, editor) => (editorRef.current = editor)}
+            // value={comment}
+          />
+          {/* <TextField
             fullWidth
             label='Add comment'
             maxRows={20}
             minRows={6}
             multiline
-            onChange={(e) => setComment(e.target.value)}
             placeholder='Add comment'
             value={comment}
             variant='filled'
-          />
+          /> */}
         </Grid>
-        <Grid item lg={12} sx={{ textAlign: 'right' }}>
-          <Button onClick={submitComment} variant='contained'>
+        <Grid
+          item
+          lg={12}
+          sx={{ display: show ? '' : 'none', textAlign: 'right' }}
+        >
+          <Button
+            endIcon={<SendIcon />}
+            onClick={submitComment}
+            variant='outlined'
+          >
             Submit
           </Button>
         </Grid>

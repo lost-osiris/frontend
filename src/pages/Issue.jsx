@@ -70,162 +70,270 @@ export const IssuePage = () => {
 
   return (
     <div>
-      <Grid container sx={{ mb: 4 }}>
-        <Grid item lg={canEdit ? 11 : 10}>
-          <Typography sx={{ textAlign: 'left' }} variant='h3'>
-            {issue.summary}
-          </Typography>
+      {/* <Grid container sx={{ mb: 4 }}>
+        <Grid item>
+          <Typography variant='h3'>{issue.summary}</Typography>
         </Grid>
-        {canEdit && (
-          <Grid item lg={1} sx={{ mt: 2, textAlign: 'right' }}>
-            <Button
-              onClick={() =>
-                navigate('/project/63fe47296edfc3b387628861/create-issue', {
-                  state: issue,
-                })
-              }
-              variant='contained'
-            >
-              <EditIcon />
-              Edit
-            </Button>
-          </Grid>
-        )}
-      </Grid>
+      </Grid> */}
       <Grid container>
         <Grid item lg={12}>
           <Card>
             <CardContent>
               <Grid container>
-                <Grid item lg={2} sx={{ mt: 1, pl: 2 }}>
-                  <Grid
-                    container
-                    direction='row'
-                    justifyContent='left'
-                    spacing={1}
-                  >
-                    <Grid item>
-                      <Typography textAlign='center' variant='h4'>
-                        {issue.playerData.username}
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <Avatar
-                        src={`https://cdn.discordapp.com/avatars/${issue.discord_id}/${issue.playerData.avatar}.png`}
-                        sx={{
-                          // mt: 0.7,
-                          ml: 0,
-                          // cursor: "pointer",
-                          // ":hover": {
-                          //   boxShadow:
-                          //     "0px 3px 5px -1px rgba(0,0,0,0.2), 0px 6px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0.12)",
-                          // },
-                        }}
-                        // onClick={() => navigate(`/user/${issue.discord_id}`)}
-                      />
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid item lg={3}>
-                  <Grid
-                    container
-                    direction='row'
-                    justifyContent='center'
-                    spacing={1}
-                  >
-                    <Grid item>
-                      <Typography textAlign='center' variant='h4'>
-                        Type:
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      {issue.type === 'bug' && (
-                        <BugReportIcon
-                          color='warning'
-                          sx={{ fontSize: '3rem' }}
-                        />
-                      )}
-                      {issue.type === 'suggestion' && (
-                        <SuggectionIcon sx={{ fontSize: '3rem' }} />
-                      )}
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid item lg={3}>
-                  <Grid
-                    container
-                    direction='row'
-                    justifyContent='center'
-                    spacing={1}
-                  >
-                    <Grid item>
-                      <Typography textAlign='center' variant='h4'>
-                        Priority:
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      {issue.priority === 'low' && (
-                        <DoubleArrowIcon
-                          color='info'
-                          sx={{
-                            fontSize: '3rem',
-                            transform: 'rotate(90deg)',
-                          }}
-                        />
-                      )}
-                      {issue.priority === 'medium' && (
-                        <DragHandleIcon
-                          color='warning'
-                          sx={{ fontSize: '3rem' }}
-                        />
-                      )}
-                      {issue.priority === 'high' && (
-                        <DoubleArrowIcon
-                          color='error'
-                          sx={{
-                            fontSize: '3rem',
-                            transform: 'rotate(-90deg)',
-                          }}
-                        />
-                      )}
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid item lg={4}>
+                <Grid item lg={canEdit ? 11 : 10}>
                   <Typography
                     sx={{
-                      bgcolor: getStatusColorHk(issue.status),
-                      borderColor: getStatusColorHk(issue.status),
-                      borderRadius: '5px',
-                      opacity: 0.9,
+                      pb: 1,
+                      pl: 3,
+                      pr: 3,
+                      pt: 1,
                     }}
-                    textAlign='center'
-                    variant='h4'
+                    variant='h3'
                   >
-                    {issue.status
-                      .split(' ')
-                      .map((s) => toTitleCase(s))
-                      .join(' ')}
+                    {issue.summary}
                   </Typography>
                 </Grid>
+                {canEdit && (
+                  <Grid item lg={1} sx={{ mt: 0.5, textAlign: 'right' }}>
+                    <Button
+                      endIcon={<EditIcon />}
+                      onClick={() =>
+                        navigate(
+                          '/project/63fe47296edfc3b387628861/create-issue',
+                          {
+                            state: issue,
+                          },
+                        )
+                      }
+                      size='md'
+                      variant='outlined'
+                    >
+                      Edit
+                    </Button>
+                  </Grid>
+                )}
                 <Grid item lg={12} sx={{ mt: 5 }}>
                   <Tabs
                     onChange={handleTabChange}
                     value={tabValue}
                     variant='fullWidth'
                   >
-                    <Tab id='Description' label='Description' />
+                    <Tab id='Details' label='Details' />
                     <Tab id='attachments' label='Attachments' />
                     <Tab id='mog-logs' label='Mod Logs' />
                   </Tabs>
                   <TabPanel index={0} value={tabValue}>
                     <Grid container>
-                      <Grid item lg={12}>
-                        <Typography variant='h5'>
-                          {issue.description || ''}
-                        </Typography>
+                      <Grid item lg={12} sx={{ mt: 2 }}>
+                        <Box component='span'>
+                          <Grid
+                            container
+                            direction='row'
+                            justifyContent='left'
+                            spacing={1}
+                          >
+                            <Grid item>
+                              <Typography variant='overline'>
+                                Status:
+                              </Typography>
+                            </Grid>
+                            <Grid item>
+                              <Typography
+                                sx={{
+                                  bgcolor: getStatusColorHk(issue.status),
+                                  borderColor: getStatusColorHk(issue.status),
+                                  borderRadius: '5px',
+                                  ml: 2,
+                                  mr: 2,
+                                  opacity: 0.9,
+                                  pl: 2,
+                                  pr: 2,
+                                }}
+                                textAlign='center'
+                                variant='h6'
+                              >
+                                {issue.status
+                                  .split(' ')
+                                  .map((s) => toTitleCase(s))
+                                  .join(' ')}
+                              </Typography>
+                            </Grid>
+                          </Grid>
+                        </Box>
+                      </Grid>
+                      <Grid item lg={2}>
+                        <Grid item lg={12} sx={{ mt: 3 }}>
+                          <Box component='span'>
+                            <Grid
+                              container
+                              direction='row'
+                              justifyContent='left'
+                              spacing={1}
+                            >
+                              <Grid item>
+                                <Typography variant='overline'>
+                                  Type:
+                                </Typography>
+                              </Grid>
+                              <Grid item>
+                                {issue.type === 'bug' && (
+                                  <BugReportIcon
+                                    color='warning'
+                                    sx={{
+                                      fontSize: '3rem',
+                                      ml: 6.5,
+                                      mt: -1.5,
+                                    }}
+                                  />
+                                )}
+                                {issue.type === 'suggestion' && (
+                                  <SuggectionIcon
+                                    sx={{
+                                      fontSize: '3rem',
+                                      ml: 7.5,
+                                      mt: -1.5,
+                                    }}
+                                  />
+                                )}
+                              </Grid>
+                            </Grid>
+                          </Box>
+                        </Grid>
+                        <Grid item lg={12} sx={{ mt: 2 }}>
+                          <Box component='span'>
+                            <Grid
+                              container
+                              direction='row'
+                              justifyContent='left'
+                              spacing={1}
+                            >
+                              <Grid item>
+                                <Typography variant='overline'>
+                                  Priority:
+                                </Typography>
+                              </Grid>
+                              <Grid item>
+                                {issue.priority === 'low' && (
+                                  <DoubleArrowIcon
+                                    color='info'
+                                    sx={{
+                                      fontSize: '3rem',
+                                      ml: 3,
+                                      mt: -1.5,
+                                      transform: 'rotate(90deg)',
+                                    }}
+                                  />
+                                )}
+                                {issue.priority === 'medium' && (
+                                  <DragHandleIcon
+                                    color='warning'
+                                    sx={{
+                                      fontSize: '3rem',
+                                      ml: 3,
+                                      mt: -1.5,
+                                    }}
+                                  />
+                                )}
+                                {issue.priority === 'high' && (
+                                  <DoubleArrowIcon
+                                    color='error'
+                                    sx={{
+                                      fontSize: '3rem',
+                                      ml: 3,
+                                      mt: -1.5,
+                                      transform: 'rotate(-90deg)',
+                                    }}
+                                  />
+                                )}
+                              </Grid>
+                            </Grid>
+                          </Box>
+                        </Grid>
+                        <Grid item lg={12} sx={{ mt: 2 }}>
+                          <Box component='span'>
+                            <Grid
+                              container
+                              direction='row'
+                              justifyContent='left'
+                              spacing={1}
+                            >
+                              <Grid item>
+                                <Typography variant='overline'>
+                                  Category:
+                                </Typography>
+                              </Grid>
+                              <Grid item>
+                                <Typography sx={{ ml: 1.5 }} variant='body'>
+                                  {toTitleCase(issue.category)}
+                                </Typography>
+                              </Grid>
+                            </Grid>
+                          </Box>
+                        </Grid>
+                        <Grid item lg={12} sx={{ mt: 3 }}>
+                          <Box component='span'>
+                            <Grid
+                              container
+                              direction='row'
+                              justifyContent='left'
+                              spacing={1}
+                            >
+                              <Grid item>
+                                <Typography variant='overline'>
+                                  Version:
+                                </Typography>
+                              </Grid>
+                              <Grid item>
+                                <Typography sx={{ ml: 3 }} variant='body'>
+                                  {issue.version}
+                                </Typography>
+                              </Grid>
+                            </Grid>
+                          </Box>
+                        </Grid>
+                        <Grid container spacing={3} sx={{ mt: 1 }}>
+                          <Grid item lg={12}>
+                            <Box component='span'>
+                              <Grid
+                                container
+                                direction='row'
+                                justifyContent='left'
+                                spacing={1}
+                              >
+                                <Grid item>
+                                  <Typography variant='overline'>
+                                    Author:
+                                  </Typography>
+                                </Grid>
+                                <Grid item>
+                                  <Avatar
+                                    src={`https://cdn.discordapp.com/avatars/${issue.discord_id}/${issue.playerData.avatar}.png`}
+                                    sx={{
+                                      ml: 4.5,
+                                      mt: -0.7,
+                                      // cursor: "pointer",
+                                      // ":hover": {
+                                      //   boxShadow:
+                                      //     "0px 3px 5px -1px rgba(0,0,0,0.2), 0px 6px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0.12)",
+                                      // },
+                                    }}
+                                    // onClick={() => navigate(`/user/${issue.discord_id}`)}
+                                  />
+                                </Grid>
+                              </Grid>
+                            </Box>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                      <Grid item lg={9}>
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html: issue.description,
+                          }}
+                        />
                       </Grid>
                     </Grid>
+                    <Grid container></Grid>
                   </TabPanel>
                   <TabPanel index={1} value={tabValue}>
                     {!issue.attachments.embedSource &
@@ -314,14 +422,13 @@ export const IssuePage = () => {
                   </TabPanel>
                 </Grid>
               </Grid>
-              <Grid item lg={12}>
-                <CreateIssueComment
-                  issue={issue}
-                  updateIssue={() => fetchIssue()}
-                />
-              </Grid>
             </CardContent>
           </Card>
+        </Grid>
+      </Grid>
+      <Grid container sx={{ mt: 5 }}>
+        <Grid item lg={12} sx={{ display: tabValue === 0 ? '' : 'none' }}>
+          <CreateIssueComment issue={issue} updateIssue={() => fetchIssue()} />
         </Grid>
       </Grid>
       <Grid container sx={{ mt: 5 }}>

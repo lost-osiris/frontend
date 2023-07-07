@@ -35,7 +35,7 @@ const commonConfig = {
         ],
       },
       {
-        test: /\.(s*)css$/,
+        test: /\.scss$/,
         use: [
           {
             loader: 'style-loader',
@@ -50,6 +50,7 @@ const commonConfig = {
           {
             loader: 'css-loader',
             options: {
+              modules: true,
               sourceMap: true,
             },
           },
@@ -59,8 +60,30 @@ const commonConfig = {
               additionalData: "@import 'variables.scss';",
               implementation: require('node-sass'),
               sassOptions: {
-                includePaths: [resolve(__dirname, '../src/styles')],
+                includePaths: [resolve(__dirname, './src/styles')],
               },
+              sourceMap: true,
+            },
+          },
+        ],
+      },
+      {
+        test: /\.css$/,
+        use: [
+          // {
+          //   loader: 'style-loader',
+          // },
+          // {
+          //   loader: MiniCssExtractPlugin.loader,
+          //   options: {
+          //     esModule: true,
+          //     publicPath: '/',
+          //   },
+          // },
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true,
               sourceMap: true,
             },
           },
