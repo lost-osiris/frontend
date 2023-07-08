@@ -1,36 +1,30 @@
-import React, { useState, useRef } from 'react'
-import { Editor } from '@tinymce/tinymce-react'
+import React, { useState, useContext } from 'react'
 
 import {
   Card,
   CardContent,
-  // Typography,
+  Typography,
   Grid,
   Button,
-  IconButton,
-  Menu,
-  MenuItem,
   Divider,
-  ListItemIcon,
-  ListItemText,
   Avatar,
   Box,
-  ButtonGroup,
 } from '@mui/material'
-import MoreVertIcon from '@mui/icons-material/MoreVert'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import CloseIcon from '@mui/icons-material/Close'
 import SendIcon from '@mui/icons-material/Send'
-import AddCommentIcon from '@mui/icons-material/AddComment'
 
+import { UserContext } from '~/context'
 import * as api from '~/api'
 import DateTime from './DateTime'
 import TinyMce from './TinyMce'
+import { dispatchAlert } from '../store'
 
 export const IssueComment = ({ comment, updateIssue }) => {
   const [menuOpen, setMenuOpen] = useState(false)
   const [toggleEdit, setEdit] = useState(false)
+  const userInfo = useContext(UserContext)
 
   const deleteComment = () => {
     api
@@ -56,8 +50,7 @@ export const IssueComment = ({ comment, updateIssue }) => {
           direction='row'
           justifyContent='space-between'
         >
-          <Grid item lg={5} md={1} sx={{ pt: 1 }}>
-            {/* <Box variant='span'> */}
+          <Grid item lg={5} msx={{ pt: 1 }}>
             <Grid container>
               <Grid item>
                 <Avatar
@@ -80,9 +73,8 @@ export const IssueComment = ({ comment, updateIssue }) => {
                 <Typography variant='h6'>{comment.discord.username}</Typography>
               </Grid>
             </Grid>
-            {/* </Box> */}
           </Grid>
-          <Grid item lg={3} md={3} sx={{ textAlign: 'right', pt: 1 }}>
+          <Grid item lg={3} sx={{ pt: 1, textAlign: 'right' }}>
             <Box sx={{ display: menuOpen ? '' : 'none' }}>
               {toggleEdit ? (
                 <Button
@@ -94,14 +86,16 @@ export const IssueComment = ({ comment, updateIssue }) => {
                   Close Edit
                 </Button>
               ) : (
-                <Button
-                  color='white'
-                  endIcon={<EditIcon />}
-                  onClick={() => setEdit(!toggleEdit)}
-                  variant='outlined'
-                >
-                  Edit
-                </Button>
+                comment.discord_id === userInfo.user.discord_id && (
+                  <Button
+                    color='white'
+                    endIcon={<EditIcon />}
+                    onClick={() => setEdit(!toggleEdit)}
+                    variant='outlined'
+                  >
+                    Edit
+                  </Button>
+                )
               )}
               <Button
                 color='error'
@@ -138,8 +132,12 @@ export const IssueComment = ({ comment, updateIssue }) => {
         >
           <IssueCommentInput
             comment={comment.comment}
+            commentId={comment.id}
             show={toggleEdit}
-            updateIssue={() => updateIssue()}
+            updateIssue={() => {
+              updateIssue()
+              setEdit(false)
+            }}
           />
         </Grid>
         <Grid
@@ -161,7 +159,7 @@ export const IssueComment = ({ comment, updateIssue }) => {
 }
 
 export const IssueCommentInput = ({
-  issue,
+  commentId,
   updateIssue,
   show,
   height,
@@ -177,18 +175,27 @@ export const IssueCommentInput = ({
       message = 'Successfully updated comment'
     }
 
-    api
-      .requests(method, `/api/issue/${issue.id}/comment`, {
-        alert: true,
-        alertMessage: message,
-        data: {
-          comment: comment,
-        },
+    if (comment === null || comment === undefined || comment === '') {
+      dispatchAlert({
+        message: "Comment can't be empty",
+        type: 'error',
       })
-      .then(() => {
-        setComment('')
-        updateIssue()
-      })
+    } else {
+      api
+        .requests(method, `/api/comment/${commentId}`, {
+          alert: true,
+          alertMessage: message,
+          data: {
+            comment: comment,
+          },
+        })
+        .then(() => {
+          if (!props.comment) {
+            setComment('')
+          }
+          updateIssue()
+        })
+    }
   }
 
   return (

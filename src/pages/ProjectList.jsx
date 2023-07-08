@@ -23,7 +23,7 @@ export const ProjectList = () => {
       <Grid container spacing={3}>
         {projects.map((el, index) => {
           return (
-            <Grid item key={`${index}-${JSON.stringify(el)}`} md={4}>
+            <Grid item key={`${index}-${JSON.stringify(el)}`} lg={4}>
               <ProjectCard project={el} />
             </Grid>
           )

@@ -109,7 +109,7 @@ export const KanbanBoardPage = () => {
               .filter((el) => archived === el.archived)
               .map((el, index) => {
                 return (
-                  <Grid item key={`${index}-${JSON.stringify(el._id)}`} md={3}>
+                  <Grid item key={`${index}-${JSON.stringify(el._id)}`} lg={3}>
                     <IssueCard issue={el} />
                   </Grid>
                 )

@@ -61,9 +61,9 @@ export const requests = async (method, url, options) => {
             message: 'Forbidden',
             type: 'error',
           })
+        } else {
+          throw error
         }
-
-        throw error
       })
   }
 }

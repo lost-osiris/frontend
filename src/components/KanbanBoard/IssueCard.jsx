@@ -2,10 +2,13 @@ import React, { useState, useContext } from 'react'
 import { UserContext, KanbanBoardContext } from '~/context'
 import { useNavigate } from 'react-router-dom'
 import { useDrag } from 'react-dnd'
-import { CardChip } from '~/components/Chip'
 import { HighPriorityIcon } from '~/components/HighPrioIcon'
 import { LowPriorityIcon } from '~/components/LowPrioIcon'
 import { MediumPriorityIcon } from '~/components/MediumPrioIcon'
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
+import { faGameConsoleHandheld } from '@fortawesome/pro-solid-svg-icons'
 
 import * as api from '~/api'
 import { toTitleCase } from '~/utils'
@@ -24,6 +27,7 @@ import {
   MenuItem,
   Avatar,
   Stack,
+  Tooltip,
 } from '@mui/material'
 
 import MoreVertIcon from '@mui/icons-material/MoreVert'
@@ -114,7 +118,7 @@ export const IssueCard = ({ issue, sx }) => {
     >
       <CardContent
         sx={{
-          cursor: canEdit && !issue.archived ? 'grab !important' : '',
+          cursor: canEdit && !issue.archived ? 'move' : '',
           mb: 0,
           paddingBottom: '16px !important',
           paddingTop: '8px !important',
@@ -172,7 +176,7 @@ export const IssueCard = ({ issue, sx }) => {
             </Box>
           </Grid>
           {userInfo && canEdit && (
-            <Grid item lg={1.5} sx={{ textAlign: 'right', pr: 1 }}>
+            <Grid item lg={1.5} sx={{ pr: 1, textAlign: 'right' }}>
               <IconButton
                 aria-controls={menuOpen ? 'menu' : undefined}
                 aria-expanded={menuOpen ? 'true' : undefined}
@@ -219,40 +223,82 @@ export const IssueCard = ({ issue, sx }) => {
             </Grid>
           )}
         </Grid>
-        <Grid container justifyContent='space-between' spacing={1}>
+        <Grid
+          container
+          direction='row'
+          justifyContent='space-between'
+          spacing={1}
+        >
           <Grid item justifyContent='left' sx={{ mt: 1 }}>
-            <Stack direction='row' spacing={1}>
+            <Stack direction='row' spacing={2}>
               {issue.type === 'bug' && (
-                <CardChip color='error' img={<BugReportIcon />} label='Type' />
+                <Tooltip title='Bug'>
+                  <span>
+                    <BugReportIcon color='error' />
+                  </span>
+                </Tooltip>
               )}
               {issue.type === 'suggestion' && (
-                <CardChip color='info' img={<SuggectionIcon />} label='Type' />
+                <Tooltip title='Suggestion'>
+                  <span>
+                    <SuggectionIcon color='white' />
+                  </span>
+                </Tooltip>
               )}
               {issue.priority === 'low' && (
-                <CardChip
-                  color='info'
-                  img={<LowPriorityIcon />}
-                  label='Priority'
-                />
+                <Tooltip title='Low Priority'>
+                  <span>
+                    <LowPriorityIcon color='info' />
+                  </span>
+                </Tooltip>
               )}
               {issue.priority === 'medium' && (
-                <CardChip
-                  color='warning'
-                  img={<MediumPriorityIcon />}
-                  label='Priority'
-                />
+                <Tooltip title='Medium Priority'>
+                  <span>
+                    <MediumPriorityIcon color='warning' />
+                  </span>
+                </Tooltip>
               )}
               {issue.priority === 'high' && (
-                <CardChip
-                  color='error'
-                  img={<HighPriorityIcon />}
-                  label='Priority'
+                <Tooltip title='High Priority'>
+                  <span>
+                    <HighPriorityIcon color='error' />
+                  </span>
+                </Tooltip>
+              )}
+            </Stack>
+          </Grid>
+          <Grid item justifyContent='center' sx={{ mt: 1 }}>
+            <Stack direction='row' spacing={2}>
+              {issue.os && issue.os.indexOf('windows') > -1 && (
+                <FontAwesomeIcon
+                  icon={icon({ name: 'windows', style: 'brands' })}
+                  size='lg'
                 />
+              )}
+              {issue.os && issue.os.indexOf('macOS') > -1 && (
+                <FontAwesomeIcon
+                  icon={icon({ name: 'apple', style: 'brands' })}
+                  size='lg'
+                />
+              )}
+              {issue.os && issue.os.indexOf('linux') > -1 && (
+                <FontAwesomeIcon
+                  icon={icon({ name: 'linux', style: 'brands' })}
+                  size='lg'
+                />
+              )}
+              {issue.os && issue.os.indexOf('handheld') > -1 && (
+                <FontAwesomeIcon icon={faGameConsoleHandheld} size='lg' />
               )}
             </Stack>
           </Grid>
           <Grid item justifyContent='right' sx={{ mt: 1 }}>
-            <Typography variant='button'>{issue.version}</Typography>
+            <Tooltip title='Version'>
+              <span>
+                <Typography variant='button'>{issue.version}</Typography>
+              </span>
+            </Tooltip>
           </Grid>
 
           <Grid item justifyContent='right'>

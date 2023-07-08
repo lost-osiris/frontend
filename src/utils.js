@@ -135,24 +135,25 @@ export const formatDateTimeString = (UTCTime) => {
   let month = datetime.getMonth()
   let date = datetime.getDate()
 
+  let nowHour = now.getHours()
+  let nowMinute = now.getMinutes()
+  let nowDay = now.getDay()
+
   let timeStr = `${hour > 12 ? hour - 12 : hour}:${minute} ${
     hour >= 12 ? 'PM' : 'AM'
   }`
   let dateStr = `${DAYS[day]}, ${MONTHS[month]} ${date}${numSuffixOf(date)}`
 
   switch (true) {
-    case now.getDay() === datetime.getDay() &&
-      now.getHours() === datetime.getHours():
-      return now.getMinutes() - datetime.getMinutes() === 0
+    case nowDay === day && nowHour === hour:
+      return nowMinute - minute === 0
         ? 'now'
-        : now.getMinutes() - datetime.getMinutes() === 1
+        : nowMinute - minute === 1
         ? '1 minute ago'
-        : `${now.getMinutes() - datetime.getMinutes()} minutes ago`
-    case now.getDay() === datetime.getDay():
-      return now.getHours() - datetime.getHours() === 1
-        ? '1 hour ago'
-        : `${now.getHours() - datetime.getHours()} hours ago`
-    case now.getDay() - 1 === datetime.getDay():
+        : `${nowMinute - minute} minutes ago`
+    case nowDay === day:
+      return nowHour - hour === 1 ? '1 hour ago' : `${nowHour - hour} hours ago`
+    case nowDay - 1 === day:
       return `Yesterday at ${timeStr}`
     default:
       return `${dateStr} at ${timeStr}`

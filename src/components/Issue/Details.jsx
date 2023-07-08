@@ -1,6 +1,10 @@
 import React from 'react'
 
-import { Grid, Typography, Box, Avatar, Divider } from '@mui/material'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
+import { faGameConsoleHandheld } from '@fortawesome/pro-solid-svg-icons'
+
+import { Grid, Typography, Box, Avatar, Divider, Stack } from '@mui/material'
 
 import { getStatusColorHk, toTitleCase } from '~/utils'
 import TypeIcon from './TypeIcon'
@@ -136,6 +140,41 @@ const Details = ({ issue }) => {
                 </Grid>
               </Grid>
             </Box>
+          </Grid>
+        </Grid>
+        <Grid item lg={12} sx={{ mt: 3 }}>
+          <Grid container direction='row' justifyContent='left' spacing={1}>
+            <Grid item>
+              <Typography variant='overline'>OS:</Typography>
+            </Grid>
+            <Grid item sx={{ ml: 5, mt: 0.5 }}>
+              <Stack direction='row' spacing={2}>
+                {(!issue.os || issue.os.length === 0) && (
+                  <Typography variant='body'>N/A</Typography>
+                )}
+                {issue.os && issue.os.indexOf('windows') > -1 && (
+                  <FontAwesomeIcon
+                    icon={icon({ name: 'windows', style: 'brands' })}
+                    size='lg'
+                  />
+                )}
+                {issue.os && issue.os.indexOf('macOS') > -1 && (
+                  <FontAwesomeIcon
+                    icon={icon({ name: 'apple', style: 'brands' })}
+                    size='lg'
+                  />
+                )}
+                {issue.os && issue.os.indexOf('linux') > -1 && (
+                  <FontAwesomeIcon
+                    icon={icon({ name: 'linux', style: 'brands' })}
+                    size='lg'
+                  />
+                )}
+                {issue.os && issue.os.indexOf('handheld') > -1 && (
+                  <FontAwesomeIcon icon={faGameConsoleHandheld} size='lg' />
+                )}
+              </Stack>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>

@@ -10,14 +10,16 @@ import {
   TextField,
   MenuItem,
   Button,
-  Stack,
   Grid,
+  FormGroup,
+  Checkbox,
 } from '@mui/material/'
 import RadioGroup from '@mui/material/RadioGroup'
 import SendIcon from '@mui/icons-material/Send'
 import { useParams, useLocation, useNavigate } from 'react-router-dom'
 import { CategoriesContext, UserContext } from '~/context'
 import Loading from '~/components/Loading'
+import TinyMce from '~/components/TinyMce'
 
 export const CreateIssue = () => {
   const userInfo = useContext(UserContext)
@@ -30,10 +32,10 @@ export const CreateIssue = () => {
   const [version, setVersion] = useState(location.state?.version || '')
   const [modlogsButtonColor, setModlogsButtonColor] = useState('primary')
   const [modlogsButtonText, setModlogsButtonText] = useState('Upload Modlogs')
-  const [embedHelperValidation, setEmbedHelperValidation] = useState('')
-  const [generalHelperValidation, setGeneralHelperValidation] = useState('')
-  const [embedFieldColor, setEmbedFieldColor] = useState('primary')
-  const [generalFieldColor, setgeneralFieldColor] = useState('primary')
+  // const [embedHelperValidation, setEmbedHelperValidation] = useState('')
+  // const [generalHelperValidation, setGeneralHelperValidation] = useState('')
+  // const [embedFieldColor, setEmbedFieldColor] = useState('primary')
+  // const [generalFieldColor, setgeneralFieldColor] = useState('primary')
 
   let defaultState = {
     archived: location.state?.archived || false,
@@ -53,6 +55,7 @@ export const CreateIssue = () => {
       body: location.state?.modlogs.body || '',
       title: location.state?.modlogs.title || '',
     },
+    os: location.state?.os || [],
     priority: location.state?.priority || 'medium',
     project_id: params.projectId,
     status: location.state?.status || 'reported',
@@ -98,6 +101,16 @@ export const CreateIssue = () => {
         ...newIssue,
         version: version,
       })
+    } else if (field === 'os') {
+      let issue = { ...newIssue }
+      let index = issue.os.indexOf(value)
+
+      if (index === -1) {
+        issue.os.push(value)
+      } else {
+        issue.os.splice(index, 1)
+      }
+      setNewIssue(issue)
     } else {
       let issue = { ...newIssue }
       issue[field] = value
@@ -114,27 +127,27 @@ export const CreateIssue = () => {
     }
   }, [version, location])
 
-  useEffect(() => {
-    if (
-      newIssue.attachments.generalUrl.match(
-        /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/g,
-      )
-    ) {
-      setGeneralHelperValidation('Valid URL!')
-      setgeneralFieldColor('success')
-    } else {
-      setGeneralHelperValidation('Please enter a valid URL')
-      setgeneralFieldColor('warning')
-    }
+  // useEffect(() => {
+  //   if (
+  //     newIssue.attachments.generalUrl.match(
+  //       /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/g,
+  //     )
+  //   ) {
+  //     setGeneralHelperValidation('Valid URL!')
+  //     setgeneralFieldColor('success')
+  //   } else {
+  //     setGeneralHelperValidation('Please enter a valid URL')
+  //     setgeneralFieldColor('warning')
+  //   }
 
-    if (newIssue.attachments.embedSource.includes('iframe')) {
-      setEmbedHelperValidation('Valid Embed!')
-      setEmbedFieldColor('success')
-    } else {
-      setEmbedHelperValidation('Please enter a valid embed link')
-      setEmbedFieldColor('warning')
-    }
-  }, [newIssue])
+  //   if (newIssue.attachments.embedSource.includes('iframe')) {
+  //     setEmbedHelperValidation('Valid Embed!')
+  //     setEmbedFieldColor('success')
+  //   } else {
+  //     setEmbedHelperValidation('Please enter a valid embed link')
+  //     setEmbedFieldColor('warning')
+  //   }
+  // }, [newIssue])
 
   const handleFormSubmit = async () => {
     if (newIssue.summary !== '') {
@@ -179,6 +192,7 @@ export const CreateIssue = () => {
             body: '',
             title: '',
           },
+          os: [],
           priority: 'medium',
           project_id: params.projectId,
           status: 'reported',
@@ -203,8 +217,13 @@ export const CreateIssue = () => {
   return (
     <div>
       <FormControl>
-        <Grid container spacing={3} sx={{ mt: 4 }}>
-          <Grid item md={12}>
+        <Grid
+          container
+          justifyContent='space-between'
+          spacing={3}
+          sx={{ pl: 3, pr: 3 }}
+        >
+          <Grid item lg={12}>
             <TextField
               fullWidth
               id='summary'
@@ -217,9 +236,9 @@ export const CreateIssue = () => {
             />
           </Grid>
 
-          <Grid item md={4}>
+          <Grid item lg={4}>
             <Grid container>
-              <Grid item md={12}>
+              <Grid item lg={12}>
                 <TextField
                   fullWidth
                   id='category-select'
@@ -241,7 +260,7 @@ export const CreateIssue = () => {
                     ))}
                 </TextField>
               </Grid>
-              <Grid item md={12}>
+              <Grid item lg={12}>
                 <TextField
                   disabled
                   fullWidth
@@ -254,7 +273,7 @@ export const CreateIssue = () => {
                   variant='standard'
                 />
               </Grid>
-              <Grid item md={12}>
+              <Grid item lg={12}>
                 <TextField
                   disabled
                   fullWidth
@@ -268,7 +287,7 @@ export const CreateIssue = () => {
             </Grid>
           </Grid>
 
-          <Grid item md={2}>
+          <Grid item lg={2}>
             <FormLabel id='type-label-group'>Type</FormLabel>
             <RadioGroup id='type-radio' sx={{ pb: 3 }}>
               <FormControlLabel
@@ -294,7 +313,7 @@ export const CreateIssue = () => {
             </RadioGroup>
           </Grid>
 
-          <Grid item md={2}>
+          <Grid item lg={2}>
             <FormLabel id='priority-label-group' sx={{ pt: 3 }}>
               Priority
             </FormLabel>
@@ -332,7 +351,7 @@ export const CreateIssue = () => {
             </RadioGroup>
           </Grid>
 
-          <Grid item md={2}>
+          <Grid item lg={2}>
             <FormLabel id='status-label-group' sx={{ pt: 3 }}>
               Status
             </FormLabel>
@@ -381,56 +400,122 @@ export const CreateIssue = () => {
               />
             </RadioGroup>
           </Grid>
+          <Grid item lg={2}>
+            <FormLabel id='os-label-group' sx={{ pt: 3 }}>
+              Operating System
+            </FormLabel>
+            <FormGroup id='os-radio' sx={{ pb: 3 }}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={newIssue.os.indexOf('windows') > -1}
+                    onChange={(e) => updateNewIssue('os', e.target.value)}
+                  />
+                }
+                label='Windows'
+                name='windows'
+                value='windows'
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={newIssue.os.indexOf('macOS') > -1}
+                    onChange={(e) => updateNewIssue('os', e.target.value)}
+                  />
+                }
+                label='macOS'
+                name='macOS'
+                value='macOS'
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={newIssue.os.indexOf('linux') > -1}
+                    onChange={(e) => {
+                      updateNewIssue('os', e.target.value)
+                    }}
+                  />
+                }
+                label='Linux'
+                name='linux'
+                value='linux'
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={newIssue.os.indexOf('handheld') > -1}
+                    onChange={(e) => {
+                      updateNewIssue('os', e.target.value)
+                    }}
+                  />
+                }
+                label='Handheld'
+                name='handheld'
+                value='handheld'
+              />
+            </FormGroup>
+          </Grid>
 
-          <Grid item md={12}>
-            <TextField
-              fullWidth
-              id='description'
-              label='Description'
-              maxRows={20}
-              minRows={6}
-              multiline
-              onChange={(e) => updateNewIssue('description', e.target.value)}
-              placeholder='Description'
+          <Grid item lg={12}>
+            <TinyMce
+              height={500}
+              onChange={(e) => updateNewIssue('description', e)}
               value={newIssue.description}
-              variant='filled'
             />
           </Grid>
-          <Grid item md={6}>
-            <Button
-              color={modlogsButtonColor}
-              component='label'
-              variant='contained'
-            >
-              {modlogsButtonText}
-              <input
-                accept='text/*'
-                hidden
-                onChange={(e) => {
-                  const file = e.target.files[0]
-                  if (file && file.size > 4 * 1024 * 1024) {
-                    setModlogsButtonColor('error')
-                    setModlogsButtonText('File size too large! ( > 4MB )')
-                    setTimeout(() => {
-                      setModlogsButtonColor('primary')
-                      setModlogsButtonText('Upload Modlogs')
-                    }, 5000)
-                  } else {
-                    updateNewIssue('modlogs', file)
-                  }
-                }}
-                type='file'
-              />
-            </Button>
+          <Grid item lg={12}>
+            <Grid container justifyContent='space-between' spacing={3}>
+              <Grid item lg={6}>
+                <Button
+                  color={modlogsButtonColor}
+                  component='label'
+                  variant='contained'
+                >
+                  {modlogsButtonText}
+                  <input
+                    accept='text/*'
+                    hidden
+                    onChange={(e) => {
+                      const file = e.target.files[0]
+                      if (file && file.size > 4 * 1024 * 1024) {
+                        setModlogsButtonColor('error')
+                        setModlogsButtonText('File size too large! ( > 4MB )')
+                        setTimeout(() => {
+                          setModlogsButtonColor('primary')
+                          setModlogsButtonText('Upload Modlogs')
+                        }, 5000)
+                      } else {
+                        updateNewIssue('modlogs', file)
+                      }
+                    }}
+                    type='file'
+                  />
+                </Button>
+              </Grid>
+              <Grid
+                alignContent='right'
+                item
+                lg={6}
+                sx={{ textAlign: 'right' }}
+              >
+                <Button
+                  endIcon={<SendIcon />}
+                  onClick={handleFormSubmit}
+                  variant='contained'
+                >
+                  Submit
+                </Button>
+              </Grid>
+            </Grid>
           </Grid>
-          <Grid item md={6}>
+          {/* <Grid item lg={6}>
             <Grid container spacing={2}>
-              <Grid item md={12}>
+              <Grid item lg={12}>
                 <FormLabel id='attachments-group' sx={{ pt: 3 }}>
                   Attachments
                 </FormLabel>
               </Grid>
-              <Grid item md={6}>
+              <Grid item lg={6}>
                 <TextField
                   color={embedFieldColor}
                   fullWidth
@@ -449,7 +534,7 @@ export const CreateIssue = () => {
                   value={newIssue.attachments.embedSource}
                 />
               </Grid>
-              <Grid item md={6}>
+              <Grid item lg={6}>
                 <TextField
                   color={generalFieldColor}
                   fullWidth
@@ -469,18 +554,7 @@ export const CreateIssue = () => {
                 />
               </Grid>
             </Grid>
-          </Grid>
-          <Grid item md={12}>
-            <Stack direction='row' spacing={2}>
-              <Button
-                endIcon={<SendIcon />}
-                onClick={handleFormSubmit}
-                variant='contained'
-              >
-                Submit
-              </Button>
-            </Stack>
-          </Grid>
+          </Grid> */}
         </Grid>
       </FormControl>
     </div>
