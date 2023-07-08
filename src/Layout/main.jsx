@@ -11,7 +11,7 @@ import {
   Box,
 } from '@mui/material'
 import Header from './Header'
-import Sidenav from './SideNav'
+import Sidenav from './Sidenav'
 import { UserContext } from '~/context'
 import AlertNotification from '~/components/Alert'
 
