@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 
 import {
   Grid,
-  Avatar,
+  // Avatar,
   Box,
   Typography,
   CardContent,

@@ -94,3 +94,67 @@ export const parseJwt = (token) => {
 
   return JSON.parse(jsonPayload)
 }
+
+export const formatDateTimeString = (UTCTime) => {
+  function numSuffixOf(i) {
+    var j = i % 10,
+      k = i % 100
+    if (j == 1 && k != 11) {
+      return 'st'
+    }
+    if (j == 2 && k != 12) {
+      return 'nd'
+    }
+    if (j == 3 && k != 13) {
+      return 'rd'
+    }
+    return 'th'
+  }
+
+  const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+  const MONTHS = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ]
+  let now = new Date()
+  let datetime = new Date(UTCTime + 'Z')
+
+  let hour = datetime.getHours()
+  let minute = datetime.getMinutes()
+  let day = datetime.getDay()
+  let month = datetime.getMonth()
+  let date = datetime.getDate()
+
+  let timeStr = `${hour > 12 ? hour - 12 : hour}:${minute} ${
+    hour >= 12 ? 'PM' : 'AM'
+  }`
+  let dateStr = `${DAYS[day]}, ${MONTHS[month]} ${date}${numSuffixOf(date)}`
+
+  switch (true) {
+    case now.getDay() === datetime.getDay() &&
+      now.getHours() === datetime.getHours():
+      return now.getMinutes() - datetime.getMinutes() === 0
+        ? 'now'
+        : now.getMinutes() - datetime.getMinutes() === 1
+        ? `${now.getMinutes() - datetime.getMinutes()} minute ago`
+        : `${now.getMinutes() - datetime.getMinutes()} minutes ago`
+    case now.getDay() === datetime.getDay():
+      return now.getHours() - datetime.getHours() === 1
+        ? `${now.getHours() - datetime.getHours()} hour ago`
+        : `${now.getHours() - datetime.getHours()} hours ago`
+    case now.getDay() - 1 === datetime.getDay():
+      return `Yesterday at ${timeStr}`
+    default:
+      return `${dateStr} at ${timeStr}`
+  }
+}
