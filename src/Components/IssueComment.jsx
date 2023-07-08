@@ -22,10 +22,10 @@ import SendIcon from '@mui/icons-material/Send'
 import AddCommentIcon from '@mui/icons-material/AddComment'
 
 import * as api from '~/api'
+import DateTime from './DateTime'
 
 export const IssueComment = ({ comment, updateIssue }) => {
   const [menuOpen, setMenuOpen] = useState(null)
-  const createAt = new Date(comment.created_at)
 
   const deleteComment = () => {
     api
@@ -66,9 +66,12 @@ export const IssueComment = ({ comment, updateIssue }) => {
             <div dangerouslySetInnerHTML={{ __html: comment.comment }}></div>
           </Grid>
           <Grid item lg={3} md={3} sx={{ textAlign: 'right' }}>
-            <Typography sx={{ mr: 3 }} variant='overline'>
-              {createAt.toISOString()}
-            </Typography>
+            <DateTime
+              data={
+                comment.updated_at ? comment.updated_at : comment.created_at
+              }
+              isUpdate={comment.updated_at ? true : false}
+            />
             <IconButton
               aria-controls={menuOpen ? 'menu' : undefined}
               aria-expanded={menuOpen ? 'true' : undefined}
@@ -149,7 +152,7 @@ export const CreateIssueComment = ({ issue, updateIssue }) => {
             apiKey='dtvbj54k907ax86riigixvtbjry1ve8he1ys3jkh3qemdu3o'
             init={{
               content_css: 'dark',
-              height: 400,
+              height: 300,
               icons: 'material',
               menubar: false,
               plugins: [
@@ -173,6 +176,8 @@ export const CreateIssueComment = ({ issue, updateIssue }) => {
                 'wordcount',
               ],
               skin: 'oxide-dark',
+              // skin: 'naked',
+              statusbar: false,
               toolbar:
                 'undo redo | blocks | ' +
                 'bold italic forecolor | alignleft aligncenter ' +
@@ -184,16 +189,6 @@ export const CreateIssueComment = ({ issue, updateIssue }) => {
             onInit={(evt, editor) => (editorRef.current = editor)}
             // value={comment}
           />
-          {/* <TextField
-            fullWidth
-            label='Add comment'
-            maxRows={20}
-            minRows={6}
-            multiline
-            placeholder='Add comment'
-            value={comment}
-            variant='filled'
-          /> */}
         </Grid>
         <Grid
           item
