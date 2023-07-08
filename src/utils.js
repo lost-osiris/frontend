@@ -146,11 +146,11 @@ export const formatDateTimeString = (UTCTime) => {
       return now.getMinutes() - datetime.getMinutes() === 0
         ? 'now'
         : now.getMinutes() - datetime.getMinutes() === 1
-        ? `${now.getMinutes() - datetime.getMinutes()} minute ago`
+        ? '1 minute ago'
         : `${now.getMinutes() - datetime.getMinutes()} minutes ago`
     case now.getDay() === datetime.getDay():
       return now.getHours() - datetime.getHours() === 1
-        ? `${now.getHours() - datetime.getHours()} hour ago`
+        ? '1 hour ago'
         : `${now.getHours() - datetime.getHours()} hours ago`
     case now.getDay() - 1 === datetime.getDay():
       return `Yesterday at ${timeStr}`
