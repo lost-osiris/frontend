@@ -26,8 +26,8 @@ import {
   Stack,
 } from '@mui/material'
 
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
-import CloseIcon from '@mui/icons-material/Close'
+import MoreVertIcon from '@mui/icons-material/MoreVert'
+import DeleteIcon from '@mui/icons-material/Delete'
 import ArchiveIcon from '@mui/icons-material/Archive'
 import UnarchiveIcon from '@mui/icons-material/Unarchive'
 import BugReportIcon from '@mui/icons-material/BugReport'
@@ -172,7 +172,7 @@ export const IssueCard = ({ issue, sx }) => {
             </Box>
           </Grid>
           {userInfo && canEdit && (
-            <Grid item lg={1.5}>
+            <Grid item lg={1.5} sx={{ textAlign: 'right', pr: 1 }}>
               <IconButton
                 aria-controls={menuOpen ? 'menu' : undefined}
                 aria-expanded={menuOpen ? 'true' : undefined}
@@ -182,7 +182,7 @@ export const IssueCard = ({ issue, sx }) => {
                 }}
                 sx={{ pt: 1 }}
               >
-                <MoreHorizIcon />
+                <MoreVertIcon />
               </IconButton>
               <Menu
                 anchorEl={menuOpen}
@@ -211,7 +211,7 @@ export const IssueCard = ({ issue, sx }) => {
                 <Divider />
                 <MenuItem onClick={handleCardDelete}>
                   <ListItemIcon>
-                    <CloseIcon color='error' fontSize='small' />
+                    <DeleteIcon color='error' fontSize='small' />
                   </ListItemIcon>
                   <ListItemText>Delete</ListItemText>
                 </MenuItem>
