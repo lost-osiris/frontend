@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { ProjectCard } from '~/components/ProjectCard'
+import { ProjectCard } from '../components/ProjectCard'
 import * as api from '~/api'
 import Loading from '~/components/Loading'
 

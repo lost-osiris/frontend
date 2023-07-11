@@ -7,13 +7,17 @@ import { ProjectList } from './pages/ProjectList'
 import { CreateIssue } from './pages/CreateIssue'
 import { JoinWaitlist } from './pages/JoinWaitList'
 import { ManageWaitlist } from './pages/ManageWaitList'
+import { Homepage } from './pages/HomePage'
 import { KanbanBoardProvider } from '~/context'
+import { ProjectPage } from './pages/Project'
 
 const AppRoutes = () => {
   return (
     <Routes>
       <Route element={<Layout />} path='/'>
+        <Route element={<Homepage />} path='/home' />
         <Route element={<ProjectList />} path='/projects' />
+        <Route element={<ProjectPage />} path='/project/:projectId' />
         <Route
           element={<JoinWaitlist />}
           path='/project/:projectId/joinwaitlist'
