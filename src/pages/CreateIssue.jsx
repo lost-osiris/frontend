@@ -17,13 +17,13 @@ import {
 import RadioGroup from '@mui/material/RadioGroup'
 import SendIcon from '@mui/icons-material/Send'
 import { useParams, useLocation, useNavigate } from 'react-router-dom'
-import { CategoriesContext, UserContext } from '~/context'
+import { ProjectsContext, UserContext } from '~/context'
 import Loading from '~/components/Loading'
 import TinyMce from '~/components/TinyMce'
 
 export const CreateIssue = () => {
   const userInfo = useContext(UserContext)
-  const categories = useContext(CategoriesContext)
+  const { project } = useContext(ProjectsContext)
 
   let params = useParams()
   let location = useLocation()
@@ -210,7 +210,7 @@ export const CreateIssue = () => {
     }
   }
 
-  if (categories === undefined) {
+  if (project === undefined) {
     return <Loading />
   }
 
@@ -249,8 +249,8 @@ export const CreateIssue = () => {
                   sx={{ pb: 2 }}
                   value={newIssue.category}
                 >
-                  {categories &&
-                    categories.map((category) => (
+                  {project &&
+                    project.categories.map((category) => (
                       <MenuItem
                         key={toTitleCase(category)}
                         value={toTitleCase(category)}

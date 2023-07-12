@@ -11,22 +11,20 @@ import {
   Grid,
 } from '@mui/material/'
 
-export const ProjectCard = (props) => {
-  const { name, description, version, members, memberCount, projectId } = props
+export const ProjectCard = ({ project }) => {
   const navigate = useNavigate()
-  let maxAvatars = Math.min(Math.round(memberCount / 4) || 9, 9)
+  let maxAvatars = Math.min(Math.round(project.memberCount / 4) || 9, 9)
 
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card sx={{ height: '100%', maxWidth: 350 }}>
       <CardMedia
-        alt={name}
         component='img'
         image='https://static0.gamerantimages.com/wordpress/wp-content/uploads/2023/07/hollow-knight-pale-court.jpg'
       />
       <CardContent>
         <Typography
           component='div'
-          onClick={() => navigate(`/project/${projectId}`)}
+          onClick={() => navigate(`/project/${project.id}`)}
           sx={{
             '&:hover': {
               cursor: 'pointer',
@@ -37,7 +35,7 @@ export const ProjectCard = (props) => {
           textAlign={'center'}
           variant='h4'
         >
-          {name}
+          {project.name}
         </Typography>
         <Grid container>
           <Grid item lg={3.7}></Grid>
@@ -47,21 +45,20 @@ export const ProjectCard = (props) => {
               color='text.secondary'
               variant='overline'
             >
-              version {version}
+              version {project.version}
             </Typography>
           </Grid>
           <Grid item lg={2}></Grid>
         </Grid>
       </CardContent>
       <CardContent>
-        {' '}
         <Typography color='text.secondary' variant='body2'>
-          {description}
+          {project.description}
         </Typography>
       </CardContent>
       <CardContent>
         <AvatarGroup max={maxAvatars}>
-          {members.map((el, index) => {
+          {project.members.map((el, index) => {
             return (
               <Avatar
                 alt={el.username}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { UserContext, CategoriesContext } from '~/context'
+import { UserContext, ProjectsContext } from '~/context'
 import { useParams, useNavigate } from 'react-router-dom'
 
 import {
@@ -51,10 +51,14 @@ export const IssuePage = () => {
   const [menuOpen, setMenuOpen] = useState(false)
   const [commentOpen, setCommentOpen] = useState(false)
   const userInfo = useContext(UserContext)
-  const categories = useContext(CategoriesContext)
-  let project = userInfo.user.projects.find((value) => value)
+  const { project } = useContext(ProjectsContext)
 
-  const hasMaintainer = project.roles.indexOf('maintainer') === 0 ? true : false
+  const hasMaintainer =
+    userInfo.user.projects
+      .find((value) => value)
+      .roles.indexOf('maintainer') === 0
+      ? true
+      : false
 
   const canEdit =
     hasMaintainer || issue?.discord_id === userInfo.user.discord_id
@@ -122,7 +126,7 @@ export const IssuePage = () => {
     }
   })
 
-  if (!issue || categories === undefined) {
+  if (!issue || !project === undefined) {
     return <Loading />
   }
 

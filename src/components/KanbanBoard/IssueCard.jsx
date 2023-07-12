@@ -2,13 +2,8 @@ import React, { useState, useContext } from 'react'
 import { UserContext, KanbanBoardContext } from '~/context'
 import { useNavigate } from 'react-router-dom'
 import { useDrag } from 'react-dnd'
-import { HighPriorityIcon } from '~/components/HighPrioIcon'
-import { LowPriorityIcon } from '~/components/LowPrioIcon'
-import { MediumPriorityIcon } from '~/components/MediumPrioIcon'
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
-import { faGameConsoleHandheld } from '@fortawesome/pro-solid-svg-icons'
+import PriorityIcon from '~/components/Issue/PriorityIcon'
+import TypeIcon from '~/components/Issue/TypeIcon'
 
 import * as api from '~/api'
 import { toTitleCase } from '~/utils'
@@ -34,9 +29,8 @@ import MoreVertIcon from '@mui/icons-material/MoreVert'
 import DeleteIcon from '@mui/icons-material/Delete'
 import ArchiveIcon from '@mui/icons-material/Archive'
 import UnarchiveIcon from '@mui/icons-material/Unarchive'
-import BugReportIcon from '@mui/icons-material/BugReport'
-import SuggectionIcon from '@mui/icons-material/TipsAndUpdates'
 import { dispatchAlert } from '~/store'
+import OsIcon from '../Issue/OsIcon'
 
 export const IssueCard = ({ issue, sx }) => {
   const [menuOpen, setMenuOpen] = useState(null)
@@ -137,7 +131,9 @@ export const IssueCard = ({ issue, sx }) => {
               >
                 <Box
                   component='span'
-                  onClick={() => navigate(`/issue/${issue.id}`)}
+                  onClick={() =>
+                    navigate(`/project/${issue.project_id}/issue/${issue.id}`)
+                  }
                   sx={{
                     '&:hover': {
                       // cursor: 'pointer',
@@ -162,7 +158,9 @@ export const IssueCard = ({ issue, sx }) => {
             >
               <Box
                 component='span'
-                onClick={() => navigate(`/issue/${issue.id}`)}
+                onClick={() =>
+                  navigate(`/project/${issue.project_id}/issue/${issue.id}`)
+                }
                 sx={{
                   '&:hover': {
                     cursor: 'pointer',
@@ -231,67 +229,20 @@ export const IssueCard = ({ issue, sx }) => {
         >
           <Grid item justifyContent='left' sx={{ mt: 1 }}>
             <Stack direction='row' spacing={2}>
-              {issue.type === 'bug' && (
-                <Tooltip title='Bug'>
-                  <span>
-                    <BugReportIcon color='error' />
-                  </span>
-                </Tooltip>
-              )}
-              {issue.type === 'suggestion' && (
-                <Tooltip title='Suggestion'>
-                  <span>
-                    <SuggectionIcon color='white' />
-                  </span>
-                </Tooltip>
-              )}
-              {issue.priority === 'low' && (
-                <Tooltip title='Low Priority'>
-                  <span>
-                    <LowPriorityIcon color='info' />
-                  </span>
-                </Tooltip>
-              )}
-              {issue.priority === 'medium' && (
-                <Tooltip title='Medium Priority'>
-                  <span>
-                    <MediumPriorityIcon color='warning' />
-                  </span>
-                </Tooltip>
-              )}
-              {issue.priority === 'high' && (
-                <Tooltip title='High Priority'>
-                  <span>
-                    <HighPriorityIcon color='error' />
-                  </span>
-                </Tooltip>
-              )}
+              <Tooltip title={toTitleCase(issue.type)}>
+                <span>
+                  <TypeIcon type={issue.type} />
+                </span>
+              </Tooltip>
+              <Tooltip title={`${toTitleCase(issue.priority)} Priority`}>
+                <span>
+                  <PriorityIcon type={issue.priority} />
+                </span>
+              </Tooltip>
             </Stack>
           </Grid>
           <Grid item justifyContent='center' sx={{ mt: 1 }}>
-            <Stack direction='row' spacing={2}>
-              {issue.os && issue.os.indexOf('windows') > -1 && (
-                <FontAwesomeIcon
-                  icon={icon({ name: 'windows', style: 'brands' })}
-                  size='lg'
-                />
-              )}
-              {issue.os && issue.os.indexOf('macOS') > -1 && (
-                <FontAwesomeIcon
-                  icon={icon({ name: 'apple', style: 'brands' })}
-                  size='lg'
-                />
-              )}
-              {issue.os && issue.os.indexOf('linux') > -1 && (
-                <FontAwesomeIcon
-                  icon={icon({ name: 'linux', style: 'brands' })}
-                  size='lg'
-                />
-              )}
-              {issue.os && issue.os.indexOf('handheld') > -1 && (
-                <FontAwesomeIcon icon={faGameConsoleHandheld} size='lg' />
-              )}
-            </Stack>
+            <OsIcon os={issue.os} />
           </Grid>
           <Grid item justifyContent='right' sx={{ mt: 1 }}>
             <Tooltip title='Version'>

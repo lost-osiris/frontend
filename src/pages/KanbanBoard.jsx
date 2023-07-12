@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
-import { UserContext, CategoriesContext, KanbanBoardContext } from '~/context'
+import { UserContext, ProjectsContext, KanbanBoardContext } from '~/context'
 
 import { toTitleCase } from '~/utils'
 import { IssueCard } from '~/components/KanbanBoard/IssueCard'
@@ -15,7 +15,7 @@ export const KanbanBoardPage = () => {
   const archived = Boolean(searchParams.get('archived') === 'true')
   const userInfo = useContext(UserContext)
   const { issues, issuesLoading } = useContext(KanbanBoardContext)
-  const categories = useContext(CategoriesContext)
+  const { project } = useContext(ProjectsContext)
   const params = useParams()
 
   const getNumOfArchived = () => {
@@ -37,7 +37,7 @@ export const KanbanBoardPage = () => {
     return <ProjectMemberAlert />
   }
 
-  if (issuesLoading || categories === undefined) {
+  if (issuesLoading || !project) {
     return <Loading />
   }
 

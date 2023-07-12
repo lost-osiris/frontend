@@ -10,14 +10,14 @@ import {
   Toolbar,
 } from '@mui/material'
 
-import { CategoriesContext, UserContext } from '~/context'
+import { ProjectsContext, UserContext } from '~/context'
 
 const drawerWidth = 240
 
 const Sidenav = () => {
   const navigate = useNavigate()
   const userInfo = useContext(UserContext)
-  const categories = useContext(CategoriesContext)
+  const { project } = useContext(ProjectsContext)
 
   return (
     <Drawer
@@ -35,8 +35,9 @@ const Sidenav = () => {
       <Box sx={{ overflow: 'auto' }}>
         <List>
           {userInfo &&
-            categories !== undefined &&
-            categories.map((el, index) => {
+            project &&
+            project.categories !== undefined &&
+            project.categories.map((el, index) => {
               return (
                 <ListItem
                   disablePadding

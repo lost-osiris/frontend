@@ -1,59 +1,50 @@
-import React, { useEffect, useState } from 'react'
-import * as api from '~/api'
+import React, { useContext } from 'react'
 import { ProjectCard } from '../components/ProjectCard'
+import Loading from '../components/Loading'
+import { ProjectsContext } from '../context'
 
 import { Typography, Grid, Divider } from '@mui/material/'
 
 export const Homepage = () => {
-  const [project, setProject] = useState(null)
-
-  useEffect(() => {
-    if (project === null) {
-      api
-        .requests('get', '/api/project/63fe47296edfc3b387628861/projectinfo')
-        .then((data) => setProject(data))
-    }
-  }, [])
+  const { projects } = useContext(ProjectsContext)
 
   return (
     <div>
-      <Grid>
-        <Grid container sx={{ pb: 8 }}>
-          <Grid item lg={2}></Grid>
-          <Grid item lg={8}>
-            <Typography textAlign={'center'} variant='h4'>
-              Welcome to ModForge
-            </Typography>
-            <Divider />
-            <Typography variant='body1'>
-              ModForge is an exceptional website that revolutionizes the modding
-              landscape by providing an easy and seamless platform for users to
-              contribute to their favorite mod projects. With the seamless
-              integration with Discord, ModForge creates a community-driven hub
-              that promotes collaboration and enhances the overall modding
-              experience.
-            </Typography>
-            <br />
-            <Typography variant='body1'>your mom</Typography>
-          </Grid>
-          <Grid item lg={2}></Grid>
+      <Grid container sx={{ pb: 10, pl: 5, pr: 5, pt: 3 }}>
+        <Grid item lg={12}>
+          <Typography textAlign={'center'} variant='h4'>
+            Welcome to ModForge
+          </Typography>
+          <Divider sx={{ mb: 4, mt: 2 }} />
+          <Typography variant='body1'>
+            ModForge is an exceptional website that revolutionizes the modding
+            landscape by providing an easy and seamless platform for users to
+            contribute to their favorite mod projects. With the seamless
+            integration with Discord, ModForge creates a community-driven hub
+            that promotes collaboration and enhances the overall modding
+            experience.
+          </Typography>
+          <br />
+          <Typography variant='body1'>your mom</Typography>
         </Grid>
-
-        <Grid alignItems={'center'} container>
-          <Grid item>
-            {project && (
-              <ProjectCard
-                description={project.description}
-                memberCount={project.member_count}
-                members={project.members}
-                name={project.name}
-                owner={project.owner}
-                projectId={project.project_id}
-                version={project.version}
-              />
-            )}
-          </Grid>
-        </Grid>
+      </Grid>
+      <Grid
+        alignItems='stretch'
+        container
+        direction='row'
+        justifyContent='flex-start'
+        spacing={5}
+        sx={{ pl: 5, pr: 5 }}
+      >
+        {!projects && <Loading />}
+        {projects &&
+          projects.map((project) => {
+            return (
+              <Grid item key={`project-card-${project.id}`}>
+                <ProjectCard project={project} />
+              </Grid>
+            )
+          })}
       </Grid>
     </div>
   )

@@ -19,9 +19,11 @@ import HomeIcon from '@mui/icons-material/Home'
 import Logout from '@mui/icons-material/Logout'
 import MoneyIcon from '@mui/icons-material/AttachMoney'
 import { AUTH_REDIRECT_URL } from '~/constants'
+import { ProjectsContext } from '../context'
 
 const Header = () => {
   const userInfo = useContext(UserContext)
+  const { project } = useContext(ProjectsContext)
 
   const navigate = useNavigate()
   const params = useParams()
@@ -52,20 +54,32 @@ const Header = () => {
           ModForge
         </Typography>
 
-        {userInfo ? (
-          <div>
-            <Fab
-              onClick={() =>
-                navigate(
-                  `/project/63fe47296edfc3b387628861/create-issue/${params.category}`,
-                )
-              }
-              sx={{ margin: 1 }}
-              variant='extended'
-            >
-              Issue
-              <AddIcon sx={{ pl: 0.5 }} />
+        <div>
+          {!userInfo && (
+            <Fab color='discord' href={AUTH_REDIRECT_URL} variant='extended'>
+              Discord Login
+              <LoginIcon sx={{ pl: 0.5 }} />
             </Fab>
+          )}
+        </div>
+
+        {userInfo && project && (
+          <Fab
+            onClick={() =>
+              navigate(
+                `/project/63fe47296edfc3b387628861/create-issue/${params.category}`,
+              )
+            }
+            sx={{ margin: 1 }}
+            variant='extended'
+          >
+            Issue
+            <AddIcon sx={{ pl: 0.5 }} />
+          </Fab>
+        )}
+
+        {userInfo && (
+          <>
             <Fab
               onClick={() =>
                 window.open(
@@ -148,14 +162,7 @@ const Header = () => {
                 Logout
               </MenuItem>
             </Menu>
-          </div>
-        ) : (
-          <div>
-            <Fab color='discord' href={AUTH_REDIRECT_URL} variant='extended'>
-              Discord Login
-              <LoginIcon sx={{ pl: 0.5 }} />
-            </Fab>
-          </div>
+          </>
         )}
       </Toolbar>
     </AppBar>
