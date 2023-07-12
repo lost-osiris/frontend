@@ -67,7 +67,9 @@ const Header = () => {
           <Fab
             onClick={() =>
               navigate(
-                `/project/63fe47296edfc3b387628861/create-issue/${params.category}`,
+                `/project/63fe47296edfc3b387628861/create-issue/${
+                  params.category || 'general'
+                } `,
               )
             }
             sx={{ margin: 1 }}
