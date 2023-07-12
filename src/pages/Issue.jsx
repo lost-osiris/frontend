@@ -243,7 +243,7 @@ export const IssuePage = () => {
         <Grid item lg={12} sx={{ display: tabValue === 0 ? '' : 'none' }}>
           <IssueCommentInput
             height={600}
-            issue={issue}
+            issueId={issue.id}
             show={commentOpen}
             updateIssue={() => fetchIssue()}
           />

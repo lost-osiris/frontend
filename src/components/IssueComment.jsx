@@ -160,6 +160,7 @@ export const IssueComment = ({ comment, updateIssue }) => {
 
 export const IssueCommentInput = ({
   commentId,
+  issueId,
   updateIssue,
   show,
   height,
@@ -181,8 +182,15 @@ export const IssueCommentInput = ({
         type: 'error',
       })
     } else {
+      let url
+      if (commentId) {
+        url = `/api/comment/${commentId}`
+      } else {
+        url = `/api/issue/${issueId}/comment`
+      }
+
       api
-        .requests(method, `/api/comment/${commentId}`, {
+        .requests(method, url, {
           alert: true,
           alertMessage: message,
           data: {

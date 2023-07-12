@@ -29,5 +29,6 @@ module.exports = (api) => {
     ...(!api.env('production') && {
       plugins: [require('react-refresh/babel'), 'macros'],
     }),
+    plugins: ['macros'],
   }
 }
