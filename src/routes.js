@@ -10,6 +10,7 @@ import { ManageWaitlist } from './pages/ManageWaitList'
 import { Homepage } from './pages/HomePage'
 import { KanbanBoardProvider } from '~/context'
 import { ProjectPage } from './pages/Project'
+import { CreateEditProject } from './pages/CreateEditProject'
 
 const AppRoutes = () => {
   return (
@@ -18,6 +19,11 @@ const AppRoutes = () => {
         <Route element={<Homepage />} path='/' />
         {/* <Route element={<ProjectList />} path='/projects' /> */}
         <Route element={<ProjectPage />} path='/project/:projectId' />
+        <Route element={<CreateEditProject />} path='/project/create' />
+        <Route
+          element={<CreateEditProject />}
+          path='/project/:projectId/edit'
+        />
         <Route
           element={<JoinWaitlist />}
           path='/project/:projectId/joinwaitlist'
