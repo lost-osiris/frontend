@@ -23,7 +23,7 @@ export const IssueListColumn = ({ name }) => {
     },
     drop: (item) => {
       if (name !== item.issue.status) {
-        updateIssue({ ...item.issue, status: name })
+        updateIssue({ ...item.issue, date: new Date(), status: name })
       }
     },
   })

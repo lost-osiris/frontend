@@ -44,7 +44,7 @@ const Sidenav = () => {
                   key={`${el.route}-${index}`}
                   onClick={() =>
                     navigate(
-                      `/project/63fe47296edfc3b387628861/issues/${el.toLowerCase()}`,
+                      `/project/${project.id}/issues/${el.toLowerCase()}`,
                     )
                   }
                 >

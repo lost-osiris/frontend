@@ -19,7 +19,7 @@ export const ProjectCard = ({ project }) => {
     <Card sx={{ height: '100%', maxWidth: 350 }}>
       <CardMedia
         component='img'
-        image='https://static0.gamerantimages.com/wordpress/wp-content/uploads/2023/07/hollow-knight-pale-court.jpg'
+        image='https://cdn.discordapp.com/attachments/1028811110033408110/1135308912774619167/Hollow_Knight_Hallownest_Vocalized_-_Launch_Trailer_FINAL.png'
       />
       <CardContent>
         <Typography

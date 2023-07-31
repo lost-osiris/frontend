@@ -37,14 +37,20 @@ export const Homepage = () => {
         sx={{ pl: 5, pr: 5 }}
       >
         {!projects && <Loading />}
-        {projects &&
-          projects.map((project) => {
-            return (
-              <Grid item key={`project-card-${project.id}`}>
+        {projects && (
+          <>
+            {projects.user_projects.map((project) => (
+              <Grid item key={`user-project-card-${project.id}`}>
                 <ProjectCard project={project} />
               </Grid>
-            )
-          })}
+            ))}
+            {projects.public_projects.map((project) => (
+              <Grid item key={`public-project-card-${project.id}`}>
+                <ProjectCard project={project} />
+              </Grid>
+            ))}
+          </>
+        )}
       </Grid>
     </div>
   )

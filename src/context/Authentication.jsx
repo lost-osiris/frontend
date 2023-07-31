@@ -15,7 +15,7 @@ export const UserProvider = (props) => {
 
     if (token) {
       localStorage.setItem('jwt', token)
-      navigate('/project/63fe47296edfc3b387628861/issues/general')
+      navigate('/')
     } else {
       if (!userInfo && localStorage.getItem('jwt')) {
         setUserInfo(parseJwt(localStorage.getItem('jwt')))

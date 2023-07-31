@@ -11,6 +11,7 @@ import { Homepage } from './pages/HomePage'
 import { KanbanBoardProvider } from '~/context'
 import { ProjectPage } from './pages/Project'
 import { CreateEditProject } from './pages/CreateEditProject'
+import { UserPage } from './pages/UserPage'
 
 const AppRoutes = () => {
   return (
@@ -49,9 +50,11 @@ const AppRoutes = () => {
           path='/project/:projectId/issue/:issueId'
         />
         <Route
+          // do we need this
           element={<CreateIssue />}
           path='/project/:projectId/create-issue/:category'
         />
+        <Route element={<UserPage />} path='/user/:discord_id' />
       </Route>
     </Routes>
   )

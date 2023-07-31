@@ -55,7 +55,7 @@ export const KanbanBoardProvider = (props) => {
         .requests(
           'get',
 
-          `/api/project/63fe47296edfc3b387628861/category/${params.category}/issues`,
+          `/api/project/${params.projectId}/category/${params.category}/issues`,
         )
         .then((data) => {
           if (loading && data) {

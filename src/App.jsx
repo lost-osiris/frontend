@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import Routes from '~/routes'
 import { BrowserRouter } from 'react-router-dom'
 import { UserProvider } from '~/context'
+import { ProjectsProvider } from './context'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { Provider as ReduxProvider } from 'react-redux'
@@ -19,9 +20,11 @@ const App = () => {
         <div className='App'>
           <BrowserRouter>
             <UserProvider>
-              <DndProvider backend={HTML5Backend}>
-                <Routes />
-              </DndProvider>
+              <ProjectsProvider>
+                <DndProvider backend={HTML5Backend}>
+                  <Routes />
+                </DndProvider>
+              </ProjectsProvider>
             </UserProvider>
           </BrowserRouter>
         </div>

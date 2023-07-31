@@ -181,7 +181,7 @@ export const IssuePage = () => {
                       <MenuItem
                         onClick={() =>
                           navigate(
-                            '/project/63fe47296edfc3b387628861/create-issue',
+                            `/project/${params.projectId}/create-issue`,
                             {
                               state: issue,
                             },

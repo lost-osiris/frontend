@@ -4,5 +4,15 @@
       "source": "/api/:match*",
       "destination": "https://backend-three-tawny.vercel.app/api/:match*"
     }
+  ],
+  "crons": [
+    {
+      "path": "/src/crons/CronWeeklyWarning.js",
+      "schedule": "0 0 * * 5"
+    },
+    {
+      "path": "/src/crons/CronWeeklyDeletion.js",
+      "schedule": "0 0 * * 0"
+    }
   ]
 }

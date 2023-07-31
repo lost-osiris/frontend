@@ -22,17 +22,22 @@ export const CreateEditProject = ({ props }) => {
   const [value, setValue] = useState(null)
   let categories = []
 
+  const [isPublic, setIsPublic] = useState(false)
+  const [modlogsButtonColor, setModlogsButtonColor] = useState('primary')
+  const [modlogsButtonText, setModlogsButtonText] = useState('Upload Modlogs')
+
   let defaultState = {
+    banner_img: '',
     categories: categories || [],
     description: '',
     is_public: false,
-    summary: location.state?.summary || '',
-    type: location.state?.type || 'bug',
+    // summary: location.state?.summary || '',
     version: '',
   }
 
   const [project, setProject] = useState(defaultState)
-  const [isPublic, setIsPublic] = useState(false)
+
+  console.log(project.banner_img)
 
   let create = false
   let edit = false
@@ -58,10 +63,26 @@ export const CreateEditProject = ({ props }) => {
         is_public: isPublic,
       })
     }
+    if (field === 'modlogs') {
+      const reader = new FileReader()
+      reader.readAsBinaryString(value)
+      reader.onload = () => {
+        console.log(reader.result.split(',')[1])
+        setProject({
+          ...project,
+          banner_img: value,
+        })
+      }
+      reader.onerror = () => {
+        console.log('file error', reader.error) //eslint-disable-line
+      }
+    }
   }
 
   const handleFormSubmit = () => {
-    console.log(project)
+    api
+      .requests('post', '/api/project/testblob', { data: project })
+      .then((data) => console.log(data))
   }
 
   return (
@@ -181,6 +202,27 @@ export const CreateEditProject = ({ props }) => {
           Update Project
         </Button>
       )}
+      <Button color={modlogsButtonColor} component='label' variant='contained'>
+        {modlogsButtonText}
+        <input
+          accept='text/*'
+          hidden
+          onChange={(e) => {
+            const file = e.target.files[0]
+            if (file && file.size > 10 * 1024 * 1024) {
+              setModlogsButtonColor('error')
+              setModlogsButtonText('File size too large! ( > 10MB )')
+              setTimeout(() => {
+                setModlogsButtonColor('primary')
+                setModlogsButtonText('Upload Modlogs')
+              }, 5000)
+            } else {
+              updateProject('modlogs', file)
+            }
+          }}
+          type='file'
+        />
+      </Button>
     </div>
   )
 }

@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react'
 import * as api from '~/api'
 import { toTitleCase } from '~/utils'
+import { useParams, useLocation, useNavigate } from 'react-router-dom'
+import { ProjectsContext, UserContext } from '~/context'
 
 import {
   Radio,
@@ -16,8 +18,6 @@ import {
 } from '@mui/material/'
 import RadioGroup from '@mui/material/RadioGroup'
 import SendIcon from '@mui/icons-material/Send'
-import { useParams, useLocation, useNavigate } from 'react-router-dom'
-import { ProjectsContext, UserContext } from '~/context'
 import Loading from '~/components/Loading'
 import TinyMce from '~/components/TinyMce'
 
@@ -47,6 +47,7 @@ export const CreateIssue = () => {
       toTitleCase(location.state?.category) ||
       toTitleCase(decodeURI(params.category)) ||
       'General',
+    date: new Date(),
     description: location.state?.description || '',
     discord_id:
       location.state?.discord_id ||
@@ -122,7 +123,7 @@ export const CreateIssue = () => {
   useEffect(() => {
     if (!version) {
       api
-        .requests('get', '/api/project/63fe47296edfc3b387628861')
+        .requests('get', `/api/project/${params.projectId}`)
         .then((data) => setVersion(data.version))
     }
   }, [version, location])
@@ -185,6 +186,7 @@ export const CreateIssue = () => {
             generalUrl: '',
           },
           category: 'General',
+          date: new Date(),
           description: '',
           discord_id:
             !userInfo.user.discord_id || null ? '' : userInfo.user.discord_id,
@@ -202,7 +204,7 @@ export const CreateIssue = () => {
         })
 
         if (location.state?.id) {
-          navigate(`/issue/${location.state.id}`)
+          navigate(`/project/${params.projectId}/issue/${location.state.id}`)
         }
       })
     } else {
