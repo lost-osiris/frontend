@@ -57,11 +57,12 @@ const Header = () => {
           <Grid item>
             {' '}
             <ListItemButton
+              centerRipple={true}
               disablePadding
+              onClick={() => (window.location.href = '/')}
               sx={{
                 boxShadow: '0 0 20px rgba(0,0,0,0.5)',
-                clipPath: 'inset(0px -15px 0px 0px)',
-                height: '100%', // Set height to 100% to ensure child elements take up full height
+                height: '100%',
                 transform: 'skew(-25deg, 0deg)',
               }}
             >
@@ -69,7 +70,6 @@ const Header = () => {
                 sx={{
                   fontFamily: 'ThunderStrike',
                   fontSize: '40px',
-
                   transform: 'skew(25deg, 0deg)',
                 }}
               >
@@ -77,7 +77,31 @@ const Header = () => {
               </Typography>
             </ListItemButton>
           </Grid>
-          <Grid item></Grid>
+          <Grid item>
+            {' '}
+            <ListItemButton
+              centerRipple={true}
+              disablePadding
+              onClick={() => navigate('/blogs')}
+              sx={{
+                boxShadow: '0 0 20px rgba(0,0,0,0.5)',
+                display: 'flex',
+                height: '60px',
+
+                transform: 'skew(-25deg, 0deg)',
+              }}
+            >
+              <Typography
+                sx={{
+                  fontFamily: 'ThunderStrike',
+                  fontSize: '20px',
+                  transform: 'skew(25deg, 0deg)',
+                }}
+              >
+                Blog
+              </Typography>
+            </ListItemButton>
+          </Grid>
         </Grid>
 
         <Grid alignItems='center' container justifyContent='flex-end'>
@@ -95,19 +119,19 @@ const Header = () => {
                   disablePadding
                   sx={{
                     boxShadow: '0 0 20px rgba(0,0,0,0.75)',
-                    clipPath: 'inset(0px -15px 0px 0px)',
-                    height: '100%', // Set height to 100% to ensure child elements take up full height
+                    height: '100%',
                     transform: 'skew(-25deg, 0deg)',
                   }}
                 >
                   <ListItemButton
+                    centerRipple={true}
                     href={AUTH_REDIRECT_URL}
                     sx={{
-                      alignItems: 'center', // Align the button content vertically
+                      alignItems: 'center',
                       backgroundColor: theme.palette.discord.main,
                       display: 'flex',
                       height: '100%',
-                      justifyContent: 'center', // Align the button content horizontally
+                      justifyContent: 'center',
                     }}
                   >
                     <ListItemText
@@ -157,9 +181,9 @@ const Header = () => {
                         variant: 'h6',
                       }}
                       sx={{
-                        alignItems: 'center', // Align the button content vertically
+                        alignItems: 'center',
                         display: 'flex',
-                        height: '100%', // Ensure the button takes full height
+                        height: '100%',
                         transform: 'skew(25deg, 0deg)',
                       }}
                     />
@@ -202,10 +226,10 @@ const Header = () => {
                       )
                     }
                     sx={{
-                      alignItems: 'center', // Align the button content vertically
+                      alignItems: 'center',
                       display: 'flex',
                       height: '100%',
-                      justifyContent: 'center', // Align the button content horizontally
+                      justifyContent: 'center',
                     }}
                   >
                     <Typography
@@ -234,7 +258,7 @@ const Header = () => {
                       <Avatar
                         alt={userInfo.user.username}
                         src={`https://cdn.discordapp.com/avatars/${userInfo.user.discord_id}/${userInfo.user.avatar}.png`}
-                        sx={{ height: '100%', width: '100%' }} // Make the avatar take full height and width
+                        sx={{ height: '100%', width: '100%' }}
                       />
                     </Fab>
                     <Menu

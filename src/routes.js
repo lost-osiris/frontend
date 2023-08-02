@@ -18,9 +18,15 @@ import { CreateBlog } from './pages/CreateBlog.jsx'
 const AppRoutes = () => {
   return (
     <Routes>
+      <Route element={<Layout showComponent={'none'} />} path='/'>
+        {/* routes without sidebar */}
+        <Route element={<Homepage />} path='/' />
+        <Route element={<UserPage />} path='/user/:discord_id' />
+        <Route element={<BlogList />} path='/blogs' />
+        <Route element={<CreateBlog />} path='/blogs/createblog' />
+      </Route>
       {/* routes with sidebar */}
       <Route element={<Layout />} path='/'>
-        <Route element={<Homepage />} path='/' />
         {/* <Route element={<ProjectList />} path='/projects' /> */}
         <Route element={<ProjectPage />} path='/project/:projectId' />
         <Route element={<CreateEditProject />} path='/project/create' />
@@ -57,13 +63,6 @@ const AppRoutes = () => {
           element={<CreateIssue />}
           path='/project/:projectId/create-issue/:category'
         />
-      </Route>
-
-      {/* routes without sidebar */}
-      <Route element={<Layout showComponent={'none'} />} path='/'>
-        <Route element={<UserPage />} path='/user/:discord_id' />
-        <Route element={<BlogList />} path='/blogs' />
-        <Route element={<CreateBlog />} path='/blogs/createblog' />
       </Route>
     </Routes>
   )
