@@ -37,17 +37,17 @@ export const CreateEditProject = ({ props }) => {
 
   const [project, setProject] = useState(defaultState)
 
-  console.log(project.banner_img)
+  // console.log(project.banner_img)
 
   let create = false
   let edit = false
 
   const handleCategories = (e) => {
     if (e.key === 'Enter') {
-      console.log('enter pressed')
-      console.log(e.value)
+      // console.log('enter pressed')
+      // console.log(e.value)
     }
-    console.log(e)
+    // console.log(e)
   }
 
   if (window.location.href.indexOf('create') > -1) {
@@ -67,7 +67,7 @@ export const CreateEditProject = ({ props }) => {
       const reader = new FileReader()
       reader.readAsBinaryString(value)
       reader.onload = () => {
-        console.log(reader.result.split(',')[1])
+        // console.log(reader.result.split(',')[1])
         setProject({
           ...project,
           banner_img: value,
@@ -80,9 +80,8 @@ export const CreateEditProject = ({ props }) => {
   }
 
   const handleFormSubmit = () => {
-    api
-      .requests('post', '/api/project/testblob', { data: project })
-      .then((data) => console.log(data))
+    api.requests('post', '/api/project/testblob', { data: project })
+    // .then((data) => console.log(data))
   }
 
   return (

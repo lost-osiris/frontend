@@ -1,15 +1,5 @@
 import React, { useContext } from 'react'
-import {
-  Typography,
-  Divider,
-  Avatar,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemAvatar,
-  AvatarGroup,
-  Grid,
-} from '@mui/material/'
+import { Avatar, AvatarGroup, Grid } from '@mui/material/'
 import { ProjectsContext } from '../context'
 import Loading from '../components/Loading'
 

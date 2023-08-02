@@ -1,6 +1,6 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
-import Layout from './layout/Main'
+import { Layout } from './layout/Main.jsx'
 import { KanbanBoardPage } from '~/pages/KanbanBoard'
 import { IssuePage } from './pages/Issue'
 // import { ProjectList } from './pages/ProjectList'
@@ -12,10 +12,13 @@ import { KanbanBoardProvider } from '~/context'
 import { ProjectPage } from './pages/Project'
 import { CreateEditProject } from './pages/CreateEditProject'
 import { UserPage } from './pages/UserPage'
+import { BlogList } from './pages/BlogList.jsx'
+import { CreateBlog } from './pages/CreateBlog.jsx'
 
 const AppRoutes = () => {
   return (
     <Routes>
+      {/* routes with sidebar */}
       <Route element={<Layout />} path='/'>
         <Route element={<Homepage />} path='/' />
         {/* <Route element={<ProjectList />} path='/projects' /> */}
@@ -54,7 +57,13 @@ const AppRoutes = () => {
           element={<CreateIssue />}
           path='/project/:projectId/create-issue/:category'
         />
+      </Route>
+
+      {/* routes without sidebar */}
+      <Route element={<Layout showComponent={'none'} />} path='/'>
         <Route element={<UserPage />} path='/user/:discord_id' />
+        <Route element={<BlogList />} path='/blogs' />
+        <Route element={<CreateBlog />} path='/blogs/createblog' />
       </Route>
     </Routes>
   )

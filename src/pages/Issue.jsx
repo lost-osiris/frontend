@@ -27,21 +27,12 @@ import AddCommentIcon from '@mui/icons-material/AddComment'
 import * as api from '~/api'
 import { toTitleCase } from '~/utils'
 import { dispatchAlert } from '~/store'
-
+import { TabPanel } from '../components/TabPanel'
 import Loading from '~/components/Loading'
 import { IssueCommentInput, IssueComment } from '../components/IssueComment'
 import IssueAttachments from '../components/Issue/Attachments'
 import ModLogs from '../components/Issue/ModLogs'
 import IssueDetails from '../components/Issue/Details'
-
-const TabPanel = (props) => {
-  const { children, value, index, ...other } = props
-  return (
-    <div hidden={value !== index} id={value} role='tabpanel' {...other}>
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
-    </div>
-  )
-}
 
 export const IssuePage = () => {
   let params = useParams()

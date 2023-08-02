@@ -7,6 +7,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import {
   Avatar,
   AppBar,
+  Box,
   Grid,
   Typography,
   Toolbar,
@@ -18,12 +19,11 @@ import {
   ListItemText,
   List,
   ListItemButton,
+  CssBaseline,
 } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import LoginIcon from '@mui/icons-material/Login'
-import HomeIcon from '@mui/icons-material/Home'
 import Logout from '@mui/icons-material/Logout'
-import MoneyIcon from '@mui/icons-material/AttachMoney'
 import { AUTH_REDIRECT_URL } from '~/constants'
 import { ProjectsContext } from '../context'
 
@@ -51,13 +51,34 @@ const Header = () => {
       position='fixed'
       sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
     >
+      <CssBaseline />
       <Toolbar>
-        <Fab onClick={() => (window.location.href = '/')} size='small'>
-          <HomeIcon />
-        </Fab>
-        <Typography component='div' sx={{ flexGrow: 1, pl: 1 }} variant='h6'>
-          ModForge
-        </Typography>
+        <Grid alignItems='center' container justifyContent='flex-'>
+          <Grid item>
+            {' '}
+            <ListItemButton
+              disablePadding
+              sx={{
+                boxShadow: '0 0 20px rgba(0,0,0,0.5)',
+                clipPath: 'inset(0px -15px 0px 0px)',
+                height: '100%', // Set height to 100% to ensure child elements take up full height
+                transform: 'skew(-25deg, 0deg)',
+              }}
+            >
+              <Typography
+                sx={{
+                  fontFamily: 'ThunderStrike',
+                  fontSize: '40px',
+
+                  transform: 'skew(25deg, 0deg)',
+                }}
+              >
+                ModForge
+              </Typography>
+            </ListItemButton>
+          </Grid>
+          <Grid item></Grid>
+        </Grid>
 
         <Grid alignItems='center' container justifyContent='flex-end'>
           {!userInfo && (
@@ -187,15 +208,16 @@ const Header = () => {
                       justifyContent: 'center', // Align the button content horizontally
                     }}
                   >
-                    <ListItemText
-                      primary='Donate'
-                      primaryTypographyProps={{
-                        color: 'white',
-                        fontWeight: 'bold',
-                        variant: 'h6',
+                    <Typography
+                      sx={{
+                        fontFamily: 'ThunderStrike',
+                        fontSize: '20px',
+
+                        transform: 'skew(25deg, 0deg)',
                       }}
-                      sx={{ transform: 'skew(25deg, 0deg)' }}
-                    />
+                    >
+                      Donate
+                    </Typography>
                   </ListItemButton>
                 </ListItem>
 

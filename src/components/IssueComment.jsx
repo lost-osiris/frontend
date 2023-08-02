@@ -25,7 +25,6 @@ export const IssueComment = ({ comment, updateIssue }) => {
   const [menuOpen, setMenuOpen] = useState(false)
   const [toggleEdit, setEdit] = useState(false)
   const userInfo = useContext(UserContext)
-  console.log(comment)
 
   const deleteComment = () => {
     api

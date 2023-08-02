@@ -1,3 +1,6 @@
+import silksong from './assets/char_hornet_large.png'
+import hollowKnight from './assets/char_knight_action.png'
+
 export const toTitleCase = (str) => {
   if (!str) {
     return str
@@ -70,6 +73,35 @@ export const getTypeColor = (type) => {
     default:
       return 'default'
   }
+}
+
+export const getImage = (tags) => {
+  for (let tag of tags) {
+    switch (tag) {
+      case 'Hollow Knight':
+        return hollowKnight
+      case 'Silksong':
+        return silksong
+    }
+  }
+}
+
+export const getBlogColor = (tags) => {
+  for (let tag of tags) {
+    switch (tag) {
+      case 'Hollow Knight':
+        return 'hollowKnight'
+      case 'Silksong':
+        return 'silksong'
+      case 'ModForge':
+        return 'success'
+      case 'high':
+        return 'error'
+      default:
+        continue
+    }
+  }
+  return 'default'
 }
 
 export const overflowLimiter = (text) => {

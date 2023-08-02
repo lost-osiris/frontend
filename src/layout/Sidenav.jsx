@@ -14,7 +14,7 @@ import { ProjectsContext, UserContext } from '~/context'
 
 const drawerWidth = 240
 
-const Sidenav = () => {
+const Sidenav = ({ showComponent }) => {
   const navigate = useNavigate()
   const userInfo = useContext(UserContext)
   const { project } = useContext(ProjectsContext)
@@ -26,6 +26,7 @@ const Sidenav = () => {
           boxSizing: 'border-box',
           width: drawerWidth,
         },
+        display: showComponent ? showComponent : 'display',
         flexShrink: 0,
         width: drawerWidth,
       }}

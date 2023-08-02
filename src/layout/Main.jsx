@@ -16,7 +16,7 @@ import Sidenav from './Sidenav'
 import { UserContext } from '~/context'
 import AlertNotification from '~/components/Alert'
 
-const Layout = () => {
+export const Layout = ({ showComponent }) => {
   const alerts = useSelector((state) => state.value)
   const userInfo = useContext(UserContext)
 
@@ -29,7 +29,7 @@ const Layout = () => {
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
         <Header />
-        <Sidenav />
+        <Sidenav showComponent={showComponent} />
         <Box component='main' sx={{ flexGrow: 1, p: 3 }}>
           {alertsList}
           <Toolbar />
