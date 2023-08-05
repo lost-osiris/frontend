@@ -14,6 +14,7 @@ import { CreateEditProject } from './pages/CreateEditProject'
 import { UserPage } from './pages/UserPage'
 import { BlogList } from './pages/BlogList.jsx'
 import { CreateBlog } from './pages/CreateBlog.jsx'
+import { Blog } from './pages/Blog.jsx'
 
 const AppRoutes = () => {
   return (
@@ -24,6 +25,7 @@ const AppRoutes = () => {
         <Route element={<UserPage />} path='/user/:discord_id' />
         <Route element={<BlogList />} path='/blogs' />
         <Route element={<CreateBlog />} path='/blogs/createblog' />
+        <Route element={<Blog />} path='/blog/:blogId' />
       </Route>
       {/* routes with sidebar */}
       <Route element={<Layout />} path='/'>

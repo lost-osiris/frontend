@@ -182,11 +182,20 @@ export const CreateBlog = ({ height }) => {
               onClick={() => {
                 blog.tags.push(blog.radio)
                 delete blog.radio
-                api.requests('post', '/api/blogs/createblog', {
-                  alert: true,
-                  alertMessage: 'successfully created blog post',
-                  data: blog,
-                })
+                api
+                  .requests('post', '/api/blogs/createblog', {
+                    alert: true,
+                    alertMessage: 'successfully created blog post',
+                    data: blog,
+                  })
+                  .then(() => {
+                    setBlog({
+                      post: '',
+                      radio: '',
+                      tags: [],
+                      title: '',
+                    })
+                  })
               }}
             >
               {' '}

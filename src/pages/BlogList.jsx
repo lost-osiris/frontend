@@ -21,11 +21,15 @@ import {
 
 export const BlogList = () => {
   const userInfo = useContext(UserContext)
-  const [blogs, setBlog] = useState()
+  const containerRef = useRef(null)
+  const [blogs, setBlogs] = useState()
   const [checkedStates, setCheckedStates] = useState(
     blogs ? new Array(blogs.length).fill(false) : [],
   )
-  const containerRef = useRef(null)
+
+  // blogs.blog_info.date.sort(
+  //   (a, b) => new Date(b.datetime) - new Date(a.datetime),
+  // )
 
   let approvedIds = [
     '123361745023533058',
@@ -59,7 +63,15 @@ export const BlogList = () => {
 
   useEffect(() => {
     if (!blogs) {
-      api.requests('get', '/api/blogs').then((data) => setBlog(data))
+      api
+        .requests('get', '/api/blogs')
+        .then((data) =>
+          setBlogs(
+            data.sort(
+              (a, b) => new Date(b.blog_info.date) - new Date(a.blog_info.date),
+            ),
+          ),
+        )
     }
   }, [blogs])
 
@@ -101,11 +113,20 @@ export const BlogList = () => {
                       theme.palette[backgroundTheme].main
                         ? theme.palette[backgroundTheme].main
                         : theme.palette.default,
+                    maxHeight: '112px',
+                    maxWidth: '1776px',
                     overflow: 'hidden',
                     transform: 'skew(-25deg, 0deg)',
                   }}
                 >
-                  <ListItemButton centerRipple={true}>
+                  <ListItemButton
+                    centerRipple={true}
+                    onClick={() => {
+                      navigate(`/blog/${el.blog_info.id}`, {
+                        state: el.blog_info.post,
+                      })
+                    }}
+                  >
                     <Grid
                       container
                       direction='row'

@@ -93,7 +93,6 @@ const Header = () => {
             >
               <Typography
                 sx={{
-                  fontFamily: 'ThunderStrike',
                   fontSize: '20px',
                   transform: 'skew(25deg, 0deg)',
                 }}
@@ -234,7 +233,6 @@ const Header = () => {
                   >
                     <Typography
                       sx={{
-                        fontFamily: 'ThunderStrike',
                         fontSize: '20px',
 
                         transform: 'skew(25deg, 0deg)',

@@ -1,5 +1,8 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
+import HKVocalized from '../assets/CardImages/HKVocalized.png'
+import PaleCourt from '../assets/CardImages/PaleCourt.jpg'
+import SealedEchoes from '../assets/CardImages/SealedEchoes.jpg'
 
 import {
   Typography,
@@ -12,15 +15,22 @@ import {
 } from '@mui/material/'
 
 export const ProjectCard = ({ project }) => {
+  let imageUrl
+
+  if (project.name === 'Hallownest Vocalized') {
+    imageUrl = HKVocalized
+  } else if (project.name === 'Pale Court') {
+    imageUrl = PaleCourt
+  } else if (project.name === 'Sealed Echoes') {
+    imageUrl = SealedEchoes
+  }
+
   const navigate = useNavigate()
   let maxAvatars = Math.min(Math.round(project.memberCount / 4) || 9, 9)
 
   return (
     <Card sx={{ height: '100%', maxWidth: 350 }}>
-      <CardMedia
-        component='img'
-        image='https://cdn.discordapp.com/attachments/1028811110033408110/1135308912774619167/Hollow_Knight_Hallownest_Vocalized_-_Launch_Trailer_FINAL.png'
-      />
+      <CardMedia component='img' image={imageUrl} />
       <CardContent>
         <Typography
           component='div'

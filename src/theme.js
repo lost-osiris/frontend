@@ -1,5 +1,5 @@
 import { createTheme } from '@mui/material/styles'
-import ThunderStrike from './assets/fonts/thunderstrike.ttf'
+import ThunderStrike from './assets/Fonts/thunderstrike.ttf'
 
 const theme = createTheme({
   components: {
@@ -24,6 +24,9 @@ const theme = createTheme({
       main: 'rgba(20, 87, 189, 0.2)',
     },
     mode: 'dark',
+    modforge: {
+      main: '#944527',
+    },
     silksong: {
       main: 'rgba(164, 50, 38, 0.2)',
     },

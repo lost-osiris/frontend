@@ -1,5 +1,6 @@
-import silksong from './assets/char_hornet_large.png'
-import hollowKnight from './assets/char_knight_action.png'
+import silksong from './assets/Images/HKHornet.png'
+import hollowKnight from './assets/Images/HKKnight.png'
+import modforge from './assets/Images/ModForge.png'
 
 export const toTitleCase = (str) => {
   if (!str) {
@@ -82,6 +83,8 @@ export const getImage = (tags) => {
         return hollowKnight
       case 'Silksong':
         return silksong
+      case 'ModForge':
+        return modforge
     }
   }
 }
@@ -94,7 +97,7 @@ export const getBlogColor = (tags) => {
       case 'Silksong':
         return 'silksong'
       case 'ModForge':
-        return 'success'
+        return 'modforge'
       case 'high':
         return 'error'
       default:

@@ -1,29 +1,38 @@
 import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import * as api from '~/api'
 
 export const ManageWaitlist = () => {
   const [waitlist, setWaitlist] = useState()
+  const params = useParams()
 
   const addToProject = (memberWithRole) => {
-    api.requests(
-      'put',
-      '/api/project/63fe47296edfc3b387628861/members/updatewaitlist',
-      {
-        alert: true,
-        alertMessage: 'Successfully approved waitlist',
-        data: memberWithRole,
-      },
-    )
+    api
+      .requests(
+        'put',
+        `/api/project/${params.projectId}/members/updatewaitlist`,
+        {
+          alert: true,
+          alertMessage: 'Successfully approved waitlist',
+          data: memberWithRole,
+        },
+      )
+      .then(() =>
+        setWaitlist((waitlist) =>
+          waitlist.filter((member) => member !== memberWithRole.member),
+        ),
+      )
   }
 
   useEffect(() => {
     if (!waitlist) {
       api
-        .requests('get', '/api/project/63fe47296edfc3b387628861/waitlist')
+        .requests('get', `/api/project/${params.projectId}/waitlist`)
         .then((data) => setWaitlist(data.waitlist))
     }
   }, [waitlist])
 
+  console.log(waitlist)
   return (
     <div>
       {waitlist !== undefined && (

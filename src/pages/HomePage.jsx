@@ -17,15 +17,10 @@ export const Homepage = () => {
           </Typography>
           <Divider sx={{ mb: 4, mt: 2 }} />
           <Typography variant='body1'>
-            ModForge is an exceptional website that revolutionizes the modding
-            landscape by providing an easy and seamless platform for users to
-            contribute to their favorite mod projects. With the seamless
-            integration with Discord, ModForge creates a community-driven hub
-            that promotes collaboration and enhances the overall modding
-            experience.
+            ModForge is currently in beta. Thank you for helping test and make
+            this application grow.
           </Typography>
           <br />
-          <Typography variant='body1'>your mom</Typography>
         </Grid>
       </Grid>
       <Grid

@@ -2,12 +2,24 @@ import React, { useContext } from 'react'
 import { Avatar, AvatarGroup, Grid } from '@mui/material/'
 import { ProjectsContext } from '../context'
 import Loading from '../components/Loading'
+import HKVocalized from '../assets/CardImages/HKVocalized.png'
+import PaleCourt from '../assets/CardImages/PaleCourt.jpg'
+import SealedEchoes from '../assets/CardImages/SealedEchoes.jpg'
 
 export const ProjectPage = () => {
   const { project } = useContext(ProjectsContext)
+  let imageUrl
 
   if (!project) {
     return <Loading />
+  }
+
+  if (project.name === 'Hallownest Vocalized') {
+    imageUrl = HKVocalized
+  } else if (project.name === 'Pale Court') {
+    imageUrl = PaleCourt
+  } else if (project.name === 'Sealed Echoes') {
+    imageUrl = SealedEchoes
   }
 
   return (
@@ -16,7 +28,7 @@ export const ProjectPage = () => {
         <Grid item lg={12}>
           <img
             alt={project.name}
-            src='https://static0.gamerantimages.com/wordpress/wp-content/uploads/2023/07/hollow-knight-pale-court.jpg'
+            src={imageUrl}
             style={{
               maxHeight: '400px',
               maxWidth: '1600px',
