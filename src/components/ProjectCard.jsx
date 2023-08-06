@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import HKVocalized from '../assets/CardImages/HKVocalized.png'
 import PaleCourt from '../assets/CardImages/PaleCourt.jpg'
 import SealedEchoes from '../assets/CardImages/SealedEchoes.jpg'
+import MenderBugInstaller from '../assets/CardImages/ConstructionKnight.svg'
 
 import {
   Typography,
@@ -23,6 +24,8 @@ export const ProjectCard = ({ project }) => {
     imageUrl = PaleCourt
   } else if (project.name === 'Sealed Echoes') {
     imageUrl = SealedEchoes
+  } else if (project.name === 'Menderbug Installer') {
+    imageUrl = MenderBugInstaller
   }
 
   const navigate = useNavigate()
@@ -38,7 +41,11 @@ export const ProjectCard = ({ project }) => {
         maxWidth: 350,
       }}
     >
-      <CardMedia component='img' image={imageUrl} />
+      <CardMedia
+        component='img'
+        image={imageUrl}
+        sx={{ maxHeight: '197px', maxWidth: '350px', objectFit: 'contain' }}
+      />
       <CardContent
         sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}
       >
