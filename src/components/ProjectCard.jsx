@@ -8,10 +8,10 @@ import {
   Typography,
   Avatar,
   AvatarGroup,
+  Box,
   CardMedia,
   CardContent,
   Card,
-  Grid,
 } from '@mui/material/'
 
 export const ProjectCard = ({ project }) => {
@@ -29,9 +29,19 @@ export const ProjectCard = ({ project }) => {
   let maxAvatars = Math.min(Math.round(project.memberCount / 4) || 9, 9)
 
   return (
-    <Card sx={{ height: '100%', maxWidth: 350 }}>
+    <Card
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        justifyContent: 'space-between',
+        maxWidth: 350,
+      }}
+    >
       <CardMedia component='img' image={imageUrl} />
-      <CardContent>
+      <CardContent
+        sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}
+      >
         <Typography
           component='div'
           onClick={() => navigate(`/project/${project.id}`)}
@@ -47,37 +57,35 @@ export const ProjectCard = ({ project }) => {
         >
           {project.name}
         </Typography>
-        <Grid container>
-          <Grid item lg={3.7}></Grid>
-          <Grid alignItems={'center'} item lg={8}>
-            <Typography
-              align={'center'}
-              color='text.secondary'
-              variant='overline'
-            >
-              version {project.version}
-            </Typography>
-          </Grid>
-          <Grid item lg={2}></Grid>
-        </Grid>
-      </CardContent>
-      <CardContent>
+
+        <Typography align={'center'} color='text.secondary' variant='overline'>
+          version {project.version}
+        </Typography>
+
         <Typography color='text.secondary' variant='body2'>
           {project.description}
         </Typography>
-      </CardContent>
-      <CardContent>
-        <AvatarGroup max={maxAvatars}>
-          {project.members.map((el, index) => {
-            return (
-              <Avatar
-                alt={el.username}
-                key={`${index}-${JSON.stringify(el.username)}`}
-                src={`https://cdn.discordapp.com/avatars/${el.discord_id}/${el.avatar}.png`}
-              />
-            )
-          })}
-        </AvatarGroup>
+
+        <Box marginTop={'auto'} sx={{ pt: 1 }}>
+          <AvatarGroup
+            max={maxAvatars}
+            sx={
+              {
+                // i want this at the bottom of the card
+              }
+            }
+          >
+            {project.members.map((el, index) => {
+              return (
+                <Avatar
+                  alt={el.username}
+                  key={`${index}-${JSON.stringify(el.username)}`}
+                  src={`https://cdn.discordapp.com/avatars/${el.discord_id}/${el.avatar}.png`}
+                />
+              )
+            })}
+          </AvatarGroup>
+        </Box>
       </CardContent>
     </Card>
   )

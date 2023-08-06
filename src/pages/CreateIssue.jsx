@@ -32,10 +32,6 @@ export const CreateIssue = () => {
   const [version, setVersion] = useState(location.state?.version || '')
   const [modlogsButtonColor, setModlogsButtonColor] = useState('primary')
   const [modlogsButtonText, setModlogsButtonText] = useState('Upload Modlogs')
-  // const [embedHelperValidation, setEmbedHelperValidation] = useState('')
-  // const [generalHelperValidation, setGeneralHelperValidation] = useState('')
-  // const [embedFieldColor, setEmbedFieldColor] = useState('primary')
-  // const [generalFieldColor, setgeneralFieldColor] = useState('primary')
 
   let defaultState = {
     archived: location.state?.archived || false,
@@ -128,28 +124,6 @@ export const CreateIssue = () => {
     }
   }, [version, location])
 
-  // useEffect(() => {
-  //   if (
-  //     newIssue.attachments.generalUrl.match(
-  //       /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/g,
-  //     )
-  //   ) {
-  //     setGeneralHelperValidation('Valid URL!')
-  //     setgeneralFieldColor('success')
-  //   } else {
-  //     setGeneralHelperValidation('Please enter a valid URL')
-  //     setgeneralFieldColor('warning')
-  //   }
-
-  //   if (newIssue.attachments.embedSource.includes('iframe')) {
-  //     setEmbedHelperValidation('Valid Embed!')
-  //     setEmbedFieldColor('success')
-  //   } else {
-  //     setEmbedHelperValidation('Please enter a valid embed link')
-  //     setEmbedFieldColor('warning')
-  //   }
-  // }, [newIssue])
-
   const handleFormSubmit = async () => {
     if (newIssue.summary !== '') {
       let issue = {
@@ -159,16 +133,20 @@ export const CreateIssue = () => {
       let promise
 
       if (location.state?.id) {
-        promise = api.requests('put', `/api/issue/${location.state.id}`, {
-          alert: true,
-          alertMessage: `Successfully update "${
-            issue.summary
-          }" with status "${toTitleCase(issue.status)}"`,
-          data: {
-            issue: { ...issue, id: location.state.id },
-            userInfo: userInfo.user,
+        promise = api.requests(
+          'put',
+          `/api/project/${params.projectId}/issue/${location.state.id}`,
+          {
+            alert: true,
+            alertMessage: `Successfully update "${
+              issue.summary
+            }" with status "${toTitleCase(issue.status)}"`,
+            data: {
+              issue: { ...issue, id: location.state.id },
+              userInfo: userInfo.user,
+            },
           },
-        })
+        )
       } else {
         promise = api.requests('post', '/api/issue', {
           alert: true,
@@ -510,53 +488,6 @@ export const CreateIssue = () => {
               </Grid>
             </Grid>
           </Grid>
-          {/* <Grid item lg={6}>
-            <Grid container spacing={2}>
-              <Grid item lg={12}>
-                <FormLabel id='attachments-group' sx={{ pt: 3 }}>
-                  Attachments
-                </FormLabel>
-              </Grid>
-              <Grid item lg={6}>
-                <TextField
-                  color={embedFieldColor}
-                  fullWidth
-                  helperText={embedHelperValidation}
-                  id='embed'
-                  label='Embed'
-                  onChange={(e) =>
-                    updateNewIssue('attachmentsEmbedSource', e.target.value)
-                  }
-                  placeholder='Embed'
-                  // defaultValue={
-                  //   newIssue && newIssue.attachments.embedSource
-                  //     ? newIssue.attachments.embedSource
-                  //     : "Embed"
-                  // }
-                  value={newIssue.attachments.embedSource}
-                />
-              </Grid>
-              <Grid item lg={6}>
-                <TextField
-                  color={generalFieldColor}
-                  fullWidth
-                  helperText={generalHelperValidation}
-                  id='generic'
-                  label='URL'
-                  onChange={(e) =>
-                    updateNewIssue('attachmentsUrl', e.target.value)
-                  }
-                  placeholder='URL'
-                  // defaultValue={
-                  //   newIssue && newIssue.attachments.generalUrl
-                  //     ? newIssue.attachments.generalUrl
-                  //     : "Embed"
-                  // }
-                  value={newIssue.attachments.generalUrl}
-                />
-              </Grid>
-            </Grid>
-          </Grid> */}
         </Grid>
       </FormControl>
     </div>

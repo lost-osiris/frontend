@@ -1,13 +1,18 @@
 import React, { useContext } from 'react'
-import { Avatar, AvatarGroup, Grid } from '@mui/material/'
-import { ProjectsContext } from '../context'
+import { useNavigate, useParams } from 'react-router-dom'
+import { UserContext, ProjectsContext } from '../context'
 import Loading from '../components/Loading'
 import HKVocalized from '../assets/CardImages/HKVocalized.png'
 import PaleCourt from '../assets/CardImages/PaleCourt.jpg'
 import SealedEchoes from '../assets/CardImages/SealedEchoes.jpg'
 
+import { Avatar, AvatarGroup, Button, Grid } from '@mui/material/'
+
 export const ProjectPage = () => {
+  const params = useParams()
+  const navigate = useNavigate()
   const { project } = useContext(ProjectsContext)
+  const { user } = useContext(UserContext)
   let imageUrl
 
   if (!project) {
@@ -24,6 +29,11 @@ export const ProjectPage = () => {
 
   return (
     <div>
+      {user.discord_id === project.owner && (
+        <Button onClick={() => navigate(`/project/${params.projectId}/edit`)}>
+          Edit Project
+        </Button>
+      )}
       <Grid container>
         <Grid item lg={12}>
           <img
@@ -39,7 +49,9 @@ export const ProjectPage = () => {
         </Grid>
       </Grid>
       <Grid container>
-        <Grid item lg={6}></Grid>
+        <Grid item lg={6}>
+          {project.description}
+        </Grid>
         <Grid item lg={6}>
           <AvatarGroup max={project.members.length}>
             {project.members.map((el, index) => {
@@ -57,38 +69,3 @@ export const ProjectPage = () => {
     </div>
   )
 }
-
-// <List
-//   sx={{ bgcolor: 'background.paper', maxWidth: 250, width: '100%' }}
-// >
-//   {project.members.map((el) => {
-//     return (
-//       <div key={el.username}>
-//         <ListItem alignItems='flex-start'>
-//           <ListItemAvatar>
-//             <Avatar
-//               alt={el.username}
-//               src={`https://cdn.discordapp.com/avatars/${el.discord_id}/${el.avatar}.png`}
-//             />
-//           </ListItemAvatar>
-//           <ListItemText
-//             primary={el.username}
-//             secondary={
-//               <React.Fragment>
-//                 <Typography
-//                   color='text.primary'
-//                   component='span'
-//                   sx={{ display: 'inline' }}
-//                   variant='body2'
-//                 >
-//                   ROLE HERE
-//                 </Typography>
-//               </React.Fragment>
-//             }
-//           />
-//         </ListItem>
-//         <Divider component='li' variant='inset' />
-//       </div>
-//     )
-//   })}
-// </List>

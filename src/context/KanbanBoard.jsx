@@ -28,7 +28,7 @@ export const KanbanBoardProvider = (props) => {
     })
 
     api
-      .requests('put', `/api/issue/${issue.id}`, {
+      .requests('put', `/api/project/${params.projectId}/issue/${issue.id}`, {
         alert: true,
         alertMessage: `Successfully updated "${
           issue.summary

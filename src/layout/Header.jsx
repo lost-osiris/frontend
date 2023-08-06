@@ -7,7 +7,6 @@ import { useNavigate, useParams } from 'react-router-dom'
 import {
   Avatar,
   AppBar,
-  Box,
   Grid,
   Typography,
   Toolbar,
@@ -52,7 +51,7 @@ const Header = () => {
       sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
     >
       <CssBaseline />
-      <Toolbar>
+      <Toolbar sx={{ maxHeight: '64px' }}>
         <Grid alignItems='center' container justifyContent='flex-'>
           <Grid item>
             {' '}
@@ -63,6 +62,7 @@ const Header = () => {
               sx={{
                 boxShadow: '0 0 20px rgba(0,0,0,0.5)',
                 height: '100%',
+                maxHeight: '64px',
                 transform: 'skew(-25deg, 0deg)',
               }}
             >
@@ -86,7 +86,7 @@ const Header = () => {
               sx={{
                 boxShadow: '0 0 20px rgba(0,0,0,0.5)',
                 display: 'flex',
-                height: '60px',
+                height: '64px',
 
                 transform: 'skew(-25deg, 0deg)',
               }}
@@ -161,7 +161,10 @@ const Header = () => {
                   flexDirection: 'row',
                 }}
               >
-                <ListItem disablePadding sx={{ height: '100%' }}>
+                <ListItem
+                  disablePadding
+                  sx={{ height: '64px', maxHeight: '64px' }}
+                >
                   <ListItemButton
                     onClick={() =>
                       navigate(
@@ -170,7 +173,12 @@ const Header = () => {
                         } `,
                       )
                     }
-                    sx={{ height: '100%', transform: 'skew(-25deg, 0deg)' }}
+                    sx={{
+                      boxShadow: '0 0 20px rgba(0,0,0,0.5)',
+                      height: '100%',
+                      maxHeight: '64px',
+                      transform: 'skew(-25deg, 0deg)',
+                    }}
                   >
                     <ListItemText
                       primary='Issue'
@@ -208,12 +216,15 @@ const Header = () => {
                 sx={{
                   display: 'flex',
                   flexDirection: 'row',
+                  height: '100%',
+                  maxHeight: '64px',
                 }}
               >
                 <ListItem
                   disablePadding
                   sx={{
                     backgroundColor: 'rgba(255, 215, 0, 0.25)',
+                    boxShadow: '0 0 20px rgba(0,0,0,0.5)',
                     transform: 'skew(-25deg, 0deg)',
                   }}
                 >
@@ -226,15 +237,14 @@ const Header = () => {
                     }
                     sx={{
                       alignItems: 'center',
-                      display: 'flex',
                       height: '100%',
                       justifyContent: 'center',
+                      maxHeight: '64px',
                     }}
                   >
                     <Typography
                       sx={{
                         fontSize: '20px',
-
                         transform: 'skew(25deg, 0deg)',
                       }}
                     >
@@ -243,14 +253,16 @@ const Header = () => {
                   </ListItemButton>
                 </ListItem>
 
-                <ListItem
-                  sx={{ height: '100%', transform: 'skew(-25deg, 0deg)' }}
-                >
-                  <ListItemButton>
+                <ListItem sx={{ transform: 'skew(-25deg, 0deg)' }}>
+                  <ListItemButton sx={{ maxHeight: '64px' }}>
                     <Fab
                       color='discord'
                       onClick={handleClick}
-                      sx={{ height: '100%', transform: 'skew(25deg, 0deg)' }}
+                      sx={{
+                        height: '100%',
+
+                        transform: 'skew(25deg, 0deg)',
+                      }}
                       variant='circular'
                     >
                       <Avatar
