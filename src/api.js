@@ -44,21 +44,25 @@ export const requests = async (method, url, options) => {
       url: url,
     })
       .then((res) => {
-        if (res.status >= 200 && options.alert) {
+        if (res.status >= 200 && res.status < 400 && options.alert) {
           dispatchAlert({
             message: options.alertMessage || 'Success',
             type: 'success',
           })
+        } else if (res.status >= 400) {
+          throw res
         }
 
         return res.data
       })
       .catch((error) => {
-        if (error.response.status === 403) {
+        if (error?.response.status === 403 || error.status === 403) {
           dispatchAlert({
             message: 'Forbidden',
             type: 'error',
           })
+        } else {
+          throw error
         }
       })
   }

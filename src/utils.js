@@ -1,3 +1,7 @@
+import silksong from './assets/Images/HKHornet.png'
+import hollowKnight from './assets/Images/HKKnight.png'
+import modforge from './assets/Images/ModForge.png'
+
 export const toTitleCase = (str) => {
   if (!str) {
     return str
@@ -72,6 +76,37 @@ export const getTypeColor = (type) => {
   }
 }
 
+export const getImage = (tags) => {
+  for (let tag of tags) {
+    switch (tag) {
+      case 'Hollow Knight':
+        return hollowKnight
+      case 'Silksong':
+        return silksong
+      case 'ModForge':
+        return modforge
+    }
+  }
+}
+
+export const getBlogColor = (tags) => {
+  for (let tag of tags) {
+    switch (tag) {
+      case 'Hollow Knight':
+        return 'hollowKnight'
+      case 'Silksong':
+        return 'silksong'
+      case 'ModForge':
+        return 'modforge'
+      case 'high':
+        return 'error'
+      default:
+        continue
+    }
+  }
+  return 'default'
+}
+
 export const overflowLimiter = (text) => {
   if (text.length > 100) {
     text = text.substring(0, 100) + '...'
@@ -93,4 +128,69 @@ export const parseJwt = (token) => {
   )
 
   return JSON.parse(jsonPayload)
+}
+
+export const formatDateTimeString = (UTCTime) => {
+  function numSuffixOf(i) {
+    var j = i % 10,
+      k = i % 100
+    if (j == 1 && k != 11) {
+      return 'st'
+    }
+    if (j == 2 && k != 12) {
+      return 'nd'
+    }
+    if (j == 3 && k != 13) {
+      return 'rd'
+    }
+    return 'th'
+  }
+
+  const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+  const MONTHS = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ]
+  let now = new Date()
+  let datetime = new Date(UTCTime + 'Z')
+
+  let hour = datetime.getHours()
+  let minute = datetime.getMinutes()
+  let day = datetime.getDay()
+  let month = datetime.getMonth()
+  let date = datetime.getDate()
+
+  let nowHour = now.getHours()
+  let nowMinute = now.getMinutes()
+  let nowDay = now.getDate()
+
+  let timeStr = `${hour > 12 ? hour - 12 : hour}:${minute} ${
+    hour >= 12 ? 'PM' : 'AM'
+  }`
+  let dateStr = `${DAYS[day]}, ${MONTHS[month]} ${date}${numSuffixOf(date)}`
+
+  switch (true) {
+    case nowDay === date && nowHour === hour:
+      return nowMinute - minute === 0
+        ? 'now'
+        : nowMinute - minute === 1
+        ? '1 minute ago'
+        : `${nowMinute - minute} minutes ago`
+    case nowDay === date:
+      return nowHour - hour === 1 ? '1 hour ago' : `${nowHour - hour} hours ago`
+    case nowDay - 1 === date:
+      return `Yesterday at ${timeStr}`
+    default:
+      return `${dateStr} at ${timeStr}`
+  }
 }

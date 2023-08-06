@@ -1,17 +1,35 @@
 import React from 'react'
 
-import BugReportIcon from '@mui/icons-material/BugReport'
-import SuggectionIcon from '@mui/icons-material/TipsAndUpdates'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { icon } from '@fortawesome/fontawesome-svg-core/import.macro'
+
+import { Box } from '@mui/material'
 
 const TypeIcon = (props) => {
-  const { chip, type, ...rest } = props
+  let { chip, type, sx, size, ...rest } = props
+  size = size || 'lg'
 
+  sx = sx || {}
   if (type === null || type === undefined || type === 'bug') {
-    return <BugReportIcon color='warning' {...rest} />
+    return (
+      <Box sx={{ ...sx, color: 'warning.main' }} {...rest}>
+        <FontAwesomeIcon
+          icon={icon({ name: 'bug', style: 'duotone' })}
+          size={size}
+        />
+      </Box>
+    )
   }
 
   if (type === 'suggestion') {
-    return <SuggectionIcon {...rest} />
+    return (
+      <Box sx={sx} {...rest}>
+        <FontAwesomeIcon
+          icon={icon({ name: 'lightbulb-on', style: 'duotone' })}
+          size={size}
+        />
+      </Box>
+    )
   }
 }
 

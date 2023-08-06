@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { ProjectCard } from '~/components/ProjectCard'
+import { ProjectCard } from '../components/ProjectCard'
 import * as api from '~/api'
 import Loading from '~/components/Loading'
 
@@ -23,7 +23,7 @@ export const ProjectList = () => {
       <Grid container spacing={3}>
         {projects.map((el, index) => {
           return (
-            <Grid item key={`${index}-${JSON.stringify(el)}`} md={4}>
+            <Grid item key={`${index}-${JSON.stringify(el)}`} lg={4}>
               <ProjectCard project={el} />
             </Grid>
           )

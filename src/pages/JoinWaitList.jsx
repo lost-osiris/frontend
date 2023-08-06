@@ -1,17 +1,19 @@
 import React, { useContext } from 'react'
 import { UserContext } from '~/context'
 import { Grid, Alert, AlertTitle, IconButton } from '@mui/material/'
+import { useParams } from 'react-router-dom'
 import * as api from '~/api'
 
 import RefreshIcon from '@mui/icons-material/Refresh'
 
 export const JoinWaitlist = () => {
   const userInfo = useContext(UserContext)
+  const params = useParams()
   const joinList = (e) => {
     e.preventDefault()
     api.requests(
       'post',
-      '/api/project/63fe47296edfc3b387628861/members/joinwaitlist',
+      `/api/project/${params.projectId}/members/joinwaitlist`,
       {
         alert: true,
         alertMessage: 'Successfully requested to join waitlist',

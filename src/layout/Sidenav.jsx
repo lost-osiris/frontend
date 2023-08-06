@@ -10,14 +10,14 @@ import {
   Toolbar,
 } from '@mui/material'
 
-import { CategoriesContext, UserContext } from '~/context'
+import { ProjectsContext, UserContext } from '~/context'
 
 const drawerWidth = 240
 
-const Sidenav = () => {
+const Sidenav = ({ showComponent }) => {
   const navigate = useNavigate()
   const userInfo = useContext(UserContext)
-  const categories = useContext(CategoriesContext)
+  const { project } = useContext(ProjectsContext)
 
   return (
     <Drawer
@@ -26,6 +26,7 @@ const Sidenav = () => {
           boxSizing: 'border-box',
           width: drawerWidth,
         },
+        display: showComponent ? showComponent : 'display',
         flexShrink: 0,
         width: drawerWidth,
       }}
@@ -35,15 +36,16 @@ const Sidenav = () => {
       <Box sx={{ overflow: 'auto' }}>
         <List>
           {userInfo &&
-            categories !== undefined &&
-            categories.map((el, index) => {
+            project &&
+            project.categories !== undefined &&
+            project.categories.map((el, index) => {
               return (
                 <ListItem
                   disablePadding
                   key={`${el.route}-${index}`}
                   onClick={() =>
                     navigate(
-                      `/project/63fe47296edfc3b387628861/issues/${el.toLowerCase()}`,
+                      `/project/${project.id}/issues/${el.toLowerCase()}`,
                     )
                   }
                 >

@@ -2,10 +2,8 @@ import React, { useState, useContext } from 'react'
 import { UserContext, KanbanBoardContext } from '~/context'
 import { useNavigate } from 'react-router-dom'
 import { useDrag } from 'react-dnd'
-import { CardChip } from '~/components/Chip'
-import { HighPriorityIcon } from '~/components/HighPrioIcon'
-import { LowPriorityIcon } from '~/components/LowPrioIcon'
-import { MediumPriorityIcon } from '~/components/MediumPrioIcon'
+import PriorityIcon from '~/components/Issue/PriorityIcon'
+import TypeIcon from '~/components/Issue/TypeIcon'
 
 import * as api from '~/api'
 import { toTitleCase } from '~/utils'
@@ -24,15 +22,15 @@ import {
   MenuItem,
   Avatar,
   Stack,
+  Tooltip,
 } from '@mui/material'
 
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
-import CloseIcon from '@mui/icons-material/Close'
+import MoreVertIcon from '@mui/icons-material/MoreVert'
+import DeleteIcon from '@mui/icons-material/Delete'
 import ArchiveIcon from '@mui/icons-material/Archive'
 import UnarchiveIcon from '@mui/icons-material/Unarchive'
-import BugReportIcon from '@mui/icons-material/BugReport'
-import SuggectionIcon from '@mui/icons-material/TipsAndUpdates'
 import { dispatchAlert } from '~/store'
+import OsIcon from '../Issue/OsIcon'
 
 export const IssueCard = ({ issue, sx }) => {
   const [menuOpen, setMenuOpen] = useState(null)
@@ -114,7 +112,7 @@ export const IssueCard = ({ issue, sx }) => {
     >
       <CardContent
         sx={{
-          cursor: canEdit && !issue.archived ? 'grab !important' : '',
+          cursor: canEdit && !issue.archived ? 'move' : '',
           mb: 0,
           paddingBottom: '16px !important',
           paddingTop: '8px !important',
@@ -133,7 +131,9 @@ export const IssueCard = ({ issue, sx }) => {
               >
                 <Box
                   component='span'
-                  onClick={() => navigate(`/issue/${issue.id}`)}
+                  onClick={() =>
+                    navigate(`/project/${issue.project_id}/issue/${issue.id}`)
+                  }
                   sx={{
                     '&:hover': {
                       // cursor: 'pointer',
@@ -158,7 +158,9 @@ export const IssueCard = ({ issue, sx }) => {
             >
               <Box
                 component='span'
-                onClick={() => navigate(`/issue/${issue.id}`)}
+                onClick={() =>
+                  navigate(`/project/${issue.project_id}/issue/${issue.id}`)
+                }
                 sx={{
                   '&:hover': {
                     cursor: 'pointer',
@@ -172,7 +174,7 @@ export const IssueCard = ({ issue, sx }) => {
             </Box>
           </Grid>
           {userInfo && canEdit && (
-            <Grid item lg={1.5}>
+            <Grid item lg={1.5} sx={{ pr: 1, textAlign: 'right' }}>
               <IconButton
                 aria-controls={menuOpen ? 'menu' : undefined}
                 aria-expanded={menuOpen ? 'true' : undefined}
@@ -182,7 +184,7 @@ export const IssueCard = ({ issue, sx }) => {
                 }}
                 sx={{ pt: 1 }}
               >
-                <MoreHorizIcon />
+                <MoreVertIcon />
               </IconButton>
               <Menu
                 anchorEl={menuOpen}
@@ -211,7 +213,7 @@ export const IssueCard = ({ issue, sx }) => {
                 <Divider />
                 <MenuItem onClick={handleCardDelete}>
                   <ListItemIcon>
-                    <CloseIcon color='error' fontSize='small' />
+                    <DeleteIcon color='error' fontSize='small' />
                   </ListItemIcon>
                   <ListItemText>Delete</ListItemText>
                 </MenuItem>
@@ -219,40 +221,35 @@ export const IssueCard = ({ issue, sx }) => {
             </Grid>
           )}
         </Grid>
-        <Grid container justifyContent='space-between' spacing={1}>
+        <Grid
+          container
+          direction='row'
+          justifyContent='space-between'
+          spacing={1}
+        >
           <Grid item justifyContent='left' sx={{ mt: 1 }}>
-            <Stack direction='row' spacing={1}>
-              {issue.type === 'bug' && (
-                <CardChip color='error' img={<BugReportIcon />} label='Type' />
-              )}
-              {issue.type === 'suggestion' && (
-                <CardChip color='info' img={<SuggectionIcon />} label='Type' />
-              )}
-              {issue.priority === 'low' && (
-                <CardChip
-                  color='info'
-                  img={<LowPriorityIcon />}
-                  label='Priority'
-                />
-              )}
-              {issue.priority === 'medium' && (
-                <CardChip
-                  color='warning'
-                  img={<MediumPriorityIcon />}
-                  label='Priority'
-                />
-              )}
-              {issue.priority === 'high' && (
-                <CardChip
-                  color='error'
-                  img={<HighPriorityIcon />}
-                  label='Priority'
-                />
-              )}
+            <Stack direction='row' spacing={2}>
+              <Tooltip title={toTitleCase(issue.type)}>
+                <span>
+                  <TypeIcon type={issue.type} />
+                </span>
+              </Tooltip>
+              <Tooltip title={`${toTitleCase(issue.priority)} Priority`}>
+                <span>
+                  <PriorityIcon type={issue.priority} />
+                </span>
+              </Tooltip>
             </Stack>
           </Grid>
+          <Grid item justifyContent='center' sx={{ mt: 1 }}>
+            <OsIcon os={issue.os} />
+          </Grid>
           <Grid item justifyContent='right' sx={{ mt: 1 }}>
-            <Typography variant='button'>{issue.version}</Typography>
+            <Tooltip title='Version'>
+              <span>
+                <Typography variant='button'>{issue.version}</Typography>
+              </span>
+            </Tooltip>
           </Grid>
 
           <Grid item justifyContent='right'>
