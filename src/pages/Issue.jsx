@@ -43,15 +43,19 @@ export const IssuePage = () => {
   const userInfo = useContext(UserContext)
   const { project } = useContext(ProjectsContext)
 
-  const hasMaintainer =
-    userInfo.user.projects
-      .find((value) => value)
-      .roles.indexOf('maintainer') === 0
-      ? true
-      : false
+  const findProject = userInfo.user.projects.find((el) => el.id === project.id)
+  let hasMaintainer = false
+  let canEdit = false
 
-  const canEdit =
-    hasMaintainer || issue?.discord_id === userInfo.user.discord_id
+  if (findProject) {
+    const roles = findProject.roles
+    for (let role in roles) {
+      if (role === 'maintainer') {
+        hasMaintainer = true
+        canEdit = hasMaintainer || issue.discord_id === userInfo.user.discord_id
+      }
+    }
+  }
 
   const handleTabChange = (_, tab) => {
     setTabValue(tab)
@@ -140,7 +144,7 @@ export const IssuePage = () => {
                     {issue.summary}
                   </Typography>
                 </Grid>
-                {canEdit && (
+                {project.is_public && (
                   <Grid item lg={1} sx={{ mt: 0.5, textAlign: 'right' }}>
                     <IconButton
                       aria-controls={menuOpen ? 'menu' : undefined}
@@ -168,43 +172,47 @@ export const IssuePage = () => {
                         </ListItemIcon>
                         <ListItemText>Comment</ListItemText>
                       </MenuItem>
-                      <MenuItem
-                        onClick={() =>
-                          navigate(
-                            `/project/${params.projectId}/create-issue`,
-                            {
-                              state: issue,
-                            },
-                          )
-                        }
-                      >
-                        <ListItemIcon>
-                          <EditIcon color='white' />
-                        </ListItemIcon>
-                        <ListItemText>Edit</ListItemText>
-                      </MenuItem>
-                      <MenuItem onClick={() => handleArchive()}>
-                        <ListItemIcon>
-                          {issue.archived ? (
-                            <UnarchiveIcon color='warning' />
-                          ) : (
-                            <ArchiveIcon color='warning' />
-                          )}
-                        </ListItemIcon>
-                        {issue.archived ? (
-                          <ListItemText>Unarchive</ListItemText>
-                        ) : (
-                          <ListItemText>Archive</ListItemText>
-                        )}
-                      </MenuItem>
+                      {canEdit && (
+                        <div>
+                          <MenuItem
+                            onClick={() =>
+                              navigate(
+                                `/project/${params.projectId}/create-issue`,
+                                {
+                                  state: issue,
+                                },
+                              )
+                            }
+                          >
+                            <ListItemIcon>
+                              <EditIcon color='white' />
+                            </ListItemIcon>
+                            <ListItemText>Edit</ListItemText>
+                          </MenuItem>
+                          <MenuItem onClick={() => handleArchive()}>
+                            <ListItemIcon>
+                              {issue.archived ? (
+                                <UnarchiveIcon color='warning' />
+                              ) : (
+                                <ArchiveIcon color='warning' />
+                              )}
+                            </ListItemIcon>
+                            {issue.archived ? (
+                              <ListItemText>Unarchive</ListItemText>
+                            ) : (
+                              <ListItemText>Archive</ListItemText>
+                            )}
+                          </MenuItem>
 
-                      <Divider />
-                      <MenuItem onClick={() => handleDelete()}>
-                        <ListItemIcon>
-                          <DeleteIcon color='error' />
-                        </ListItemIcon>
-                        <ListItemText>Delete</ListItemText>
-                      </MenuItem>
+                          <Divider />
+                          <MenuItem onClick={() => handleDelete()}>
+                            <ListItemIcon>
+                              <DeleteIcon color='error' />
+                            </ListItemIcon>
+                            <ListItemText>Delete</ListItemText>
+                          </MenuItem>
+                        </div>
+                      )}
                     </Menu>
                   </Grid>
                 )}

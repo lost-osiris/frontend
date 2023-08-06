@@ -14,7 +14,7 @@ export const IssueListColumn = ({ name }) => {
     collect: (monitor) => {
       let item = monitor.getItem()
       let issue = item ? item.issue : {}
-      let accept = issue.status !== name
+      let accept = issue && issue.status !== name
 
       return {
         canDrop: monitor.canDrop() && accept,

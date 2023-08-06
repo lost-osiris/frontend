@@ -1,5 +1,5 @@
-import React, { useState, useContext } from 'react'
-import { UserContext, KanbanBoardContext } from '~/context'
+import React, { useState, useEffect, useContext } from 'react'
+import { UserContext, KanbanBoardContext, ProjectsContext } from '~/context'
 import { useNavigate } from 'react-router-dom'
 import { useDrag } from 'react-dnd'
 import PriorityIcon from '~/components/Issue/PriorityIcon'
@@ -33,18 +33,32 @@ import { dispatchAlert } from '~/store'
 import OsIcon from '../Issue/OsIcon'
 
 export const IssueCard = ({ issue, sx }) => {
+  const { project } = useContext(ProjectsContext)
   const [menuOpen, setMenuOpen] = useState(null)
+  const [hasMaintainer, setHasMaintainer] = useState(false)
+  const [canEdit, setCanEdit] = useState(false)
   const userInfo = useContext(UserContext)
   const navigate = useNavigate()
   const { updateIssue, deleteIssue } = useContext(KanbanBoardContext)
   const issueSummary =
     issue.summary.charAt(0).toUpperCase() + issue.summary.slice(1)
-  let project = userInfo.user.projects.find((value) => value)
 
-  const hasMaintainer = project.roles.indexOf('maintainer') === 0 ? true : false
+  useEffect(() => {
+    const findProject = userInfo.user.projects.find(
+      (el) => el.id === project.id,
+    )
 
-  const canEdit = hasMaintainer || issue.discord_id === userInfo.user.discord_id
+    if (findProject) {
+      const roles = findProject.roles
 
+      if (roles.includes('maintainer')) {
+        setHasMaintainer(true)
+        setCanEdit(
+          hasMaintainer || issue.discord_id === userInfo.user.discord_id,
+        )
+      }
+    }
+  }, [project, userInfo, issue.discord_id, hasMaintainer])
   const handleCardDelete = () => {
     api
       .requests('delete', `/api/issue/${issue.id}`, {

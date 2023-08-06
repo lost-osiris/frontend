@@ -6,7 +6,14 @@ import HKVocalized from '../assets/CardImages/HKVocalized.png'
 import PaleCourt from '../assets/CardImages/PaleCourt.jpg'
 import SealedEchoes from '../assets/CardImages/SealedEchoes.jpg'
 
-import { Avatar, AvatarGroup, Button, Grid } from '@mui/material/'
+import {
+  Avatar,
+  AvatarGroup,
+  Button,
+  Grid,
+  Divider,
+  Tooltip,
+} from '@mui/material/'
 
 export const ProjectPage = () => {
   const params = useParams()
@@ -34,36 +41,49 @@ export const ProjectPage = () => {
           Edit Project
         </Button>
       )}
-      <Grid container>
-        <Grid item lg={12}>
+      <Grid container direction='row'>
+        <Grid direction='column' item lg={6}>
           <img
             alt={project.name}
             src={imageUrl}
             style={{
               maxHeight: '400px',
               maxWidth: '1600px',
-              minHeight: '400px',
-              minWidth: '1600px',
             }}
           />
         </Grid>
-      </Grid>
-      <Grid container>
         <Grid item lg={6}>
-          {project.description}
-        </Grid>
-        <Grid item lg={6}>
-          <AvatarGroup max={project.members.length}>
-            {project.members.map((el, index) => {
-              return (
-                <Avatar
-                  alt={el.username}
-                  key={`${index}-${JSON.stringify(el.username)}`}
-                  src={`https://cdn.discordapp.com/avatars/${el.discord_id}/${el.avatar}.png`}
-                />
-              )
-            })}
-          </AvatarGroup>
+          <Grid container direction='column'>
+            <Grid item lg={6}>
+              {project.description}
+              <Divider sx={{ m: 1 }} />
+            </Grid>
+            <Grid item lg={6}>
+              <AvatarGroup
+                max={project.members.length}
+                sx={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                }}
+              >
+                {project.members.map((el, index) => {
+                  return (
+                    <div key={`${index}-${JSON.stringify(el.username)}`}>
+                      <Tooltip title={el.username}>
+                        <span>
+                          <Avatar
+                            alt={el.username}
+                            src={`https://cdn.discordapp.com/avatars/${el.discord_id}/${el.avatar}.png`}
+                            sx={{ m: 1 }}
+                          />
+                        </span>
+                      </Tooltip>
+                    </div>
+                  )
+                })}
+              </AvatarGroup>
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
     </div>

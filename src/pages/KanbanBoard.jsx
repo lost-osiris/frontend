@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 import { UserContext, ProjectsContext, KanbanBoardContext } from '~/context'
 
@@ -12,6 +12,7 @@ import Loading from '~/components/Loading'
 
 export const KanbanBoardPage = () => {
   const [searchParams, setSearchParams] = useSearchParams()
+  const [isMember, setIsMember] = useState(false)
   const archived = Boolean(searchParams.get('archived') === 'true')
   const userInfo = useContext(UserContext)
   const { issues, issuesLoading } = useContext(KanbanBoardContext)
@@ -30,10 +31,17 @@ export const KanbanBoardPage = () => {
     }
   }
 
-  if (
-    !userInfo?.user.projects[0] ||
-    userInfo?.user.projects[0].id !== '63fe47296edfc3b387628861'
-  ) {
+  useEffect(() => {
+    if (project) {
+      setIsMember(
+        userInfo.user.projects.some(
+          (projectInfo) => projectInfo.id === project.id,
+        ),
+      )
+    }
+  }, [project, userInfo])
+
+  if (!project || (!isMember && !project.is_public)) {
     return <ProjectMemberAlert />
   }
 
