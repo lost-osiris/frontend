@@ -26,6 +26,8 @@ export const EditProject = () => {
   const params = useParams()
   const navigate = useNavigate()
   const [project, setProject] = useState()
+  const [btnColor, setBtnColor] = useState('primary')
+  const [btnText, setBtnText] = useState('copy invite link')
   const [tabValue, setTabValue] = useState(0)
 
   useEffect(() => {
@@ -34,21 +36,18 @@ export const EditProject = () => {
         (el) => el.id === params.projectId,
       )
 
-      if (!foundProject) {
+      if (
+        !foundProject ||
+        (foundProject && user.discord_id !== foundProject.owner)
+      ) {
         navigate('/')
       }
 
-      if (foundProject) {
-        if (user.discord_id !== foundProject.owner) {
-          navigate('/')
-        }
-
-        api
-          .requests('get', `/api/project/${params.projectId}/getwebhooks`)
-          .then((data) => {
-            setProject({ ...foundProject, webhooks: data.webhooks })
-          })
-      }
+      api
+        .requests('get', `/api/project/${params.projectId}/getwebhooks`)
+        .then((data) => {
+          setProject({ ...foundProject, webhooks: data.webhooks })
+        })
     }
   }, [projects, params.projectId])
 
@@ -254,6 +253,43 @@ export const EditProject = () => {
             </Grid>
           </TabPanel>
           <TabPanel index={1} value={tabValue}>
+            {project && (
+              <div>
+                <Grid
+                  alignItems='center'
+                  container
+                  direction='row'
+                  justifyContent='center'
+                >
+                  <Grid item>
+                    <Typography>
+                      Invite others to your project, copy the link and share it
+                      with others
+                    </Typography>
+                  </Grid>
+                  <Grid item sx={{ pl: 2 }}>
+                    <Button
+                      color={btnColor}
+                      onClick={() => {
+                        navigator.clipboard.writeText(
+                          `https://modforge.gg/project/${params.projectId}/joinwaitlist`,
+                        )
+                        setBtnColor('success')
+                        setBtnText('Link Copied!')
+                        setTimeout(() => {
+                          setBtnColor('primary')
+                          setBtnText('copy invite link')
+                        }, '5000')
+                      }}
+                      variant='outlined'
+                    >
+                      {btnText}
+                    </Button>
+                  </Grid>
+                </Grid>
+                <Divider sx={{ m: 1, mt: 4 }} />
+              </div>
+            )}
             {project &&
               project.waitlist.map((el, index) => {
                 return (
