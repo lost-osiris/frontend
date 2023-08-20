@@ -5,6 +5,7 @@ import Loading from '../components/Loading'
 import HKVocalized from '../assets/CardImages/HKVocalized.png'
 import PaleCourt from '../assets/CardImages/PaleCourt.jpg'
 import SealedEchoes from '../assets/CardImages/SealedEchoes.jpg'
+import HKM_Blank from '../assets/CardImages/HKM_Blank.png'
 
 import {
   Avatar,
@@ -32,6 +33,8 @@ export const ProjectPage = () => {
     imageUrl = PaleCourt
   } else if (project.name === 'Sealed Echoes') {
     imageUrl = SealedEchoes
+  } else if (project.name === 'Menderbug Installer') {
+    imageUrl = HKM_Blank
   }
 
   return (

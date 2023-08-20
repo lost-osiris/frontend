@@ -40,22 +40,30 @@ export const IssuePage = () => {
   let [tabValue, setTabValue] = useState(0)
   const [menuOpen, setMenuOpen] = useState(false)
   const [commentOpen, setCommentOpen] = useState(false)
+  const [hasMaintainer, setHasMaintainer] = useState(false)
+  const [canEdit, setCanEdit] = useState(false)
+
   const userInfo = useContext(UserContext)
   const { project } = useContext(ProjectsContext)
 
-  const findProject = userInfo.user.projects.find((el) => el.id === project.id)
-  let hasMaintainer = false
-  let canEdit = false
+  useEffect(() => {
+    const findProject = userInfo.user.projects.find(
+      (el) => el.id === project?.id,
+    )
+    if (findProject) {
+      const roles = findProject.roles
 
-  if (findProject) {
-    const roles = findProject.roles
-    for (let role in roles) {
-      if (role === 'maintainer') {
-        hasMaintainer = true
-        canEdit = hasMaintainer || issue.discord_id === userInfo.user.discord_id
-      }
+      roles.forEach((el) => {
+        if (el === 'maintainer') {
+          setHasMaintainer(true)
+        }
+      })
+      // Add a condition to check if issue exists before accessing its properties
+      setCanEdit(
+        hasMaintainer || issue?.discord_id === userInfo.user.discord_id,
+      )
     }
-  }
+  }, [issue, userInfo.user.discord_id])
 
   const handleTabChange = (_, tab) => {
     setTabValue(tab)
@@ -144,78 +152,83 @@ export const IssuePage = () => {
                     {issue.summary}
                   </Typography>
                 </Grid>
-                {project.is_public && (
-                  <Grid item lg={1} sx={{ mt: 0.5, textAlign: 'right' }}>
-                    <IconButton
-                      aria-controls={menuOpen ? 'menu' : undefined}
-                      aria-expanded={menuOpen ? 'true' : undefined}
-                      aria-haspopup='true'
-                      onClick={(e) => {
-                        setMenuOpen(e.currentTarget)
-                      }}
-                      sx={{ pt: 1 }}
-                    >
-                      <MoreVertIcon />
-                    </IconButton>
-                    <Menu
-                      anchorEl={menuOpen}
-                      anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                      id='menu'
-                      onClick={() => setMenuOpen(null)}
-                      onClose={() => setMenuOpen(null)}
-                      open={Boolean(menuOpen)}
-                      transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                    >
-                      <MenuItem onClick={() => setCommentOpen(!commentOpen)}>
-                        <ListItemIcon>
-                          <AddCommentIcon color='white' />
-                        </ListItemIcon>
-                        <ListItemText>Comment</ListItemText>
-                      </MenuItem>
-                      {canEdit && (
-                        <div>
-                          <MenuItem
-                            onClick={() =>
-                              navigate(
-                                `/project/${params.projectId}/create-issue`,
-                                {
-                                  state: issue,
-                                },
-                              )
-                            }
-                          >
-                            <ListItemIcon>
-                              <EditIcon color='white' />
-                            </ListItemIcon>
-                            <ListItemText>Edit</ListItemText>
-                          </MenuItem>
-                          <MenuItem onClick={() => handleArchive()}>
-                            <ListItemIcon>
-                              {issue.archived ? (
-                                <UnarchiveIcon color='warning' />
-                              ) : (
-                                <ArchiveIcon color='warning' />
-                              )}
-                            </ListItemIcon>
+                <Grid item lg={1} sx={{ mt: 0.5, textAlign: 'right' }}>
+                  <IconButton
+                    aria-controls={menuOpen ? 'menu' : undefined}
+                    aria-expanded={menuOpen ? 'true' : undefined}
+                    aria-haspopup='true'
+                    onClick={(e) => {
+                      setMenuOpen(e.currentTarget)
+                    }}
+                    sx={{ pt: 1 }}
+                  >
+                    <MoreVertIcon />
+                  </IconButton>
+                  <Menu
+                    anchorEl={menuOpen}
+                    anchorOrigin={{
+                      horizontal: 'right',
+                      vertical: 'bottom',
+                    }}
+                    id='menu'
+                    onClick={() => setMenuOpen(null)}
+                    onClose={() => setMenuOpen(null)}
+                    open={Boolean(menuOpen)}
+                    transformOrigin={{
+                      horizontal: 'right',
+                      vertical: 'top',
+                    }}
+                  >
+                    <MenuItem onClick={() => setCommentOpen(!commentOpen)}>
+                      <ListItemIcon>
+                        <AddCommentIcon color='white' />
+                      </ListItemIcon>
+                      <ListItemText>Comment</ListItemText>
+                    </MenuItem>
+                    {canEdit && (
+                      <div>
+                        <MenuItem
+                          onClick={() =>
+                            navigate(
+                              `/project/${params.projectId}/create-issue`,
+                              {
+                                state: issue,
+                              },
+                            )
+                          }
+                        >
+                          <ListItemIcon>
+                            <EditIcon color='white' />
+                          </ListItemIcon>
+                          <ListItemText>Edit</ListItemText>
+                        </MenuItem>
+                        <MenuItem onClick={() => handleArchive()}>
+                          <ListItemIcon>
                             {issue.archived ? (
-                              <ListItemText>Unarchive</ListItemText>
+                              <UnarchiveIcon color='warning' />
                             ) : (
-                              <ListItemText>Archive</ListItemText>
+                              <ArchiveIcon color='warning' />
                             )}
-                          </MenuItem>
+                          </ListItemIcon>
+                          {issue.archived ? (
+                            <ListItemText>Unarchive</ListItemText>
+                          ) : (
+                            <ListItemText>Archive</ListItemText>
+                          )}
+                        </MenuItem>
 
-                          <Divider />
-                          <MenuItem onClick={() => handleDelete()}>
-                            <ListItemIcon>
-                              <DeleteIcon color='error' />
-                            </ListItemIcon>
-                            <ListItemText>Delete</ListItemText>
-                          </MenuItem>
-                        </div>
-                      )}
-                    </Menu>
-                  </Grid>
-                )}
+                        <Divider />
+                        <MenuItem onClick={() => handleDelete()}>
+                          <ListItemIcon>
+                            <DeleteIcon color='error' />
+                          </ListItemIcon>
+                          <ListItemText>Delete</ListItemText>
+                        </MenuItem>
+                      </div>
+                    )}
+                  </Menu>
+                </Grid>
+
                 <Grid item lg={12} sx={{ mt: 5 }}>
                   <Tabs
                     onChange={handleTabChange}

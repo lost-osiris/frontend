@@ -53,9 +53,12 @@ export const IssueCard = ({ issue, sx }) => {
 
       if (roles.includes('maintainer')) {
         setHasMaintainer(true)
-        setCanEdit(
-          hasMaintainer || issue.discord_id === userInfo.user.discord_id,
-        )
+        setCanEdit(hasMaintainer)
+      } else if (
+        roles.includes('contributor') &&
+        issue.discord_id === userInfo.user.discord_id
+      ) {
+        setCanEdit()
       }
     }
   }, [project, userInfo, issue.discord_id, hasMaintainer])
@@ -105,6 +108,8 @@ export const IssueCard = ({ issue, sx }) => {
   if (!issue.archived && canEdit) {
     cardProps.ref = drag
   }
+
+  console.log(canEdit)
 
   return (
     <Card

@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { TabPanel } from '../components/TabPanel'
 import * as api from '~/api'
 
-import { ProjectsContext } from '../context'
+import { ProjectsContext, UserContext } from '../context'
 import IssueWHExample from '../assets/Images/IssueWHExample.png'
 import WaitlistWHExample from '../assets/Images/WaitlistWHExample.png'
 import CommentWHExample from '../assets/Images/CommentWHExample.png'
@@ -22,7 +22,9 @@ import {
 
 export const EditProject = () => {
   const { projects } = useContext(ProjectsContext)
+  const { user } = useContext(UserContext)
   const params = useParams()
+  const navigate = useNavigate()
   const [project, setProject] = useState()
   const [tabValue, setTabValue] = useState(0)
 
@@ -32,7 +34,15 @@ export const EditProject = () => {
         (el) => el.id === params.projectId,
       )
 
+      if (!foundProject) {
+        navigate('/')
+      }
+
       if (foundProject) {
+        if (user.discord_id !== foundProject.owner) {
+          navigate('/')
+        }
+
         api
           .requests('get', `/api/project/${params.projectId}/getwebhooks`)
           .then((data) => {

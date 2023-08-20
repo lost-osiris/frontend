@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import HKVocalized from '../assets/CardImages/HKVocalized.png'
 import PaleCourt from '../assets/CardImages/PaleCourt.jpg'
 import SealedEchoes from '../assets/CardImages/SealedEchoes.jpg'
-import MenderBugInstaller from '../assets/CardImages/ConstructionKnight.svg'
+import HKM_Blank from '../assets/CardImages/HKM_Blank.png'
 
 import {
   Typography,
@@ -25,7 +25,7 @@ export const ProjectCard = ({ project }) => {
   } else if (project.name === 'Sealed Echoes') {
     imageUrl = SealedEchoes
   } else if (project.name === 'Menderbug Installer') {
-    imageUrl = MenderBugInstaller
+    imageUrl = HKM_Blank
   }
 
   const navigate = useNavigate()
@@ -74,14 +74,7 @@ export const ProjectCard = ({ project }) => {
         </Typography>
 
         <Box marginTop={'auto'} sx={{ pt: 1 }}>
-          <AvatarGroup
-            max={maxAvatars}
-            sx={
-              {
-                // i want this at the bottom of the card
-              }
-            }
-          >
+          <AvatarGroup max={maxAvatars}>
             {project.members.map((el, index) => {
               return (
                 <Avatar
