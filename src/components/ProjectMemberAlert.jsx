@@ -12,22 +12,7 @@ const ProjectMemberAlert = () => {
         <AlertTitle>Not a project Member</AlertTitle>
         <Typography variant='body'>
           You are not a member of the project and cannot see this issues
-          associated with it — Please navigate{' '}
-          <Typography
-            component='span'
-            onClick={() =>
-              navigate('/project/63fe47296edfc3b387628861/joinwaitlist')
-            }
-            sx={{
-              ':hover': { cursor: 'pointer', textDecoration: 'underline' },
-              color: 'white',
-              fontWeight: 'bold',
-            }}
-          >
-            HERE
-          </Typography>{' '}
-          to request access to the project
-          <br></br>
+          associated with it — Please contact the project owner to gain access
         </Typography>
         <Grid container>
           <Grid item>

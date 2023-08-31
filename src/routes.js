@@ -5,7 +5,6 @@ import { KanbanBoardPage } from '~/pages/KanbanBoard'
 import { IssuePage } from './pages/Issue'
 // import { ProjectList } from './pages/ProjectList'
 import { CreateIssue } from './pages/CreateIssue'
-import { JoinWaitlist } from './pages/JoinWaitList'
 
 import { Homepage } from './pages/HomePage'
 import { KanbanBoardProvider } from '~/context'
@@ -31,10 +30,6 @@ const AppRoutes = () => {
       <Route element={<Layout />} path='/'>
         <Route element={<ProjectPage />} path='/project/:projectId' />
         <Route element={<EditProject />} path='/project/:projectId/edit' />
-        <Route
-          element={<JoinWaitlist />}
-          path='/project/:projectId/joinwaitlist'
-        />
 
         <Route
           element={<CreateIssue />}

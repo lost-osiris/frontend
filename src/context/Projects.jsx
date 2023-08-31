@@ -34,6 +34,7 @@ export const ProjectsProvider = (props) => {
       value={{
         project: project,
         projects: projects,
+        setProject: setProject,
       }}
     >
       {props.children}

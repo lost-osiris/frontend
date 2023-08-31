@@ -30,6 +30,10 @@ const Header = () => {
   const userInfo = useContext(UserContext)
   const { project } = useContext(ProjectsContext)
 
+  console.log(window.location.protocol)
+  console.log(window.location.host)
+  console.log(window.location.href)
+
   const navigate = useNavigate()
   const params = useParams()
   const [anchorEl, setAnchorEl] = useState()

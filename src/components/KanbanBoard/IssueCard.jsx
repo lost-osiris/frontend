@@ -50,7 +50,6 @@ export const IssueCard = ({ issue, sx }) => {
 
     if (findProject) {
       const roles = findProject.roles
-
       if (roles.includes('maintainer')) {
         setHasMaintainer(true)
         setCanEdit(hasMaintainer)
@@ -275,11 +274,6 @@ export const IssueCard = ({ issue, sx }) => {
               sx={{
                 mr: 1,
                 mt: 0.7,
-                // cursor: "pointer",
-                // ":hover": {
-                //   boxShadow:
-                //     "0px 3px 5px -1px rgba(0,0,0,0.2), 0px 6px 2px 0px rgba(0,0,0,0.14), 0px 1px 5px 0px rgba(0,0,0.12)",
-                // },
               }}
               // onClick={() => navigate(`/user/${issue.discord_id}`)}
             />

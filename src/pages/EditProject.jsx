@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { TabPanel } from '../components/TabPanel'
 import * as api from '~/api'
+import { dispatchAlert } from '../store'
 
 import { ProjectsContext, UserContext } from '../context'
 import IssueWHExample from '../assets/Images/IssueWHExample.png'
@@ -10,6 +11,8 @@ import CommentWHExample from '../assets/Images/CommentWHExample.png'
 
 import {
   Avatar,
+  Autocomplete,
+  Box,
   TextField,
   Button,
   ButtonGroup,
@@ -21,35 +24,28 @@ import {
 } from '@mui/material'
 
 export const EditProject = () => {
-  const { projects } = useContext(ProjectsContext)
+  const { project, setProject } = useContext(ProjectsContext)
   const { user } = useContext(UserContext)
+  const [members, setMembers] = useState()
+  const [chosen, setchosen] = useState()
   const params = useParams()
   const navigate = useNavigate()
-  const [project, setProject] = useState()
+  const [blob, setBlob] = useState()
   const [btnColor, setBtnColor] = useState('primary')
   const [btnText, setBtnText] = useState('copy invite link')
   const [tabValue, setTabValue] = useState(0)
 
   useEffect(() => {
-    if (projects && params.projectId) {
-      const foundProject = projects.user_projects.find(
-        (el) => el.id === params.projectId,
-      )
-
-      if (
-        !foundProject ||
-        (foundProject && user.discord_id !== foundProject.owner)
-      ) {
-        navigate('/')
-      }
-
-      api
-        .requests('get', `/api/project/${params.projectId}/getwebhooks`)
-        .then((data) => {
-          setProject({ ...foundProject, webhooks: data.webhooks })
-        })
+    if (project && user.discord_id !== project.owner) {
+      navigate('/')
     }
-  }, [projects, params.projectId])
+  }, [params.projectId, project])
+
+  useEffect(() => {
+    if (!members) {
+      api.requests('get', 'link here')
+    }
+  }, [members])
 
   const handleTabChange = (_, tab) => {
     setTabValue(tab)
@@ -104,6 +100,24 @@ export const EditProject = () => {
           members: updatedMembers,
         })
       })
+  }
+
+  const updateWebhooks = () => {
+    api.requests('put', `/api/project/${params.projectId}/updatewebhooks`, {
+      alert: true,
+      alertMessage: 'Webhooks updated',
+      data: project.webhooks,
+    })
+  }
+
+  const updateBanner = () => {
+    api
+      .requests('put', `/api/project/${params.projectId}/updatebanner`, {
+        alert: true,
+        alertMessage: 'banner  updated',
+        data: { file: blob, type: 'png' },
+      })
+      .then((data) => console.log(data))
   }
 
   return (
@@ -234,20 +248,7 @@ export const EditProject = () => {
               justifyContent='center'
               sx={{ mt: 2 }}
             >
-              <Button
-                onClick={() => {
-                  api.requests(
-                    'put',
-                    `/api/project/${params.projectId}/updatewebhooks`,
-                    {
-                      alert: true,
-                      alertMessage: 'Webhooks updated',
-                      data: project.webhooks,
-                    },
-                  )
-                }}
-                variant='outlined'
-              >
+              <Button onClick={() => updateWebhooks} variant='outlined'>
                 Update Webhooks
               </Button>
             </Grid>
@@ -268,23 +269,38 @@ export const EditProject = () => {
                     </Typography>
                   </Grid>
                   <Grid item sx={{ pl: 2 }}>
-                    <Button
-                      color={btnColor}
-                      onClick={() => {
-                        navigator.clipboard.writeText(
-                          `https://modforge.gg/project/${params.projectId}/joinwaitlist`,
-                        )
-                        setBtnColor('success')
-                        setBtnText('Link Copied!')
-                        setTimeout(() => {
-                          setBtnColor('primary')
-                          setBtnText('copy invite link')
-                        }, '5000')
-                      }}
-                      variant='outlined'
-                    >
-                      {btnText}
-                    </Button>
+                    <Autocomplete
+                      autoHighlight
+                      // getOptionLabel={(option) => option.label}
+                      options={countries}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          inputProps={{
+                            ...params.inputProps,
+                            autoComplete: 'new-password', // disable autocomplete and autofill
+                          }}
+                          label='Choose a country'
+                        />
+                      )}
+                      renderOption={(props, option) => (
+                        <Box
+                          component='li'
+                          sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
+                          {...props}
+                        >
+                          <img
+                            alt=''
+                            loading='lazy'
+                            src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
+                            srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
+                            width='20'
+                          />
+                          {option.label} ({option.code}) +{option.phone}
+                        </Box>
+                      )}
+                      sx={{ width: 300 }}
+                    />
                   </Grid>
                 </Grid>
                 <Divider sx={{ m: 1, mt: 4 }} />
@@ -408,6 +424,29 @@ export const EditProject = () => {
                   </div>
                 )
               })}
+          </TabPanel>
+          <TabPanel index={3} value={tabValue}>
+            <Button component='label' variant='contained'>
+              asdfasdf
+              <input
+                accept='.png, .jpg, .jpeg'
+                hidden
+                onChange={(e) => {
+                  const file = e.target.files[0]
+                  if (file && file.size > 2 * 1024 * 1024) {
+                    dispatchAlert({
+                      message: 'Image must be less than 2MB',
+                      type: 'error',
+                    })
+                  } else {
+                    let image = new Blob([file], { type: file.type })
+                    setBlob(image)
+                  }
+                }}
+                type='file'
+              />
+            </Button>
+            <Button onClick={updateBanner}> upload image</Button>
           </TabPanel>
         </Grid>
       </Grid>
