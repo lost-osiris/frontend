@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { TabPanel } from '../components/TabPanel'
 import * as api from '~/api'
 import { dispatchAlert } from '../store'
+import { AutoComplete } from '../components/AutoComplete'
 
 import { ProjectsContext, UserContext } from '../context'
 import IssueWHExample from '../assets/Images/IssueWHExample.png'
@@ -16,6 +17,10 @@ import {
   TextField,
   Button,
   ButtonGroup,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
   Grid,
   Tab,
   Tabs,
@@ -26,14 +31,28 @@ import {
 export const EditProject = () => {
   const { project, setProject } = useContext(ProjectsContext)
   const { user } = useContext(UserContext)
-  const [members, setMembers] = useState()
-  const [chosen, setchosen] = useState()
   const params = useParams()
   const navigate = useNavigate()
   const [blob, setBlob] = useState()
-  const [btnColor, setBtnColor] = useState('primary')
-  const [btnText, setBtnText] = useState('copy invite link')
   const [tabValue, setTabValue] = useState(0)
+  const [allUsers, setAllUsers] = useState()
+  const [selectedUser, setSelectedUser] = useState(null)
+
+  useEffect(() => {
+    if (!allUsers) {
+      api.requests('get', '/api/user/findall/').then((data) => {
+        if (project && data) {
+          let filteredData = data.filter(
+            (members1) =>
+              !project.members.some(
+                (members2) => members1.discord_id === members2.discord_id,
+              ),
+          )
+          setAllUsers(filteredData)
+        }
+      })
+    }
+  }, [allUsers])
 
   useEffect(() => {
     if (project && user.discord_id !== project.owner) {
@@ -41,39 +60,13 @@ export const EditProject = () => {
     }
   }, [params.projectId, project])
 
-  useEffect(() => {
-    if (!members) {
-      api.requests('get', 'link here')
-    }
-  }, [members])
-
   const handleTabChange = (_, tab) => {
     setTabValue(tab)
   }
 
-  const addToProject = (index, el, role) => {
-    let updatedMembers = [...project.waitlist]
-    api
-      .requests(
-        'put',
-        `/api/project/${params.projectId}/members/updatewaitlist`,
-        {
-          alert: true,
-          alertMessage:
-            role !== 'remove'
-              ? 'Successfully approved waitlist'
-              : 'Successfully rejected user from project',
-          data: [el, role],
-        },
-      )
-      .then(() => {
-        updatedMembers.splice(1, index)
-
-        setProject({
-          ...project,
-          members: updatedMembers,
-        })
-      })
+  const handleAddToProject = (role) => {
+    // Logic to add the selected user to the project
+    // This function will be triggered when the button is clicked
   }
 
   const updateMember = (index, role) => {
@@ -126,7 +119,6 @@ export const EditProject = () => {
         <Grid item lg={12} sx={{ mt: 5 }}>
           <Tabs onChange={handleTabChange} value={tabValue} variant='fullWidth'>
             <Tab id='manage-webhooks' label='Webhooks' />
-            <Tab id='manage-waitlist' label='Waitlist' />
             <Tab id='manage-members' label='Members' />
             <Tab id='manage-info' label='Info' />
           </Tabs>
@@ -168,43 +160,7 @@ export const EditProject = () => {
                 <img src={IssueWHExample} />
               </Grid>
             </Grid>
-            <Grid
-              alignItems='center'
-              container
-              direction='row'
-              justifyContent={'center'}
-              sx={{ mb: 2, mt: 2 }}
-            >
-              <Grid item lg={2}>
-                <TextField
-                  id='waitlist-webhook'
-                  label='Waitlist Webhook'
-                  maxRows={4}
-                  onChange={(e) =>
-                    setProject({
-                      ...project,
-                      webhooks: {
-                        ...project.webhooks,
-                        waitlist: e.target.value,
-                      },
-                    })
-                  }
-                  placeholder={project?.webhooks.waitlist || 'Waitlist Webhook'}
-                  value={project?.webhooks.waitlist || ''}
-                  variant='outlined'
-                />
-              </Grid>
-              <Grid item lg={5}>
-                <div>
-                  This will display a webhook message that shows when a user has
-                  requested access to the project, as well as shows the result
-                  of acceptance or denial
-                </div>
-              </Grid>
-              <Grid item lg={5}>
-                <img src={WaitlistWHExample} />
-              </Grid>
-            </Grid>
+
             <Grid
               alignItems='center'
               container
@@ -255,113 +211,43 @@ export const EditProject = () => {
           </TabPanel>
           <TabPanel index={1} value={tabValue}>
             {project && (
-              <div>
-                <Grid
-                  alignItems='center'
-                  container
-                  direction='row'
-                  justifyContent='center'
-                >
-                  <Grid item>
-                    <Typography>
-                      Invite others to your project, copy the link and share it
-                      with others
-                    </Typography>
-                  </Grid>
-                  <Grid item sx={{ pl: 2 }}>
-                    <Autocomplete
-                      autoHighlight
-                      // getOptionLabel={(option) => option.label}
-                      options={countries}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          inputProps={{
-                            ...params.inputProps,
-                            autoComplete: 'new-password', // disable autocomplete and autofill
-                          }}
-                          label='Choose a country'
-                        />
-                      )}
-                      renderOption={(props, option) => (
-                        <Box
-                          component='li'
-                          sx={{ '& > img': { mr: 2, flexShrink: 0 } }}
-                          {...props}
-                        >
-                          <img
-                            alt=''
-                            loading='lazy'
-                            src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
-                            srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
-                            width='20'
-                          />
-                          {option.label} ({option.code}) +{option.phone}
-                        </Box>
-                      )}
-                      sx={{ width: 300 }}
-                    />
-                  </Grid>
-                </Grid>
-                <Divider sx={{ m: 1, mt: 4 }} />
-              </div>
-            )}
-            {project &&
-              project.waitlist.map((el, index) => {
-                return (
-                  <div key={el.discord_id}>
+              <Grid>
+                <Grid align={'center'} item lg={12}>
+                  <AutoComplete
+                    label={`add users to ${project.name}`}
+                    options={allUsers}
+                    setter={setSelectedUser}
+                  />
+
+                  {selectedUser && (
                     <Grid
-                      alignItems='center'
+                      alignItems='baseline'
                       container
-                      justifyContent='space-evenly'
+                      direction='row'
+                      justifyContent='center'
                     >
-                      <Grid item>
-                        <Avatar
-                          src={`https://cdn.discordapp.com/avatars/${el.discord_id}/${el.avatar}.png`}
-                        />
-                      </Grid>
-                      <Grid item>
-                        <Typography variant='h5'>{el.username}</Typography>
-                      </Grid>
-                      <Grid item>
-                        <ButtonGroup
-                          aria-label='outlined button group'
-                          sx={{ pl: 2 }}
-                          variant='outlined'
-                        >
-                          <Button
-                            onClick={() => {
-                              addToProject(index, el, 'maintainer')
-                            }}
-                          >
-                            Maintainer
-                          </Button>
-                          <Button
-                            onClick={() => {
-                              addToProject(index, el, 'contributor')
-                            }}
-                          >
-                            Contributor
-                          </Button>
-                        </ButtonGroup>
+                      <Grid item lg={3} sx={{ mt: 3 }}>
                         <Button
-                          color='error'
-                          onClick={() => {
-                            addToProject(index, el, 'remove')
-                          }}
-                          sx={{ ml: 4 }}
+                          onClick={handleAddToProject('contributor')}
                           variant='outlined'
                         >
-                          Remove
+                          Add {selectedUser.username} as a contributor
+                        </Button>
+                      </Grid>
+                      <Grid item lg={3} sx={{ mt: 3 }}>
+                        <Button
+                          onClick={handleAddToProject('maintainer')}
+                          variant='outlined'
+                        >
+                          Add {selectedUser.username} as a maintainer
                         </Button>
                       </Grid>
                     </Grid>
-                    <Divider sx={{ mb: 2, mt: 2 }} />
-                  </div>
-                )
-              })}
-          </TabPanel>
-          <TabPanel index={2} value={tabValue}>
+                  )}
+                </Grid>
+                <Divider sx={{ mb: 2, mt: 2 }} />
+              </Grid>
+            )}
             {project &&
               project.members.map((el, index) => {
                 return (
@@ -425,7 +311,7 @@ export const EditProject = () => {
                 )
               })}
           </TabPanel>
-          <TabPanel index={3} value={tabValue}>
+          <TabPanel index={2} value={tabValue}>
             <Button component='label' variant='contained'>
               asdfasdf
               <input

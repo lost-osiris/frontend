@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { useDrag } from 'react-dnd'
 import PriorityIcon from '~/components/Issue/PriorityIcon'
 import TypeIcon from '~/components/Issue/TypeIcon'
+import { ProgressBar } from '../ProgressBar'
 
 import * as api from '~/api'
 import { toTitleCase } from '~/utils'
@@ -280,6 +281,7 @@ export const IssueCard = ({ issue, sx }) => {
           </Grid>
         </Grid>
       </CardContent>
+      {issue.assignments && <ProgressBar count={issue.assignments} />}
     </Card>
   )
 }

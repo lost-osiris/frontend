@@ -27,10 +27,6 @@ export const BlogList = () => {
     blogs ? new Array(blogs.length).fill(false) : [],
   )
 
-  // blogs.blog_info.date.sort(
-  //   (a, b) => new Date(b.datetime) - new Date(a.datetime),
-  // )
-
   let approvedIds = [
     '123361745023533058',
     '500343640871403520',
@@ -66,12 +62,24 @@ export const BlogList = () => {
       api
         .requests('get', '/api/blogs')
         .then((data) =>
-          setBlogs(
-            data.sort(
-              (a, b) => new Date(b.blog_info.date) - new Date(a.blog_info.date),
-            ),
-          ),
+          setBlogs(data.sort((a, b) => new Date(b.date) - new Date(a.date))),
         )
+    }
+  }, [blogs])
+
+  useEffect(() => {
+    if (blogs) {
+      let updatedBlogs = []
+      blogs.forEach((el) => {
+        api
+          .requests('get', `/api/user/finduser/${el.discord_id}`)
+          .then((data) => {
+            el.username = data.username
+            el.avatar = data.avatar
+            updatedBlogs.push(el)
+          })
+        setBlogs(updatedBlogs)
+      })
     }
   }, [blogs])
 
@@ -84,12 +92,12 @@ export const BlogList = () => {
       )}
       {blogs &&
         blogs.map((el, index) => {
-          let backgroundTheme = getBlogColor(el.blog_info.tags)
-          let image = getImage(el.blog_info.tags)
+          let backgroundTheme = getBlogColor(el.tags)
+          let image = getImage(el.tags)
 
           return (
             <Box
-              key={el.blog_info.id}
+              key={el.id}
               ref={containerRef}
               sx={{
                 m: 1,
@@ -122,8 +130,8 @@ export const BlogList = () => {
                   <ListItemButton
                     centerRipple={true}
                     onClick={() => {
-                      navigate(`/blog/${el.blog_info.id}`, {
-                        state: el.blog_info.post,
+                      navigate(`/blog/${el.id}`, {
+                        state: el.post,
                       })
                     }}
                   >
@@ -142,16 +150,16 @@ export const BlogList = () => {
                         sx={{ alignItems: 'center', display: 'flex' }}
                       >
                         <Avatar
-                          src={`https://cdn.discordapp.com/avatars/${el.user_info.discord_id}/${el.user_info.avatar}.png`}
+                          src={`https://cdn.discordapp.com/avatars/${el.discord_id}/${el.avatar}.png`}
                         />
                         <Typography sx={{ pl: 2 }} variant='overline'>
-                          Created by {el.user_info.username}
-                          <DateTime data={el.blog_info.date} display='block' />
+                          Created by {el.username}
+                          <DateTime data={el.date} display='block' />
                         </Typography>
                       </Grid>
                       <Grid item lg={8} sx={{ alignItems: 'center' }}>
                         <Typography sx={{ textAlign: 'center' }} variant='h4'>
-                          {el.blog_info.title}
+                          {el.title}
                         </Typography>
                       </Grid>
                       <Grid
@@ -191,8 +199,8 @@ export const BlogList = () => {
                             />
                           </Slide>
                         </Box>
-                        {el.blog_info.tags &&
-                          el.blog_info.tags.map((el) => {
+                        {el.tags &&
+                          el.tags.map((el) => {
                             return (
                               <Chip
                                 key={el}

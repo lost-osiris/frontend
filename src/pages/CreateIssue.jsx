@@ -3,6 +3,7 @@ import * as api from '~/api'
 import { toTitleCase } from '~/utils'
 import { useParams, useLocation, useNavigate } from 'react-router-dom'
 import { ProjectsContext, UserContext } from '~/context'
+import { AutoComplete } from '../components/AutoComplete'
 
 import {
   Radio,
@@ -15,11 +16,27 @@ import {
   Grid,
   FormGroup,
   Checkbox,
+  Modal,
+  Box,
+  Typography,
 } from '@mui/material/'
 import RadioGroup from '@mui/material/RadioGroup'
 import SendIcon from '@mui/icons-material/Send'
 import Loading from '~/components/Loading'
 import TinyMce from '~/components/TinyMce'
+
+const style = {
+  bgcolor: 'background.paper',
+  border: '2px solid #FFFFFF',
+  boxShadow: 24,
+  left: '50%',
+  p: 4,
+  position: 'absolute',
+  textAlign: 'center',
+  top: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+}
 
 export const CreateIssue = () => {
   const userInfo = useContext(UserContext)
@@ -32,9 +49,50 @@ export const CreateIssue = () => {
   const [version, setVersion] = useState(location.state?.version || '')
   const [modlogsButtonColor, setModlogsButtonColor] = useState('primary')
   const [modlogsButtonText, setModlogsButtonText] = useState('Upload Modlogs')
+  const [checked, setChecked] = useState(false)
+  const [open, setOpen] = useState(false)
+  const handleOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
+  const [assignments, setAssignments] = useState([
+    {
+      completed: false,
+      task: '',
+      user: '',
+    },
+  ])
+
+  const addAssignment = () => {
+    setAssignments([...assignments, { task: '', user: '' }])
+  }
+
+  const removeAssignment = (index) => {
+    if (assignments.length > 1) {
+      const updatedAssignments = [...assignments]
+      updatedAssignments.splice(index, 1)
+      setAssignments(updatedAssignments)
+    } else {
+      setAssignments([
+        {
+          completed: false,
+          task: '',
+          user: '',
+        },
+      ])
+    }
+  }
+
+  const updateAssignment = (index, field, value) => {
+    const updatedAssignments = [...assignments]
+    updatedAssignments[index] = {
+      ...updatedAssignments[index],
+      [field]: value,
+    }
+    setAssignments(updatedAssignments)
+  }
 
   let defaultState = {
     archived: location.state?.archived || false,
+    assignments: assignments,
     attachments: {
       embedSource: location.state?.attachments.embedSource || '',
       generalUrl: location.state?.attachments.generalUrl || '',
@@ -53,6 +111,7 @@ export const CreateIssue = () => {
       title: location.state?.modlogs.title || '',
     },
     os: location.state?.os || [],
+    pingOnCreate: checked,
     priority: location.state?.priority || 'medium',
     project_id: params.projectId,
     status: location.state?.status || 'reported',
@@ -159,6 +218,7 @@ export const CreateIssue = () => {
       promise.then(() => {
         setNewIssue({
           archived: false,
+          assignments: assignments,
           attachments: {
             embedSource: '',
             generalUrl: '',
@@ -173,6 +233,7 @@ export const CreateIssue = () => {
             title: '',
           },
           os: [],
+          pingOnCreate: checked,
           priority: 'medium',
           project_id: params.projectId,
           status: 'reported',
@@ -435,57 +496,162 @@ export const CreateIssue = () => {
               />
             </FormGroup>
           </Grid>
-
-          <Grid item lg={12}>
-            <TinyMce
-              height={500}
-              onChange={(e) => updateNewIssue('description', e)}
-              value={newIssue.description}
+          {assignments.map((assignment, index) => (
+            <Grid item key={index} lg={12}>
+              {userInfo.user.discord_id === project.owner && (
+                <Grid container direction='row'>
+                  <Grid item lg={2.5}>
+                    <AutoComplete
+                      label={'Assign member to Issue'}
+                      options={project.members}
+                      setter={(selectedValue) => {
+                        updateAssignment(index, 'user', selectedValue)
+                      }}
+                    />
+                  </Grid>
+                  <Grid item lg={9.5}>
+                    {assignment.user && (
+                      <Grid container>
+                        <Grid item lg={5}>
+                          <TextField
+                            fullWidth
+                            id={`assignment-task-${index}`}
+                            label='Assignment Task'
+                            multiline
+                            onChange={(e) => {
+                              updateAssignment(index, 'task', e.target.value)
+                            }}
+                            placeholder='Assignment Task'
+                            value={assignment.task}
+                          />
+                        </Grid>
+                        <Grid item lg={2}>
+                          <Grid
+                            alignItems='center'
+                            container
+                            direction='row'
+                            justifyContent='space-evenly'
+                            sx={{ pl: 2, pt: 1 }}
+                          >
+                            <Grid item lg={6}>
+                              <Button
+                                onClick={() => addAssignment()}
+                                variant='outlined'
+                              >
+                                +
+                              </Button>
+                            </Grid>
+                            <Grid item lg={6}>
+                              <Button
+                                color='error'
+                                onClick={() => removeAssignment(index)}
+                                variant='outlined'
+                              >
+                                -
+                              </Button>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    )}
+                  </Grid>
+                </Grid>
+              )}
+            </Grid>
+          ))}
+        </Grid>
+        {userInfo.user.discord_id === project.owner && assignments[0]?.user && (
+          <Grid item lg={12} sx={{ pl: 3, pr: 3, pt: 2 }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={checked}
+                  onChange={() => {
+                    if (checked) {
+                      setChecked(false)
+                    } else {
+                      handleOpen()
+                    }
+                  }}
+                />
+              }
+              label='Ping Users On Creation'
             />
+            <Modal
+              aria-describedby='modal-modal-description'
+              aria-labelledby='modal-modal-title'
+              onClose={handleClose}
+              open={open}
+            >
+              <Box sx={style}>
+                <Typography component='h2' id='modal-modal-title' variant='h2'>
+                  One Sec!
+                </Typography>
+                <Typography id='modal-modal-description' sx={{ mb: 2, mt: 2 }}>
+                  Checking this box pings assigned issue members on Discord via
+                  your issue webhook channel upon issue creation.
+                  <br />
+                  <br />
+                  Are you sure you wanna do this?
+                </Typography>
+                <Button
+                  onClick={() => {
+                    setChecked(true)
+                    handleClose()
+                  }}
+                  variant='outlined'
+                >
+                  Yup!
+                </Button>
+              </Box>
+            </Modal>
           </Grid>
-          <Grid item lg={12}>
-            <Grid container justifyContent='space-between' spacing={3}>
-              <Grid item lg={6}>
-                <Button
-                  color={modlogsButtonColor}
-                  component='label'
-                  variant='contained'
-                >
-                  {modlogsButtonText}
-                  <input
-                    accept='text/*'
-                    hidden
-                    onChange={(e) => {
-                      const file = e.target.files[0]
-                      if (file && file.size > 4 * 1024 * 1024) {
-                        setModlogsButtonColor('error')
-                        setModlogsButtonText('File size too large! ( > 4MB )')
-                        setTimeout(() => {
-                          setModlogsButtonColor('primary')
-                          setModlogsButtonText('Upload Modlogs')
-                        }, 5000)
-                      } else {
-                        updateNewIssue('modlogs', file)
-                      }
-                    }}
-                    type='file'
-                  />
-                </Button>
-              </Grid>
-              <Grid
-                alignContent='right'
-                item
-                lg={6}
-                sx={{ textAlign: 'right' }}
+        )}
+
+        <Grid item lg={12}>
+          <TinyMce
+            height={500}
+            onChange={(e) => updateNewIssue('description', e)}
+            value={newIssue.description}
+          />
+        </Grid>
+        <Grid item lg={12}>
+          <Grid container justifyContent='space-between' spacing={3}>
+            <Grid item lg={6}>
+              <Button
+                color={modlogsButtonColor}
+                component='label'
+                variant='contained'
               >
-                <Button
-                  endIcon={<SendIcon />}
-                  onClick={handleFormSubmit}
-                  variant='contained'
-                >
-                  Submit
-                </Button>
-              </Grid>
+                {modlogsButtonText}
+                <input
+                  accept='text/*'
+                  hidden
+                  onChange={(e) => {
+                    const file = e.target.files[0]
+                    if (file && file.size > 4 * 1024 * 1024) {
+                      setModlogsButtonColor('error')
+                      setModlogsButtonText('File size too large! ( > 4MB )')
+                      setTimeout(() => {
+                        setModlogsButtonColor('primary')
+                        setModlogsButtonText('Upload Modlogs')
+                      }, 5000)
+                    } else {
+                      updateNewIssue('modlogs', file)
+                    }
+                  }}
+                  type='file'
+                />
+              </Button>
+            </Grid>
+            <Grid alignContent='right' item lg={6} sx={{ textAlign: 'right' }}>
+              <Button
+                endIcon={<SendIcon />}
+                onClick={handleFormSubmit}
+                variant='contained'
+              >
+                Submit
+              </Button>
             </Grid>
           </Grid>
         </Grid>
