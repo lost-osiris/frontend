@@ -53,46 +53,19 @@ export const CreateIssue = () => {
   const [open, setOpen] = useState(false)
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
-  const [assignments, setAssignments] = useState([
-    {
-      completed: false,
-      task: '',
-      user: '',
-    },
-  ])
-
-  const addAssignment = () => {
-    setAssignments([...assignments, { task: '', user: '' }])
-  }
-
-  const removeAssignment = (index) => {
-    if (assignments.length > 1) {
-      const updatedAssignments = [...assignments]
-      updatedAssignments.splice(index, 1)
-      setAssignments(updatedAssignments)
-    } else {
-      setAssignments([
-        {
-          completed: false,
-          task: '',
-          user: '',
-        },
-      ])
-    }
-  }
-
-  const updateAssignment = (index, field, value) => {
-    const updatedAssignments = [...assignments]
-    updatedAssignments[index] = {
-      ...updatedAssignments[index],
-      [field]: value,
-    }
-    setAssignments(updatedAssignments)
-  }
+  const [assignments, setAssignments] = useState(
+    location.state?.assignments || [
+      {
+        completed: false,
+        task: '',
+        user: '',
+      },
+    ],
+  )
 
   let defaultState = {
     archived: location.state?.archived || false,
-    assignments: assignments,
+    assignments: location.state?.assignments || assignments,
     attachments: {
       embedSource: location.state?.attachments.embedSource || '',
       generalUrl: location.state?.attachments.generalUrl || '',
@@ -167,12 +140,53 @@ export const CreateIssue = () => {
         issue.os.splice(index, 1)
       }
       setNewIssue(issue)
+    } else if (field === 'assignments') {
+      setNewIssue({
+        ...newIssue,
+        assignments: assignments,
+      })
     } else {
       let issue = { ...newIssue }
       issue[field] = value
 
       setNewIssue(issue)
     }
+  }
+
+  const addAssignment = () => {
+    setAssignments([
+      ...assignments,
+      {
+        completed: false,
+        task: '',
+        user: '',
+      },
+    ])
+  }
+
+  const removeAssignment = (index) => {
+    if (assignments.length > 1) {
+      const updatedAssignments = [...assignments]
+      updatedAssignments.splice(index, 1)
+      setAssignments(updatedAssignments)
+    } else {
+      setAssignments([
+        {
+          completed: false,
+          task: '',
+          user: '',
+        },
+      ])
+    }
+  }
+
+  const updateAssignment = (index, field, value) => {
+    const updatedAssignments = [...assignments]
+    updatedAssignments[index] = {
+      ...updatedAssignments[index],
+      [field]: value,
+    }
+    setAssignments(updatedAssignments)
   }
 
   useEffect(() => {
@@ -184,9 +198,14 @@ export const CreateIssue = () => {
   }, [version, location])
 
   const handleFormSubmit = async () => {
-    if (newIssue.summary !== '') {
+    const isAnyAssignmentBlank = assignments.some(
+      (assignment) => assignment.user === '',
+    )
+
+    if (newIssue.summary !== '' && !isAnyAssignmentBlank) {
       let issue = {
         ...newIssue,
+        assignments: assignments,
         version: version,
       }
       let promise
@@ -496,69 +515,71 @@ export const CreateIssue = () => {
               />
             </FormGroup>
           </Grid>
-          {assignments.map((assignment, index) => (
-            <Grid item key={index} lg={12}>
-              {userInfo.user.discord_id === project.owner && (
-                <Grid container direction='row'>
-                  <Grid item lg={2.5}>
-                    <AutoComplete
-                      label={'Assign member to Issue'}
-                      options={project.members}
-                      setter={(selectedValue) => {
-                        updateAssignment(index, 'user', selectedValue)
-                      }}
-                    />
-                  </Grid>
-                  <Grid item lg={9.5}>
-                    {assignment.user && (
-                      <Grid container>
-                        <Grid item lg={5}>
-                          <TextField
-                            fullWidth
-                            id={`assignment-task-${index}`}
-                            label='Assignment Task'
-                            multiline
-                            onChange={(e) => {
-                              updateAssignment(index, 'task', e.target.value)
-                            }}
-                            placeholder='Assignment Task'
-                            value={assignment.task}
-                          />
-                        </Grid>
-                        <Grid item lg={2}>
-                          <Grid
-                            alignItems='center'
-                            container
-                            direction='row'
-                            justifyContent='space-evenly'
-                            sx={{ pl: 2, pt: 1 }}
-                          >
-                            <Grid item lg={6}>
-                              <Button
-                                onClick={() => addAssignment()}
-                                variant='outlined'
-                              >
-                                +
-                              </Button>
-                            </Grid>
-                            <Grid item lg={6}>
-                              <Button
-                                color='error'
-                                onClick={() => removeAssignment(index)}
-                                variant='outlined'
-                              >
-                                -
-                              </Button>
+          {assignments &&
+            assignments.map((assignment, index) => (
+              <Grid item key={index} lg={12}>
+                {userInfo.user.discord_id === project.owner && (
+                  <Grid container direction='row'>
+                    <Grid item lg={2.5}>
+                      <AutoComplete
+                        defaultValue={assignment.user}
+                        label={'Assign member to Issue'}
+                        options={project.members}
+                        setter={(selectedValue) => {
+                          updateAssignment(index, 'user', selectedValue)
+                        }}
+                      />
+                    </Grid>
+                    <Grid item lg={9.5}>
+                      {assignment.user && (
+                        <Grid container>
+                          <Grid item lg={5}>
+                            <TextField
+                              fullWidth
+                              id={`assignment-task-${index}`}
+                              label='Assignment Task'
+                              multiline
+                              onChange={(e) => {
+                                updateAssignment(index, 'task', e.target.value)
+                              }}
+                              placeholder='Assignment Task'
+                              value={assignment.task}
+                            />
+                          </Grid>
+                          <Grid item lg={2}>
+                            <Grid
+                              alignItems='center'
+                              container
+                              direction='row'
+                              justifyContent='space-evenly'
+                              sx={{ pl: 2, pt: 1 }}
+                            >
+                              <Grid item lg={6}>
+                                <Button
+                                  onClick={() => addAssignment()}
+                                  variant='outlined'
+                                >
+                                  +
+                                </Button>
+                              </Grid>
+                              <Grid item lg={6}>
+                                <Button
+                                  color='error'
+                                  onClick={() => removeAssignment(index)}
+                                  variant='outlined'
+                                >
+                                  -
+                                </Button>
+                              </Grid>
                             </Grid>
                           </Grid>
                         </Grid>
-                      </Grid>
-                    )}
+                      )}
+                    </Grid>
                   </Grid>
-                </Grid>
-              )}
-            </Grid>
-          ))}
+                )}
+              </Grid>
+            ))}
         </Grid>
         {userInfo.user.discord_id === project.owner && assignments[0]?.user && (
           <Grid item lg={12} sx={{ pl: 3, pr: 3, pt: 2 }}>

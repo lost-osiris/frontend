@@ -38,11 +38,25 @@ export const IssueCard = ({ issue, sx }) => {
   const [menuOpen, setMenuOpen] = useState(null)
   const [hasMaintainer, setHasMaintainer] = useState(false)
   const [canEdit, setCanEdit] = useState(false)
+  const [progress, setProgress] = useState(0)
   const userInfo = useContext(UserContext)
   const navigate = useNavigate()
   const { updateIssue, deleteIssue } = useContext(KanbanBoardContext)
   const issueSummary =
     issue.summary.charAt(0).toUpperCase() + issue.summary.slice(1)
+
+  useEffect(() => {
+    if (issue.assignments) {
+      const completedCount = issue.assignments.filter(
+        (obj) => obj.completed,
+      ).length
+      const totalObjects = issue.assignments.length
+      const percentageCompleted =
+        totalObjects === 0 ? 0 : (completedCount / totalObjects) * 100
+
+      setProgress(percentageCompleted)
+    }
+  }, [issue])
 
   useEffect(() => {
     const findProject = userInfo.user.projects.find(
@@ -281,7 +295,7 @@ export const IssueCard = ({ issue, sx }) => {
           </Grid>
         </Grid>
       </CardContent>
-      {issue.assignments && <ProgressBar count={issue.assignments} />}
+      {issue.assignments && <ProgressBar progress={progress} />}
     </Card>
   )
 }

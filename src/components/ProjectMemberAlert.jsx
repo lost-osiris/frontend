@@ -1,11 +1,11 @@
 import React from 'react'
 import { Grid, Alert, AlertTitle, IconButton, Typography } from '@mui/material'
 import RefreshIcon from '@mui/icons-material/Refresh'
-import { useNavigate } from 'react-router-dom'
+// import { useNavigate } from 'react-router-dom'
 import { AUTH_REDIRECT_URL } from '~/constants'
 
 const ProjectMemberAlert = () => {
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
   return (
     <div>
       <Alert severity='warning'>

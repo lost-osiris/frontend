@@ -44,9 +44,25 @@ export const IssuePage = () => {
   const [commentOpen, setCommentOpen] = useState(false)
   const [hasMaintainer, setHasMaintainer] = useState(false)
   const [canEdit, setCanEdit] = useState(false)
+  const [progress, setProgress] = useState(0)
 
   const userInfo = useContext(UserContext)
   const { project } = useContext(ProjectsContext)
+
+  useEffect(() => {
+    if (issue) {
+      if (issue.assignments) {
+        const completedCount = issue.assignments.filter(
+          (obj) => obj.completed,
+        ).length
+        const totalObjects = issue.assignments.length
+        const percentageCompleted =
+          totalObjects === 0 ? 0 : (completedCount / totalObjects) * 100
+
+        setProgress(percentageCompleted)
+      }
+    }
+  }, [issue])
 
   useEffect(() => {
     const findProject = userInfo.user.projects.find(
@@ -252,12 +268,16 @@ export const IssuePage = () => {
                     <ModLogs issue={issue} />
                   </TabPanel>
                   <TabPanel index={3} value={tabValue}>
-                    <Assignments issue={issue} />
+                    <Assignments
+                      fetchIssue={fetchIssue}
+                      issue={issue}
+                      setProgress={setProgress}
+                    />
                   </TabPanel>
                 </Grid>
               </Grid>
             </CardContent>
-            {issue.assignments && <ProgressBar count={issue.assignments} />}
+            {issue.assignments && <ProgressBar progress={progress} />}
           </Card>
         </Grid>
       </Grid>

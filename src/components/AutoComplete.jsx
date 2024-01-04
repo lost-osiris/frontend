@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Autocomplete, TextField, Box } from '@mui/material'
 
-export const AutoComplete = ({ setter, options, label }) => {
+export const AutoComplete = ({ setter, options, label, defaultValue }) => {
   return (
     <Autocomplete
       autoHighlight
+      defaultValue={defaultValue}
       getOptionLabel={(option) => option.username}
       id='country-select-demo'
       onChange={(event, newValue) => setter(newValue)}
