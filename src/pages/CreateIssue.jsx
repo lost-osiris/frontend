@@ -198,15 +198,21 @@ export const CreateIssue = () => {
   }, [version, location])
 
   const handleFormSubmit = async () => {
-    const isAnyAssignmentBlank = assignments.some(
-      (assignment) => assignment.user === '',
-    )
+    let isAnyAssignmentBlank = false
+    if (assignments[0].user !== '' && assignments[0].task !== '') {
+      isAnyAssignmentBlank = assignments.some(
+        (assignment) => assignment.user === '',
+      )
+    }
 
-    if (newIssue.summary !== '' && !isAnyAssignmentBlank) {
+    if (newIssue.summary !== '' && isAnyAssignmentBlank === false) {
       let issue = {
         ...newIssue,
         assignments: assignments,
         version: version,
+      }
+      if (!assignments[0].user && !assignments[0].task) {
+        delete issue.assignments
       }
       let promise
 
@@ -521,14 +527,25 @@ export const CreateIssue = () => {
                 {userInfo.user.discord_id === project.owner && (
                   <Grid container direction='row'>
                     <Grid item lg={2.5}>
-                      <AutoComplete
-                        defaultValue={assignment.user}
-                        label={'Assign member to Issue'}
-                        options={project.members}
-                        setter={(selectedValue) => {
-                          updateAssignment(index, 'user', selectedValue)
-                        }}
-                      />
+                      {assignment.user ? (
+                        <AutoComplete
+                          defaultValue={assignment.user}
+                          label={'Assign member to Issue'}
+                          options={project.members}
+                          setter={(selectedValue) => {
+                            updateAssignment(index, 'user', selectedValue)
+                          }}
+                        />
+                      ) : (
+                        <AutoComplete
+                          defaultValue={null}
+                          label={'Assign member to Issue'}
+                          options={project.members}
+                          setter={(selectedValue) => {
+                            updateAssignment(index, 'user', selectedValue)
+                          }}
+                        />
+                      )}
                     </Grid>
                     <Grid item lg={9.5}>
                       {assignment.user && (

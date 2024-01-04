@@ -5,7 +5,7 @@ import { Grid, Typography, Box } from '@mui/material'
 const IssueAttachments = ({ issue }) => {
   return (
     <>
-      {!issue.attachments.embedSource & !issue.attachments.generalUrl ? (
+      {!issue.attachments.embedSource && !issue.attachments.generalUrl ? (
         <Grid container justifyContent='center'>
           <Grid item>
             <Typography
