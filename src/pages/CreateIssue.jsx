@@ -653,7 +653,7 @@ export const CreateIssue = () => {
             value={newIssue.description}
           />
         </Grid>
-        <Grid item lg={12}>
+        <Grid item lg={12} sx={{ mt: 1 }}>
           <Grid container justifyContent='space-between' spacing={3}>
             <Grid item lg={6}>
               <Button
